@@ -10,4 +10,5 @@ export default [
   route('about', './routes/about.tsx'),
   route('colophon', './routes/colophon.tsx'),
   route('uses', './routes/uses.tsx'),
+  route('*', './routes/not-found.tsx'),
 ] satisfies RouteConfig;

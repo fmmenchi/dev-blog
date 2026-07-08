@@ -30,4 +30,12 @@ test.describe('article', () => {
       page.getByRole('link', { name: '← back to the blog' }),
     ).toBeVisible();
   });
+
+  test('completely unmatched URLs hit the catch-all 404', async ({ page }) => {
+    const response = await page.goto('/this/never/existed');
+    expect(response?.status()).toBe(404);
+    await expect(
+      page.getByRole('heading', { name: /doesn't exist/ }),
+    ).toBeVisible();
+  });
 });
