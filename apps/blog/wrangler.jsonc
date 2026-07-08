@@ -9,6 +9,10 @@
   },
   "upload_source_maps": true,
   "workers_dev": true,
+  "vars": {
+    // Flip with `nx run blog:maintenance-on|off` or the Maintenance workflow.
+    "MAINTENANCE": "false",
+  },
   // Once fabiomenchicchi.com is a zone on the Cloudflare account, route the
   // custom domain here:
   // "routes": [{ "pattern": "fabiomenchicchi.com", "custom_domain": true }]
