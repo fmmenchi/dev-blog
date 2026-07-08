@@ -1,3 +1,14 @@
+## 0.4.1 (2026-07-08)
+
+### 🩹 Fixes
+
+- **theme:** rename accent tokens to English ([4d2cc49](https://github.com/fmmenchi/dev-blog/commit/4d2cc49))
+
+### ❤️ Thank You
+
+- Claude Fable 5
+- Fabio Menchicchi @fmmenchi
+
 ## 0.4.0 (2026-07-08)
 
 ### 🚀 Features
