@@ -66,8 +66,13 @@ static assets). Key pieces:
 
 ## CI & release
 
-- `.github/workflows/ci.yml` (pnpm + Nx Cloud) runs format check, then
-  `lint test build typecheck e2e`. `lint-css` runs Stylelint per lib.
+- `.github/workflows/ci.yml` — the `main` job runs, as named steps:
+  **Format check** → **lint / test / build / typecheck / lint-css** for every
+  project (`nx run-many`) → **E2E** (Playwright flows + axe a11y sweep,
+  driving the real worker in miniflare; chromium is installed in a prior
+  step). Everything runs on PRs and on main; merging requires this job green
+  (branch protection). On pushes to main two more jobs follow: `release`
+  (tag + GitHub Release) and `deploy` (Cloudflare Workers).
 - `nx release` versions from conventional commits (fixed versioning, `v{x}`
   tags, GitHub release changelog) — never hand-edit versions. Releases are
   **tag-only**: no release commits and no CHANGELOG.md land on main (the
