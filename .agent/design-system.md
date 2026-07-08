@@ -18,7 +18,7 @@ layer**. Violations fail the build:
   `declaration-strict-value` fails the build (`transparent`, `currentColor`,
   `inherit` are allowed).
 - The blog is dark-first (`:root` is the dark theme) and the accent is
-  switchable via `<html data-accent="giallo|lime|ambra">` — it remaps only
+  switchable via `<html data-accent="yellow|lime|amber">` — it remaps only
   the `--color-primary` family. Never write per-accent styles in components.
 
 ## Component pattern

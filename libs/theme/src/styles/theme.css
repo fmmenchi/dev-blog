@@ -8,7 +8,7 @@
  *
  * The blog is dark-first: :root holds the dark theme from the design mocks
  * (claude.ai/design project "Blog design chat"). The accent is switchable via
- * <html data-accent="giallo|lime|ambra"> (default giallo); only the primary
+ * <html data-accent="yellow|lime|amber"> (default yellow); only the primary
  * family changes per accent.
  */
 
@@ -76,18 +76,18 @@
   /* LEVEL 2 — derived (accent palettes; see data-accent overrides)      */
   /* ------------------------------------------------------------------ */
 
-  --accent-giallo: oklch(86% 0.16 95);
-  --accent-giallo-hover: oklch(90% 0.14 95);
-  --accent-giallo-active: oklch(93% 0.12 95);
-  --accent-giallo-foreground: oklch(24% 0.04 95);
+  --accent-yellow: oklch(86% 0.16 95);
+  --accent-yellow-hover: oklch(90% 0.14 95);
+  --accent-yellow-active: oklch(93% 0.12 95);
+  --accent-yellow-foreground: oklch(24% 0.04 95);
   --accent-lime: oklch(86% 0.19 130);
   --accent-lime-hover: oklch(90% 0.17 130);
   --accent-lime-active: oklch(93% 0.15 130);
   --accent-lime-foreground: oklch(23% 0.05 130);
-  --accent-ambra: oklch(80% 0.15 70);
-  --accent-ambra-hover: oklch(85% 0.13 70);
-  --accent-ambra-active: oklch(89% 0.11 70);
-  --accent-ambra-foreground: oklch(24% 0.05 70);
+  --accent-amber: oklch(80% 0.15 70);
+  --accent-amber-hover: oklch(85% 0.13 70);
+  --accent-amber-active: oklch(89% 0.11 70);
+  --accent-amber-foreground: oklch(24% 0.05 70);
 
   /* ------------------------------------------------------------------ */
   /* LEVEL 3 — semantic (the only tokens components may consume)         */
@@ -103,11 +103,11 @@
   --color-border: var(--color-neutral-800);
   --color-ring: var(--color-primary);
 
-  /* Brand roles — default accent: giallo */
-  --color-primary: var(--accent-giallo);
-  --color-primary-foreground: var(--accent-giallo-foreground);
-  --color-primary-hover: var(--accent-giallo-hover);
-  --color-primary-active: var(--accent-giallo-active);
+  /* Brand roles — default accent: yellow */
+  --color-primary: var(--accent-yellow);
+  --color-primary-foreground: var(--accent-yellow-foreground);
+  --color-primary-hover: var(--accent-yellow-hover);
+  --color-primary-active: var(--accent-yellow-active);
 
   /* Code blocks */
   --color-code-background: var(--color-neutral-1000);
@@ -157,11 +157,11 @@
   --color-primary-active: var(--accent-lime-active);
 }
 
-[data-accent='ambra'] {
-  --color-primary: var(--accent-ambra);
-  --color-primary-foreground: var(--accent-ambra-foreground);
-  --color-primary-hover: var(--accent-ambra-hover);
-  --color-primary-active: var(--accent-ambra-active);
+[data-accent='amber'] {
+  --color-primary: var(--accent-amber);
+  --color-primary-foreground: var(--accent-amber-foreground);
+  --color-primary-hover: var(--accent-amber-hover);
+  --color-primary-active: var(--accent-amber-active);
 }
 
 /* ---------------------------------------------------------------------- */

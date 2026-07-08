@@ -29,7 +29,7 @@ Every `X` / `X-foreground` pair is picked for WCAG AA contrast.
 
 The blog is **dark-first**: `:root` holds the dark theme from the design mocks
 (claude.ai/design project "Blog design chat"). The **accent is switchable** —
-`<html data-accent="giallo|lime|ambra">` (default giallo) redefines only the
+`<html data-accent="yellow|lime|amber">` (default yellow) redefines only the
 `--color-primary` family, so components need no conditional styles.
 
 ## Typography
