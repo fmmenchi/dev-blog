@@ -73,9 +73,9 @@ jobs:
         # --first-release is required when no v* tag exists yet
         run: |
           if git describe --tags --abbrev=0 --match "v*" >/dev/null 2>&1; then
-            pnpm nx release --skip-publish --yes
+            pnpm nx release --skip-publish
           else
-            pnpm nx release --skip-publish --yes --first-release
+            pnpm nx release --skip-publish --first-release
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
