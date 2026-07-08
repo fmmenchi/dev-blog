@@ -133,12 +133,10 @@
   font-size: 10.5px;
   font-weight: var(--font-weight-semibold);
   margin: 0 0 var(--spacing-stack-s);
-  opacity: 0.8;
 }
 
 .nowLabelAccent {
   color: var(--color-primary);
-  opacity: 1;
 }
 
 .nowText {
