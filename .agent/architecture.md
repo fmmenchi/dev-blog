@@ -60,7 +60,10 @@ static assets). Key pieces:
   redeploy) with `pnpm nx run blog:maintenance:on` / `blog:maintenance:off`
   (single target with Nx configurations, default `off`) or the "Maintenance"
   GitHub Actions workflow. The worker serves a 503 curtain
-  (`app/lib/maintenance.ts`) with Retry-After + noindex.
+  (`app/lib/maintenance.ts`) with Retry-After + noindex. KV writes take
+  ~10–60s to reach every edge: after a toggle, wait and verify with curl
+  before judging it broken. The production flag state is the author's
+  intent — never flip it without being asked.
 - The Cloudflare Vite plugin is skipped during Nx graph creation
   (`NX_GRAPH_CREATION`) and under Vitest — don't remove those guards.
 
