@@ -4,6 +4,7 @@ import { Avatar } from '../components/avatar';
 import { SectionHeading } from '../components/section-heading';
 import { profile } from '../lib/content';
 import { originFromMatches, seoMeta } from '../lib/seo';
+import { SITE_NAME } from '../lib/site';
 import styles from './about.module.css';
 
 export const meta = ({
@@ -16,7 +17,7 @@ export const meta = ({
   seoMeta({
     origin: originFromMatches(matches),
     path: location.pathname,
-    title: 'About — fabio.dev',
+    title: `About — ${SITE_NAME}`,
     description: `${profile.name}, ${profile.role} — ${profile.bioCard}`,
   });
 

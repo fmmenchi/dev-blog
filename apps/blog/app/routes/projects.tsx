@@ -2,6 +2,7 @@ import { Card } from '@dev-blog/ui';
 
 import { projects } from '../lib/content';
 import { originFromMatches, seoMeta } from '../lib/seo';
+import { SITE_NAME } from '../lib/site';
 import styles from './projects.module.css';
 
 export const meta = ({
@@ -14,7 +15,7 @@ export const meta = ({
   seoMeta({
     origin: originFromMatches(matches),
     path: location.pathname,
-    title: 'Projects — fabio.dev',
+    title: `Projects — ${SITE_NAME}`,
     description:
       'Things I build to understand how they work. Almost all open source, almost none finished.',
   });

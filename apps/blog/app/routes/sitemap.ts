@@ -1,9 +1,8 @@
-import type { LoaderFunctionArgs } from 'react-router';
-
 import { getPosts } from '../lib/posts.server';
+import { SITE_URL } from '../lib/site';
 
-export function loader({ request }: LoaderFunctionArgs) {
-  const origin = new URL(request.url).origin;
+export function loader() {
+  const origin = SITE_URL;
   const staticPaths = ['/', '/projects', '/about'];
   const urls = [
     ...staticPaths.map((path) => `  <url><loc>${origin}${path}</loc></url>`),

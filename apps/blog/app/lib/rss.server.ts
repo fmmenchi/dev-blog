@@ -1,4 +1,5 @@
 import type { Post } from './posts.server';
+import { SITE_NAME } from './site';
 
 function escapeXml(value: string): string {
   return value
@@ -25,7 +26,7 @@ export function buildRssFeed(origin: string, posts: Post[]): string {
   return `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>fabio.dev</title>
+    <title>${SITE_NAME}</title>
     <link>${origin}</link>
     <description>Software, systems and the decisions behind the code.</description>
     <language>en</language>

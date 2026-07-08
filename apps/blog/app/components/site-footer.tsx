@@ -4,7 +4,7 @@ export function SiteFooter() {
   return (
     <footer className={styles['footer']}>
       <div className={styles['inner']}>
-        <span>© 2026 fabio.dev · made with too much coffee</span>
+        <span>© 2026 fabiomenchicchi.com · made with too much coffee</span>
         <nav aria-label="Secondary" className={styles['links']}>
           <a href="/rss.xml" className={styles['link']}>
             rss

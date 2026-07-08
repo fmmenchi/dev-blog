@@ -11,6 +11,7 @@ import { profile } from '../lib/content';
 import { renderMarkdown } from '../lib/markdown.server';
 import { getPost, getPosts } from '../lib/posts.server';
 import { originFromMatches, seoMeta } from '../lib/seo';
+import { SITE_NAME } from '../lib/site';
 import styles from './post.module.css';
 
 export function loader({ params }: LoaderFunctionArgs) {
@@ -39,13 +40,13 @@ export const meta = ({
   matches: ({ id: string; loaderData?: unknown } | undefined)[];
   location: { pathname: string };
 }) => {
-  if (!loaderData) return [{ title: 'fabio.dev' }];
+  if (!loaderData) return [{ title: SITE_NAME }];
   const { post } = loaderData;
   return [
     ...seoMeta({
       origin: originFromMatches(matches),
       path: location.pathname,
-      title: `${post.title} — fabio.dev`,
+      title: `${post.title} — ${SITE_NAME}`,
       description: post.excerpt,
       type: 'article',
     }),

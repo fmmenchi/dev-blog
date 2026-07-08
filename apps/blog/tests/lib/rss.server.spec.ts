@@ -2,21 +2,21 @@ import { getPosts } from '../../app/lib/posts.server';
 import { buildRssFeed } from '../../app/lib/rss.server';
 
 describe('buildRssFeed', () => {
-  const feed = buildRssFeed('https://fabio.dev', getPosts());
+  const feed = buildRssFeed('https://fabiomenchicchi.com', getPosts());
 
   it('produces a valid RSS 2.0 envelope', () => {
     expect(feed).toContain('<?xml version="1.0" encoding="UTF-8"?>');
     expect(feed).toContain('<rss version="2.0"');
-    expect(feed).toContain('<title>fabio.dev</title>');
+    expect(feed).toContain('<title>fabiomenchicchi.com</title>');
     expect(feed).toContain(
-      '<atom:link href="https://fabio.dev/rss.xml" rel="self"',
+      '<atom:link href="https://fabiomenchicchi.com/rss.xml" rel="self"',
     );
   });
 
   it('lists every post with absolute permalinks and dates', () => {
     for (const post of getPosts()) {
       expect(feed).toContain(
-        `<link>https://fabio.dev/blog/${post.slug}</link>`,
+        `<link>https://fabiomenchicchi.com/blog/${post.slug}</link>`,
       );
     }
     expect(feed).toContain('<pubDate>Thu, 02 Jul 2026 00:00:00 GMT</pubDate>');

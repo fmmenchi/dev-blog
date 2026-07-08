@@ -4,9 +4,9 @@ import { originFromMatches, seoMeta } from '../../app/lib/seo';
 
 describe('seoMeta', () => {
   const tags = seoMeta({
-    origin: 'https://fabio.dev',
+    origin: 'https://fabiomenchicchi.com',
     path: '/about',
-    title: 'About — fabio.dev',
+    title: 'About — fabiomenchicchi.com',
     description: 'Bio.',
   });
 
@@ -14,11 +14,11 @@ describe('seoMeta', () => {
     expect(tags).toContainEqual({
       tagName: 'link',
       rel: 'canonical',
-      href: 'https://fabio.dev/about',
+      href: 'https://fabiomenchicchi.com/about',
     });
     expect(tags).toContainEqual({
       property: 'og:url',
-      content: 'https://fabio.dev/about',
+      content: 'https://fabiomenchicchi.com/about',
     });
     expect(tags).toContainEqual({ name: 'twitter:card', content: 'summary' });
   });
@@ -36,13 +36,13 @@ describe('seoMeta', () => {
 describe('sitemap.xml', () => {
   it('lists static pages and every post', async () => {
     const res = sitemapLoader({
-      request: new Request('https://fabio.dev/sitemap.xml'),
+      request: new Request('https://fabiomenchicchi.com/sitemap.xml'),
     } as never);
     const xml = await res.text();
-    expect(xml).toContain('<loc>https://fabio.dev/</loc>');
-    expect(xml).toContain('<loc>https://fabio.dev/projects</loc>');
+    expect(xml).toContain('<loc>https://fabiomenchicchi.com/</loc>');
+    expect(xml).toContain('<loc>https://fabiomenchicchi.com/projects</loc>');
     expect(xml).toContain(
-      '<loc>https://fabio.dev/blog/rewrote-my-blog-in-200-lines</loc>',
+      '<loc>https://fabiomenchicchi.com/blog/rewrote-my-blog-in-200-lines</loc>',
     );
     expect(xml).toContain('<lastmod>2026-07-02</lastmod>');
   });
@@ -51,10 +51,10 @@ describe('sitemap.xml', () => {
 describe('robots.txt', () => {
   it('allows crawling and points to the sitemap', async () => {
     const res = robotsLoader({
-      request: new Request('https://fabio.dev/robots.txt'),
+      request: new Request('https://fabiomenchicchi.com/robots.txt'),
     } as never);
     const body = await res.text();
     expect(body).toContain('Allow: /');
-    expect(body).toContain('Sitemap: https://fabio.dev/sitemap.xml');
+    expect(body).toContain('Sitemap: https://fabiomenchicchi.com/sitemap.xml');
   });
 });
