@@ -1,3 +1,14 @@
+## 0.7.0 (2026-07-08)
+
+### 🚀 Features
+
+- **blog:** run on Cloudflare Workers ([9a833b3](https://github.com/fmmenchi/dev-blog/commit/9a833b3))
+
+### ❤️ Thank You
+
+- Claude Fable 5
+- Fabio Menchicchi @fmmenchi
+
 ## 0.6.0 (2026-07-08)
 
 ### 🚀 Features
