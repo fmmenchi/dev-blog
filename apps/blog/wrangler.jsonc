@@ -9,6 +9,8 @@
   },
   "upload_source_maps": true,
   "workers_dev": true,
+  // No public URLs for not-yet-promoted versions.
+  "preview_urls": false,
   "vars": {
     // Flip with `nx run blog:maintenance:on|off` or the Maintenance workflow.
     "MAINTENANCE": "false",
