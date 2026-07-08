@@ -39,6 +39,12 @@ versions and changelogs from them).
 ## Conventions (essentials)
 
 - **Commits**: conventional commits, enforced. Use `pnpm cz` when unsure.
+  One commit per logical change — never batch unrelated changes together.
+- **Branching**: trunk-based. Every change starts on a short-lived semantic
+  branch off `main` (`feat/x`, `fix/y`, `docs/z`, `ci/w`) and merges fast.
+  Never commit directly to `main`; every merge to `main` releases
+  automatically (`nx release` in CI). Run the Definition-of-done gates
+  before every commit.
 - **Styling**: semantic design tokens only — any color/font value in a CSS
   Module must be a `var(--…)` token (Stylelint `declaration-strict-value`
   fails the build otherwise). See [design-system](./.agent/design-system.md).
