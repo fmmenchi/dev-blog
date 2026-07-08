@@ -9,13 +9,31 @@
     "tags": [
       "scope:blog",
       "type:app"
-    ]
+    ],
+    "targets": {
+      "preview": {
+        "command": "vite preview --port 4300",
+        "options": {
+          "cwd": "{projectRoot}"
+        },
+        "dependsOn": [
+          "build"
+        ]
+      },
+      "deploy": {
+        "command": "wrangler deploy",
+        "options": {
+          "cwd": "{projectRoot}"
+        },
+        "dependsOn": [
+          "build"
+        ]
+      }
+    }
   },
   "dependencies": {
     "@dev-blog/theme": "workspace:*",
     "@dev-blog/ui": "workspace:*",
-    "@react-router/node": "^8.1.0",
-    "@react-router/serve": "^8.1.0",
     "isbot": "^4.4.0",
     "marked": "^18.0.5",
     "react": "^19.0.0",
@@ -23,10 +41,12 @@
     "react-router": "^8.1.0"
   },
   "devDependencies": {
+    "@cloudflare/vite-plugin": "^1.43.0",
     "@react-router/dev": "^8.1.0",
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0"
+    "@types/react-dom": "^19.0.0",
+    "wrangler": "^4.107.0"
   },
   "version": "0.6.0"
 }

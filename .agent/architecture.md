@@ -40,6 +40,23 @@ project.
 - `AppLoadContext` no longer exists; `entry.server.tsx` types its params via
   `Parameters<HandleDocumentRequestFunction>`.
 
+## Deployment
+
+The app runs on **Cloudflare Workers** (SSR in workerd, client files as edge
+static assets). Key pieces:
+
+- `apps/blog/workers/app.ts` — worker entry (createRequestHandler).
+- `apps/blog/app/entry.server.tsx` — web streams only
+  (`renderToReadableStream`); never import Node APIs here.
+- `apps/blog/wrangler.jsonc` — worker config (name `fabiomenchicchi-com`);
+  the custom-domain route is commented until the zone exists on the account.
+- `pnpm nx run blog:preview` — runs the real worker locally in miniflare on
+  port 4300 (what the e2e suite drives).
+- `pnpm nx run blog:deploy` — wrangler deploy (CI does this on main; needs
+  CLOUDFLARE_API_TOKEN + CLOUDFLARE_ACCOUNT_ID secrets).
+- The Cloudflare Vite plugin is skipped during Nx graph creation
+  (`NX_GRAPH_CREATION`) and under Vitest — don't remove those guards.
+
 ## CI & release
 
 - `.github/workflows/ci.yml` (pnpm + Nx Cloud) runs format check, then

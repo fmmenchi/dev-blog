@@ -12,7 +12,9 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
   webServer: {
-    command: 'PORT=4300 pnpm exec nx run blog:start',
+    // vite preview runs the worker in miniflare (workerd) — the same runtime
+    // as the Cloudflare deployment.
+    command: 'pnpm exec nx run blog:preview',
     url: baseURL,
     reuseExistingServer: !process.env['CI'],
     cwd: workspaceRoot,

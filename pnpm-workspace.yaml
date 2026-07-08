@@ -6,3 +6,5 @@ allowBuilds:
   '@swc/core': true
   esbuild: false
   '@parcel/watcher': false
+  sharp: false
+  workerd: true
