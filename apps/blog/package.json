@@ -28,6 +28,24 @@
         "dependsOn": [
           "build"
         ]
+      },
+      "maintenance-on": {
+        "command": "wrangler deploy --var MAINTENANCE:true",
+        "options": {
+          "cwd": "{projectRoot}"
+        },
+        "dependsOn": [
+          "build"
+        ]
+      },
+      "maintenance-off": {
+        "command": "wrangler deploy",
+        "options": {
+          "cwd": "{projectRoot}"
+        },
+        "dependsOn": [
+          "build"
+        ]
       }
     }
   },

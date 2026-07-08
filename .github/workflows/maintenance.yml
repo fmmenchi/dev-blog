@@ -1,0 +1,38 @@
+name: Maintenance
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Maintenance curtain'
+        required: true
+        type: choice
+        options:
+          - 'on'
+          - 'off'
+
+jobs:
+  toggle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: 'pnpm'
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Toggle maintenance mode
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "CLOUDFLARE_API_TOKEN secret not set — cannot toggle." >&2
+            exit 1
+          fi
+          pnpm nx run blog:maintenance-${{ inputs.mode }}
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
