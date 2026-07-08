@@ -10,6 +10,7 @@ import { SectionHeading } from '../components/section-heading';
 import { profile } from '../lib/content';
 import { renderMarkdown } from '../lib/markdown.server';
 import { getPost, getPosts } from '../lib/posts.server';
+import { originFromMatches, seoMeta } from '../lib/seo';
 import styles from './post.module.css';
 
 export function loader({ params }: LoaderFunctionArgs) {
@@ -29,10 +30,38 @@ export function loader({ params }: LoaderFunctionArgs) {
   };
 }
 
-export const meta = ({ data }: { data?: ReturnType<typeof loader> }) => [
-  { title: data ? `${data.post.title} — fabio.dev` : 'fabio.dev' },
-  { name: 'description', content: data?.post.excerpt ?? '' },
-];
+export const meta = ({
+  loaderData,
+  matches,
+  location,
+}: {
+  loaderData?: ReturnType<typeof loader>;
+  matches: ({ id: string; loaderData?: unknown } | undefined)[];
+  location: { pathname: string };
+}) => {
+  if (!loaderData) return [{ title: 'fabio.dev' }];
+  const { post } = loaderData;
+  return [
+    ...seoMeta({
+      origin: originFromMatches(matches),
+      path: location.pathname,
+      title: `${post.title} — fabio.dev`,
+      description: post.excerpt,
+      type: 'article',
+    }),
+    { property: 'article:published_time', content: post.date },
+    {
+      'script:ld+json': {
+        '@context': 'https://schema.org',
+        '@type': 'BlogPosting',
+        headline: post.title,
+        description: post.excerpt,
+        datePublished: post.date,
+        author: { '@type': 'Person', name: profile.name },
+      },
+    },
+  ];
+};
 
 export default function Post() {
   const { post, html, toc, prev, next } = useLoaderData<typeof loader>();

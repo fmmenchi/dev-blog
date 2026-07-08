@@ -1,17 +1,23 @@
 import { Card } from '@dev-blog/ui';
-import type { MetaFunction } from 'react-router';
 
 import { projects } from '../lib/content';
+import { originFromMatches, seoMeta } from '../lib/seo';
 import styles from './projects.module.css';
 
-export const meta: MetaFunction = () => [
-  { title: 'Projects — fabio.dev' },
-  {
-    name: 'description',
-    content:
+export const meta = ({
+  matches,
+  location,
+}: {
+  matches: ({ id: string; loaderData?: unknown } | undefined)[];
+  location: { pathname: string };
+}) =>
+  seoMeta({
+    origin: originFromMatches(matches),
+    path: location.pathname,
+    title: 'Projects — fabio.dev',
+    description:
       'Things I build to understand how they work. Almost all open source, almost none finished.',
-  },
-];
+  });
 
 const LANGUAGE_COLOR: Record<string, string> = {
   Rust: 'oklch(60% 0.16 40)',

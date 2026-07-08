@@ -1,18 +1,24 @@
 import { Button, Card } from '@dev-blog/ui';
-import type { MetaFunction } from 'react-router';
 
 import { Avatar } from '../components/avatar';
 import { SectionHeading } from '../components/section-heading';
 import { profile } from '../lib/content';
+import { originFromMatches, seoMeta } from '../lib/seo';
 import styles from './about.module.css';
 
-export const meta: MetaFunction = () => [
-  { title: 'About — fabio.dev' },
-  {
-    name: 'description',
-    content: `${profile.name}, ${profile.role} — ${profile.bioCard}`,
-  },
-];
+export const meta = ({
+  matches,
+  location,
+}: {
+  matches: ({ id: string; loaderData?: unknown } | undefined)[];
+  location: { pathname: string };
+}) =>
+  seoMeta({
+    origin: originFromMatches(matches),
+    path: location.pathname,
+    title: 'About — fabio.dev',
+    description: `${profile.name}, ${profile.role} — ${profile.bioCard}`,
+  });
 
 export default function About() {
   return (
