@@ -68,4 +68,9 @@ static assets). Key pieces:
 - `.github/workflows/ci.yml` (pnpm + Nx Cloud) runs format check, then
   `lint test build typecheck e2e`. `lint-css` runs Stylelint per lib.
 - `nx release` versions from conventional commits (fixed versioning, `v{x}`
-  tags, GitHub release changelog) — never hand-edit versions.
+  tags, GitHub release changelog) — never hand-edit versions. Releases are
+  **tag-only**: no release commits and no CHANGELOG.md land on main (the
+  branch is protected — required green `main` check — and the bot cannot
+  bypass it); the changelog lives in the GitHub Releases. The current
+  version is always resolved from the latest `v*` tag, so the `version`
+  fields in package.json files are historical, not authoritative.

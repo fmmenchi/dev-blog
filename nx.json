@@ -77,6 +77,12 @@
     "releaseTag": {
       "pattern": "v{version}"
     },
+    "git": {
+      "commit": false,
+      "stageChanges": false,
+      "tag": true,
+      "push": true
+    },
     "version": {
       "conventionalCommits": true,
       "adjustSemverBumpsForZeroMajorVersion": false
@@ -84,7 +90,8 @@
     "changelog": {
       "projectChangelogs": false,
       "workspaceChangelog": {
-        "createRelease": "github"
+        "createRelease": "github",
+        "file": false
       }
     },
     "projects": ["*"]
