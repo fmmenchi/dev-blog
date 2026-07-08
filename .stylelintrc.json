@@ -1,0 +1,18 @@
+{
+  "extends": ["stylelint-config-recommended"],
+  "plugins": ["stylelint-declaration-strict-value"],
+  "rules": {
+    "scale-unlimited/declaration-strict-value": [
+      ["/color$/", "fill", "stroke"],
+      {
+        "ignoreValues": [
+          "currentColor",
+          "inherit",
+          "transparent",
+          "initial",
+          "unset"
+        ]
+      }
+    ]
+  }
+}
