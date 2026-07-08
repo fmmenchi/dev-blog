@@ -1,7 +1,7 @@
 /**
  * Maintenance mode: when the worker's MAINTENANCE var is "true", every page
  * answers 503 with a styled curtain. Toggle without touching code:
- *   pnpm nx run blog:maintenance-on   /   blog:maintenance-off
+ *   pnpm nx run blog:maintenance:on   /   blog:maintenance:off
  * or the "Maintenance" GitHub Actions workflow.
  */
 

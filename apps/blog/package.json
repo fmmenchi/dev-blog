@@ -29,20 +29,18 @@
           "build"
         ]
       },
-      "maintenance-on": {
-        "command": "wrangler deploy --var MAINTENANCE:true",
-        "options": {
-          "cwd": "{projectRoot}"
-        },
-        "dependsOn": [
-          "build"
-        ]
-      },
-      "maintenance-off": {
+      "maintenance": {
         "command": "wrangler deploy",
         "options": {
           "cwd": "{projectRoot}"
         },
+        "configurations": {
+          "on": {
+            "command": "wrangler deploy --var MAINTENANCE:true"
+          },
+          "off": {}
+        },
+        "defaultConfiguration": "off",
         "dependsOn": [
           "build"
         ]
