@@ -9,6 +9,7 @@
 .prose h3 {
   font-weight: var(--typography-heading-weight);
   line-height: var(--typography-heading-leading);
+  letter-spacing: var(--typography-heading-tracking);
   margin-block: var(--spacing-stack-l) var(--spacing-stack-m);
 }
 
@@ -42,8 +43,8 @@
 .prose code {
   font-family: var(--font-mono);
   font-size: var(--typography-small-size);
-  background-color: var(--color-code-background);
-  color: var(--color-code-foreground);
+  background-color: var(--color-muted);
+  border: 1px solid var(--color-border);
   padding: calc(var(--space-1) / 2) var(--space-1);
   border-radius: var(--radius-sm);
 }
@@ -51,13 +52,15 @@
 .prose pre {
   background-color: var(--color-code-background);
   color: var(--color-code-foreground);
-  padding: var(--spacing-inset-m);
-  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  padding: var(--spacing-inset-m) var(--spacing-inset-l);
+  border-radius: var(--radius-lg);
   overflow-x: auto;
 }
 
 .prose pre code {
   padding: 0;
+  border: none;
   background-color: transparent;
 }
 
