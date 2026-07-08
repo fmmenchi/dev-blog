@@ -45,6 +45,9 @@ versions and changelogs from them).
   Never commit directly to `main`; every merge to `main` releases
   automatically (`nx release` in CI). Run the Definition-of-done gates
   before every commit.
+- **Merging**: always a **merge commit** (`gh pr merge --merge`), never
+  squash or rebase — the branch's individual conventional commits must land
+  on `main` because `nx release` derives versions and changelog from them.
 - **Styling**: semantic design tokens only — any color/font value in a CSS
   Module must be a `var(--…)` token (Stylelint `declaration-strict-value`
   fails the build otherwise). See [design-system](./.agent/design-system.md).
