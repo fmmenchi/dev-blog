@@ -43,7 +43,6 @@ jobs:
 
   # Trunk-based release: every green push to main versions from conventional
   # commits, tags, updates the changelog and creates the GitHub release.
-  # The very first release ever needs `--first-release` appended once.
   release:
     runs-on: ubuntu-latest
     needs: main
@@ -70,6 +69,13 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - run: pnpm nx release --skip-publish --yes
+      - name: Release
+        # --first-release is required when no v* tag exists yet
+        run: |
+          if git describe --tags --abbrev=0 --match "v*" >/dev/null 2>&1; then
+            pnpm nx release --skip-publish --yes
+          else
+            pnpm nx release --skip-publish --yes --first-release
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
