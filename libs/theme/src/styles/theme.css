@@ -17,17 +17,16 @@
   /* LEVEL 1 — primitives                                                */
   /* ------------------------------------------------------------------ */
 
-  /* Neutral ramp — cool dark slate (hue 256) */
-  --color-neutral-50: oklch(93% 0.01 256);
-  --color-neutral-100: oklch(88% 0.01 256);
-  --color-neutral-300: oklch(72% 0.015 256);
-  --color-neutral-400: oklch(65% 0.015 256);
-  --color-neutral-500: oklch(55% 0.02 256);
-  --color-neutral-700: oklch(32% 0.02 256);
-  --color-neutral-800: oklch(27% 0.02 256);
-  --color-neutral-850: oklch(24% 0.02 256);
-  --color-neutral-900: oklch(21% 0.02 256);
-  --color-neutral-950: oklch(17% 0.015 256);
+  /* Neutral ramp — cool dark slate (hue 256), from the andes-routes palette */
+  --color-neutral-50: oklch(96.5% 0.006 256);
+  --color-neutral-100: oklch(95% 0.007 256);
+  --color-neutral-400: oklch(74% 0.014 256);
+  --color-neutral-700: oklch(38% 0.02 256);
+  --color-neutral-800: oklch(31% 0.02 256);
+  --color-neutral-850: oklch(26% 0.02 256);
+  --color-neutral-900: oklch(24% 0.02 256);
+  --color-neutral-950: oklch(21% 0.02 256);
+  --color-neutral-1000: oklch(17% 0.015 256);
 
   /* Spacing scale (raw) */
   --space-1: 0.25rem;
@@ -95,13 +94,13 @@
   /* ------------------------------------------------------------------ */
 
   /* Surfaces */
-  --color-background: var(--color-neutral-900);
-  --color-foreground: var(--color-neutral-50);
+  --color-background: var(--color-neutral-950);
+  --color-foreground: var(--color-neutral-100);
   --color-card: var(--color-neutral-850);
-  --color-card-foreground: var(--color-neutral-50);
-  --color-muted: var(--color-neutral-800);
+  --color-card-foreground: var(--color-neutral-100);
+  --color-muted: var(--color-neutral-850);
   --color-muted-foreground: var(--color-neutral-400);
-  --color-border: var(--color-neutral-700);
+  --color-border: var(--color-neutral-800);
   --color-ring: var(--color-primary);
 
   /* Brand roles — default accent: giallo */
@@ -111,7 +110,7 @@
   --color-primary-active: var(--accent-giallo-active);
 
   /* Code blocks */
-  --color-code-background: var(--color-neutral-950);
+  --color-code-background: var(--color-neutral-1000);
   --color-code-foreground: var(--color-neutral-100);
 
   /* Typography roles */
