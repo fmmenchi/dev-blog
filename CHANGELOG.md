@@ -1,3 +1,14 @@
+## 0.0.8 (2026-07-08)
+
+### 🩹 Fixes
+
+- **release:** keep standard semver bumps below 1.0.0 ([c494e6b](https://github.com/fmmenchi/dev-blog/commit/c494e6b))
+
+### ❤️ Thank You
+
+- Claude Fable 5
+- Fabio Menchicchi @fmmenchi
+
 ## 0.0.7 (2026-07-08)
 
 ### 🚀 Features
