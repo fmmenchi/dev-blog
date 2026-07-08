@@ -1,10 +1,10 @@
 import { createRequestHandler } from 'react-router';
 
-import { isMaintenance, maintenanceResponse } from '../app/lib/maintenance';
-
-interface Env {
-  MAINTENANCE?: string;
-}
+import {
+  isMaintenance,
+  maintenanceResponse,
+  type MaintenanceEnv,
+} from '../app/lib/maintenance';
 
 const requestHandler = createRequestHandler(
   () => import('virtual:react-router/server-build'),
@@ -12,10 +12,10 @@ const requestHandler = createRequestHandler(
 );
 
 export default {
-  fetch(request, env) {
-    if (isMaintenance(env)) {
+  async fetch(request, env) {
+    if (await isMaintenance(env)) {
       return maintenanceResponse();
     }
     return requestHandler(request);
   },
-} satisfies ExportedHandler<Env>;
+} satisfies ExportedHandler<MaintenanceEnv>;

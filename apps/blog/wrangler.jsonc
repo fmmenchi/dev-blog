@@ -11,10 +11,15 @@
   "workers_dev": true,
   // No public URLs for not-yet-promoted versions.
   "preview_urls": false,
-  "vars": {
-    // Flip with `nx run blog:maintenance:on|off` or the Maintenance workflow.
-    "MAINTENANCE": "false",
-  },
+  // Maintenance flag lives in KV so deploys can never flip it. Toggle with
+  // `nx run blog:maintenance:on|off` or the Maintenance workflow — instant,
+  // no redeploy.
+  "kv_namespaces": [
+    {
+      "binding": "MAINTENANCE_KV",
+      "id": "f5cee6f254b64e72b9b8c8649b113312",
+    },
+  ],
   // custom_domain also creates the DNS record on the zone automatically.
   "routes": [{ "pattern": "fabiomenchicchi.com", "custom_domain": true }],
 }
