@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react';
 
 import styles from './accent-switcher.module.css';
 
-const ACCENTS = ['giallo', 'lime', 'ambra'] as const;
+const ACCENTS = ['yellow', 'lime', 'amber'] as const;
 type Accent = (typeof ACCENTS)[number];
 
 const SWATCH: Record<Accent, string> = {
-  giallo: 'var(--accent-giallo)',
+  yellow: 'var(--accent-yellow)',
   lime: 'var(--accent-lime)',
-  ambra: 'var(--accent-ambra)',
+  amber: 'var(--accent-amber)',
 };
 
 const STORAGE_KEY = 'fabio-accent';
@@ -17,9 +17,9 @@ function isAccent(value: string | null): value is Accent {
   return ACCENTS.includes(value as Accent);
 }
 
-/** Cycles the site accent (giallo → lime → ambra), persisted per visitor. */
+/** Cycles the site accent (yellow → lime → amber), persisted per visitor. */
 export function AccentSwitcher() {
-  const [accent, setAccent] = useState<Accent>('giallo');
+  const [accent, setAccent] = useState<Accent>('yellow');
 
   useEffect(() => {
     const saved = window.localStorage.getItem(STORAGE_KEY);
