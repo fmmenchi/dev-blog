@@ -1,3 +1,15 @@
+## 0.0.6 (2026-07-08)
+
+### 🚀 Features
+
+- **blog:** build the article page from the design mock ([cf39dd3](https://github.com/fmmenchi/dev-blog/commit/cf39dd3))
+- **blog:** build the progetti page from the design mock ([b906e86](https://github.com/fmmenchi/dev-blog/commit/b906e86))
+
+### ❤️ Thank You
+
+- Claude Fable 5
+- Fabio Menchicchi @fmmenchi
+
 ## 0.0.5 (2026-07-08)
 
 ### 🚀 Features
