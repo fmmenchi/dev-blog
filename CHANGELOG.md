@@ -1,3 +1,14 @@
+## 0.3.0 (2026-07-08)
+
+### 🚀 Features
+
+- **blog:** add SEO infrastructure ([bf4c498](https://github.com/fmmenchi/dev-blog/commit/bf4c498))
+
+### ❤️ Thank You
+
+- Claude Fable 5
+- Fabio Menchicchi @fmmenchi
+
 ## 0.2.0 (2026-07-08)
 
 ### 🚀 Features
