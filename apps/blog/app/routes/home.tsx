@@ -1,5 +1,5 @@
-import { Badge, Button, Card } from '@dev-blog/ui';
-import { Link as RouterLink, useLoaderData } from 'react-router';
+import { Badge, Button, Card, Link } from '@dev-blog/ui';
+import { useLoaderData } from 'react-router';
 
 import { Avatar } from '../components/avatar';
 import { SectionHeading } from '../components/section-heading';
@@ -68,14 +68,15 @@ export default function Home() {
           </div>
 
           <nav aria-label="Social" className={styles['social']}>
-            <a href="https://github.com/fmmenchi">
+            <Link href="https://github.com/fmmenchi" variant="plain">
               github
-              <span className="sr-only"> (opens in a new tab)</span>
-            </a>
-            <a href="https://x.com/fmmenchi">
-              x<span className="sr-only"> (opens in a new tab)</span>
-            </a>
-            <a href="mailto:f.menchicchi@gmail.com">mail</a>
+            </Link>
+            <Link href="https://x.com/fmmenchi" variant="plain">
+              x
+            </Link>
+            <Link href="mailto:f.menchicchi@gmail.com" variant="plain">
+              mail
+            </Link>
           </nav>
         </aside>
 
@@ -84,8 +85,9 @@ export default function Home() {
             articles
           </SectionHeading>
 
-          <RouterLink
+          <Link
             to={`/blog/${featured.slug}`}
+            variant="plain"
             className={styles['cardLink']}
           >
             <Card as="article" interactive className={styles['featured']}>
@@ -105,12 +107,13 @@ export default function Home() {
                 ))}
               </div>
             </Card>
-          </RouterLink>
+          </Link>
 
           {rest.map((post) => (
-            <RouterLink
+            <Link
               key={post.slug}
               to={`/blog/${post.slug}`}
+              variant="plain"
               className={styles['cardLink']}
             >
               <Card as="article" interactive className={styles['compact']}>
@@ -122,12 +125,12 @@ export default function Home() {
                   {compactDate(post.date)} · {post.minutes} min
                 </span>
               </Card>
-            </RouterLink>
+            </Link>
           ))}
 
-          <RouterLink to="/" className={styles['all']}>
+          <Link to="/" variant="plain" className={styles['all']}>
             → all articles
-          </RouterLink>
+          </Link>
         </section>
       </div>
     </main>

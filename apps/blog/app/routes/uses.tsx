@@ -1,3 +1,5 @@
+import { Link } from '@dev-blog/ui';
+
 import { SectionHeading } from '../components/section-heading';
 import { originFromMatches, seoMeta } from '../lib/seo';
 import { SITE_NAME } from '../lib/site';
@@ -41,11 +43,7 @@ export default function Uses() {
       <h1 className={styles['title']}>Uses</h1>
       <p className={styles['intro']}>
         The tools I actually work with, updated occasionally. Inspired by{' '}
-        <a href="https://uses.tech">
-          uses.tech
-          <span className="sr-only"> (opens in a new tab)</span>
-        </a>
-        .
+        <Link href="https://uses.tech">uses.tech</Link>.
       </p>
 
       <section className={styles['section']} aria-label="Editor and terminal">
