@@ -1,3 +1,14 @@
+## 0.8.0 (2026-07-08)
+
+### 🚀 Features
+
+- **blog:** add switchable maintenance mode ([89beca1](https://github.com/fmmenchi/dev-blog/commit/89beca1))
+
+### ❤️ Thank You
+
+- Claude Fable 5
+- Fabio Menchicchi @fmmenchi
+
 ## 0.7.0 (2026-07-08)
 
 ### 🚀 Features

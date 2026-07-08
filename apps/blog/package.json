@@ -66,5 +66,5 @@
     "@types/react-dom": "^19.0.0",
     "wrangler": "^4.107.0"
   },
-  "version": "0.7.0"
+  "version": "0.8.0"
 }
