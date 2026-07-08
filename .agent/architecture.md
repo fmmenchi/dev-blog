@@ -54,11 +54,12 @@ static assets). Key pieces:
   port 4300 (what the e2e suite drives).
 - `pnpm nx run blog:deploy` — wrangler deploy (CI does this on main; needs
   CLOUDFLARE_API_TOKEN + CLOUDFLARE_ACCOUNT_ID secrets).
-- **Maintenance mode**: `pnpm nx run blog:maintenance-on|off` (or the
-  "Maintenance" GitHub Actions workflow) redeploys with the MAINTENANCE var
-  flipped; the worker then serves a 503 curtain (`app/lib/maintenance.ts`)
-  with Retry-After + noindex. A normal deploy always comes back with the
-  curtain off.
+- **Maintenance mode**: `pnpm nx run blog:maintenance:on` /
+  `blog:maintenance:off` (a single `maintenance` target with Nx
+  configurations; default `off`) or the "Maintenance" GitHub Actions
+  workflow; both redeploy with the MAINTENANCE var flipped and the worker
+  serves a 503 curtain (`app/lib/maintenance.ts`) with Retry-After +
+  noindex. A normal deploy always comes back with the curtain off.
 - The Cloudflare Vite plugin is skipped during Nx graph creation
   (`NX_GRAPH_CREATION`) and under Vitest — don't remove those guards.
 
