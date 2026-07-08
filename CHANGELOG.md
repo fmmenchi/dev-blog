@@ -1,3 +1,14 @@
+## 0.0.5 (2026-07-08)
+
+### 🚀 Features
+
+- **blog:** build the home page from the design mock ([52b1231](https://github.com/fmmenchi/dev-blog/commit/52b1231))
+
+### ❤️ Thank You
+
+- Claude Fable 5
+- Fabio Menchicchi @fmmenchi
+
 ## 0.0.4 (2026-07-08)
 
 ### 🚀 Features
