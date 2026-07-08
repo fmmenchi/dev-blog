@@ -6,6 +6,8 @@ const PAGES = [
   '/blog/rewrote-my-blog-in-200-lines',
   '/projects',
   '/about',
+  '/colophon',
+  '/uses',
 ];
 
 for (const path of PAGES) {

@@ -8,4 +8,6 @@ export default [
   route('blog/:slug', './routes/post.tsx'),
   route('projects', './routes/projects.tsx'),
   route('about', './routes/about.tsx'),
+  route('colophon', './routes/colophon.tsx'),
+  route('uses', './routes/uses.tsx'),
 ] satisfies RouteConfig;
