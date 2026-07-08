@@ -1,3 +1,18 @@
+## 0.5.0 (2026-07-08)
+
+### 🚀 Features
+
+- **blog-e2e:** add playwright e2e project ([2d23648](https://github.com/fmmenchi/dev-blog/commit/2d23648))
+
+### 🩹 Fixes
+
+- **blog:** resolve axe violations on the home card ([6620b45](https://github.com/fmmenchi/dev-blog/commit/6620b45))
+
+### ❤️ Thank You
+
+- Claude Fable 5
+- Fabio Menchicchi @fmmenchi
+
 ## 0.4.1 (2026-07-08)
 
 ### 🩹 Fixes
