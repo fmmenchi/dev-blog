@@ -1,3 +1,15 @@
+## 0.0.3 (2026-07-08)
+
+### 🚀 Features
+
+- **theme:** adopt blog identity from design mocks ([f3937c0](https://github.com/fmmenchi/dev-blog/commit/f3937c0))
+- **ui:** align components with the design mocks ([68d56b9](https://github.com/fmmenchi/dev-blog/commit/68d56b9))
+
+### ❤️ Thank You
+
+- Claude Fable 5
+- Fabio Menchicchi @fmmenchi
+
 ## 0.0.2 (2026-07-08)
 
 ### 🚀 Features
