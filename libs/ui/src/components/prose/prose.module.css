@@ -1,0 +1,75 @@
+.prose {
+  font-size: var(--typography-body-size);
+  line-height: var(--typography-body-leading);
+  color: var(--color-foreground);
+}
+
+.prose h1,
+.prose h2,
+.prose h3 {
+  font-weight: var(--typography-heading-weight);
+  line-height: var(--typography-heading-leading);
+  margin-block: var(--spacing-stack-l) var(--spacing-stack-m);
+}
+
+.prose h1 {
+  font-size: var(--typography-h1-size);
+}
+
+.prose h2 {
+  font-size: var(--typography-h2-size);
+}
+
+.prose h3 {
+  font-size: var(--typography-h3-size);
+}
+
+.prose p,
+.prose ul,
+.prose ol {
+  margin-block: var(--spacing-stack-m);
+}
+
+.prose a {
+  color: var(--color-primary);
+  text-underline-offset: 0.25em;
+}
+
+.prose a:hover {
+  color: var(--color-primary-hover);
+}
+
+.prose code {
+  font-family: var(--font-mono);
+  font-size: var(--typography-small-size);
+  background-color: var(--color-code-background);
+  color: var(--color-code-foreground);
+  padding: calc(var(--space-1) / 2) var(--space-1);
+  border-radius: var(--radius-sm);
+}
+
+.prose pre {
+  background-color: var(--color-code-background);
+  color: var(--color-code-foreground);
+  padding: var(--spacing-inset-m);
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+}
+
+.prose pre code {
+  padding: 0;
+  background-color: transparent;
+}
+
+.prose blockquote {
+  margin-inline: 0;
+  padding-inline-start: var(--spacing-inset-m);
+  border-inline-start: 3px solid var(--color-border);
+  color: var(--color-muted-foreground);
+}
+
+.prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-md);
+}
