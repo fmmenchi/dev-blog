@@ -2,14 +2,14 @@ import { Card } from '@dev-blog/ui';
 import type { MetaFunction } from 'react-router';
 
 import { projects } from '../lib/content';
-import styles from './progetti.module.css';
+import styles from './projects.module.css';
 
 export const meta: MetaFunction = () => [
-  { title: 'Progetti — fabio.dev' },
+  { title: 'Projects — fabio.dev' },
   {
     name: 'description',
     content:
-      'Cose che costruisco per capire come funzionano. Quasi tutto open source, quasi niente finito.',
+      'Things I build to understand how they work. Almost all open source, almost none finished.',
   },
 ];
 
@@ -20,16 +20,16 @@ const LANGUAGE_COLOR: Record<string, string> = {
   Lua: 'oklch(75% 0.12 145)',
 };
 
-export default function Progetti() {
+export default function Projects() {
   return (
     <main className={styles['page']}>
-      <h1 className={styles['title']}>Progetti</h1>
+      <h1 className={styles['title']}>Projects</h1>
       <p className={styles['intro']}>
-        Cose che costruisco per capire come funzionano. Quasi tutto open source,
-        quasi niente finito.
+        Things I build to understand how they work. Almost all open source,
+        almost none finished.
       </p>
 
-      <ul className={styles['grid']} aria-label="Progetti">
+      <ul className={styles['grid']} aria-label="Projects">
         {projects.map((project) => (
           <li key={project.name}>
             <a href={project.url} className={styles['cardLink']}>

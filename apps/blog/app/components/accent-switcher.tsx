@@ -46,8 +46,8 @@ export function AccentSwitcher() {
       type="button"
       className={styles['switcher']}
       onClick={cycle}
-      title="cambia accento"
-      aria-label={`Cambia colore accento in ${next}`}
+      title="switch accent"
+      aria-label={`Change accent color to ${next}`}
     >
       <span
         aria-hidden="true"

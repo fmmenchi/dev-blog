@@ -5,21 +5,21 @@ import styles from './site-header.module.css';
 
 const NAV = [
   { to: '/', label: '/blog' },
-  { to: '/progetti', label: '/progetti' },
+  { to: '/projects', label: '/projects' },
   { to: '/about', label: '/about' },
 ] as const;
 
 export function SiteHeader() {
   return (
     <header className={styles['header']}>
-      <a href="#contenuto" className={styles['skip']}>
-        Salta al contenuto
+      <a href="#content" className={styles['skip']}>
+        Skip to content
       </a>
       <div className={styles['inner']}>
         <RouterLink to="/" className={styles['logo']}>
           fabio<span className={styles['logoAccent']}>.dev</span>
         </RouterLink>
-        <nav aria-label="Principale" className={styles['nav']}>
+        <nav aria-label="Main" className={styles['nav']}>
           {NAV.map(({ to, label }) => (
             <NavLink
               key={to}

@@ -13,7 +13,7 @@ describe('About', () => {
     renderPage();
     expect(screen.getByRole('main')).toBeTruthy();
     expect(
-      screen.getByRole('heading', { level: 1, name: /Ciao, sono Fabio/ }),
+      screen.getByRole('heading', { level: 1, name: /Hi, I'm Fabio/ }),
     ).toBeTruthy();
   });
 
@@ -23,14 +23,14 @@ describe('About', () => {
     expect(nav).toBeTruthy();
     expect(
       screen.getByRole('link', {
-        name: /github.*si apre in una nuova scheda/,
+        name: /github.*opens in a new tab/,
       }),
     ).toBeTruthy();
   });
 
   it('shows the now section', () => {
     renderPage();
-    expect(screen.getByText('$ IN BUILD')).toBeTruthy();
-    expect(screen.getByText('$ IN LETTURA')).toBeTruthy();
+    expect(screen.getByText('$ NOW BUILDING')).toBeTruthy();
+    expect(screen.getByText('$ NOW READING')).toBeTruthy();
   });
 });

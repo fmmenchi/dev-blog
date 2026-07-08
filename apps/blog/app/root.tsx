@@ -15,11 +15,11 @@ import { SiteHeader } from './components/site-header';
 import styles from './root.module.css';
 
 export const meta: MetaFunction = () => [
-  { title: 'fabio.dev — software, sistemi e decisioni' },
+  { title: 'fabio.dev — software, systems and decisions' },
   {
     name: 'description',
     content:
-      'Niente hype, niente thread-boy. Post-mortem onesti, architettura, TypeScript e developer experience.',
+      'No hype, no thread-boy takes. Honest post-mortems, architecture, TypeScript and developer experience.',
   },
 ];
 
@@ -39,7 +39,7 @@ export const links: LinksFunction = () => [
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="it" data-accent="giallo">
+    <html lang="en" data-accent="giallo">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -49,7 +49,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body>
         <div className={styles['shell']}>
           <SiteHeader />
-          <div id="contenuto" className={styles['content']}>
+          <div id="content" className={styles['content']}>
             {children}
           </div>
           <SiteFooter />

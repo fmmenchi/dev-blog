@@ -30,11 +30,11 @@ describe('posts', () => {
   });
 
   it('exposes the featured post with parsed frontmatter', () => {
-    const post = getPost('blog-in-200-righe');
-    expect(post?.title).toBe('Ho riscritto il mio blog in 200 righe');
+    const post = getPost('rewrote-my-blog-in-200-lines');
+    expect(post?.title).toBe('I rewrote my blog in 200 lines');
     expect(post?.minutes).toBe(6);
-    expect(post?.tags).toEqual(['web', 'minimalismo']);
+    expect(post?.tags).toEqual(['web', 'minimalism']);
     expect(post?.featured).toBe(true);
-    expect(post?.body).toContain('## Il problema');
+    expect(post?.body).toContain('## The problem');
   });
 });

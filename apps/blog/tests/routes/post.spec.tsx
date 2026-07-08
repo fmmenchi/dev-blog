@@ -12,38 +12,38 @@ function renderPost(slug: string) {
 
 describe('Post', () => {
   it('renders the article with title and numbered sections', async () => {
-    renderPost('blog-in-200-righe');
+    renderPost('rewrote-my-blog-in-200-lines');
     expect(
       await screen.findByRole('heading', {
         level: 1,
-        name: 'Ho riscritto il mio blog in 200 righe',
+        name: 'I rewrote my blog in 200 lines',
       }),
     ).toBeTruthy();
     expect(
-      screen.getByRole('heading', { level: 2, name: /Il problema/ }),
+      screen.getByRole('heading', { level: 2, name: /The problem/ }),
     ).toBeTruthy();
   });
 
   it('exposes a table of contents linking to the sections', async () => {
-    renderPost('blog-in-200-righe');
+    renderPost('rewrote-my-blog-in-200-lines');
     const toc = await screen.findByRole('navigation', {
-      name: 'In questa pagina',
+      name: 'On this page',
     });
     expect(toc).toBeTruthy();
-    const first = screen.getByRole('link', { name: /01 · Il problema/ });
-    expect(first.getAttribute('href')).toBe('#il-problema');
+    const first = screen.getByRole('link', { name: /01 · The problem/ });
+    expect(first.getAttribute('href')).toBe('#the-problem');
     expect(
       screen
-        .getByRole('heading', { level: 2, name: /Il problema/ })
+        .getByRole('heading', { level: 2, name: /The problem/ })
         .getAttribute('id'),
-    ).toBe('il-problema');
+    ).toBe('the-problem');
   });
 
   it('links the neighbouring articles', async () => {
-    renderPost('blog-in-200-righe');
-    await screen.findByRole('navigation', { name: 'Altri articoli' });
+    renderPost('rewrote-my-blog-in-200-lines');
+    await screen.findByRole('navigation', { name: 'More articles' });
     expect(
-      screen.getByRole('link', { name: /precedente/ }).getAttribute('href'),
-    ).toBe('/blog/addio-microservizi');
+      screen.getByRole('link', { name: /previous/ }).getAttribute('href'),
+    ).toBe('/blog/why-i-left-microservices');
   });
 });
