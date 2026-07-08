@@ -1,3 +1,14 @@
+## 0.4.0 (2026-07-08)
+
+### 🚀 Features
+
+- **blog:** adopt fabiomenchicchi.com as canonical domain ([6090704](https://github.com/fmmenchi/dev-blog/commit/6090704))
+
+### ❤️ Thank You
+
+- Claude Fable 5
+- Fabio Menchicchi @fmmenchi
+
 ## 0.3.0 (2026-07-08)
 
 ### 🚀 Features
