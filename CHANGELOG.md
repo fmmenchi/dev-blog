@@ -1,3 +1,14 @@
+## 0.6.0 (2026-07-08)
+
+### 🚀 Features
+
+- **blog:** add colophon and uses pages ([0e6d6ed](https://github.com/fmmenchi/dev-blog/commit/0e6d6ed))
+
+### ❤️ Thank You
+
+- Claude Fable 5
+- Fabio Menchicchi @fmmenchi
+
 ## 0.5.0 (2026-07-08)
 
 ### 🚀 Features
