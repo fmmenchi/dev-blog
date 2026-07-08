@@ -72,7 +72,8 @@
       "pattern": "v{version}"
     },
     "version": {
-      "conventionalCommits": true
+      "conventionalCommits": true,
+      "adjustSemverBumpsForZeroMajorVersion": false
     },
     "changelog": {
       "projectChangelogs": false,
