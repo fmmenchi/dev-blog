@@ -1,0 +1,217 @@
+/*
+ * @dev-blog/theme — design tokens.
+ *
+ * Three levels:
+ *   1. Primitives  — raw palette/scales. Implementation detail: never consume directly.
+ *   2. Derived     — ramps computed from the primitives (OKLCH relative colors).
+ *   3. Semantic    — role tokens. The ONLY level components and app code may consume.
+ *
+ * Light theme lives on :root; dark mode redefines the semantic level only,
+ * activated by <html data-theme="dark">.
+ */
+
+:root {
+  /* ------------------------------------------------------------------ */
+  /* LEVEL 1 — primitives                                                */
+  /* ------------------------------------------------------------------ */
+
+  /* Brand base colors (OKLCH) */
+  --color-primary-base: oklch(55% 0.18 255);
+  --color-accent-base: oklch(70% 0.15 55);
+
+  /* Neutral ramp — hand-tuned, shared by both themes */
+  --color-neutral-0: oklch(100% 0 0);
+  --color-neutral-50: oklch(98% 0.003 250);
+  --color-neutral-100: oklch(96% 0.004 250);
+  --color-neutral-200: oklch(91% 0.005 250);
+  --color-neutral-300: oklch(84% 0.006 250);
+  --color-neutral-400: oklch(70% 0.008 250);
+  --color-neutral-500: oklch(55% 0.01 250);
+  --color-neutral-600: oklch(45% 0.01 250);
+  --color-neutral-700: oklch(37% 0.01 250);
+  --color-neutral-800: oklch(28% 0.01 250);
+  --color-neutral-900: oklch(21% 0.012 250);
+  --color-neutral-950: oklch(15% 0.012 250);
+
+  /* Spacing scale (raw) */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+
+  /* Type scale (raw) */
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.375rem;
+  --text-2xl: 1.75rem;
+  --text-3xl: 2.25rem;
+
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --leading-tight: 1.2;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.7;
+
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono:
+    ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* Radius, motion */
+  --radius: 0.5rem;
+  --duration-s: 120ms;
+  --duration-m: 200ms;
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ------------------------------------------------------------------ */
+  /* LEVEL 2 — derived                                                   */
+  /* ------------------------------------------------------------------ */
+
+  --color-primary-400: oklch(from var(--color-primary-base) calc(l + 0.1) c h);
+  --color-primary-600: oklch(from var(--color-primary-base) calc(l - 0.07) c h);
+  --color-primary-700: oklch(from var(--color-primary-base) calc(l - 0.14) c h);
+
+  --radius-sm: calc(var(--radius) - 0.25rem);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 0.25rem);
+  --radius-full: 9999px;
+
+  /* ------------------------------------------------------------------ */
+  /* LEVEL 3 — semantic (the only tokens components may consume)         */
+  /* ------------------------------------------------------------------ */
+
+  /* Surfaces */
+  --color-background: var(--color-neutral-0);
+  --color-foreground: var(--color-neutral-900);
+  --color-card: var(--color-neutral-50);
+  --color-card-foreground: var(--color-neutral-900);
+  --color-muted: var(--color-neutral-100);
+  --color-muted-foreground: var(--color-neutral-600);
+  --color-border: var(--color-neutral-200);
+  --color-ring: var(--color-primary-base);
+
+  /* Brand roles */
+  --color-primary: var(--color-primary-base);
+  --color-primary-foreground: var(--color-neutral-0);
+  --color-primary-hover: var(--color-primary-600);
+  --color-primary-active: var(--color-primary-700);
+  --color-accent: var(--color-accent-base);
+  --color-accent-foreground: var(--color-neutral-950);
+
+  /* Code blocks */
+  --color-code-background: var(--color-neutral-100);
+  --color-code-foreground: var(--color-neutral-800);
+
+  /* Typography roles */
+  --typography-h1-size: var(--text-3xl);
+  --typography-h2-size: var(--text-2xl);
+  --typography-h3-size: var(--text-xl);
+  --typography-heading-weight: var(--font-weight-bold);
+  --typography-heading-leading: var(--leading-tight);
+  --typography-body-size: var(--text-base);
+  --typography-body-leading: var(--leading-relaxed);
+  --typography-small-size: var(--text-sm);
+
+  /* Semantic spacing */
+  --spacing-stack-s: var(--space-2);
+  --spacing-stack-m: var(--space-4);
+  --spacing-stack-l: var(--space-8);
+  --spacing-inline-s: var(--space-2);
+  --spacing-inline-m: var(--space-4);
+  --spacing-inset-s: var(--space-3);
+  --spacing-inset-m: var(--space-4);
+  --spacing-inset-l: var(--space-6);
+
+  /* Named transitions */
+  --transition-color:
+    color var(--duration-s) var(--ease-standard),
+    background-color var(--duration-s) var(--ease-standard),
+    border-color var(--duration-s) var(--ease-standard);
+
+  /* Layout */
+  --layout-content-width: 42rem;
+}
+
+/* Dark theme — semantic level only */
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --color-primary-base: oklch(70% 0.15 255);
+
+  --color-background: var(--color-neutral-950);
+  --color-foreground: var(--color-neutral-100);
+  --color-card: var(--color-neutral-900);
+  --color-card-foreground: var(--color-neutral-100);
+  --color-muted: var(--color-neutral-900);
+  --color-muted-foreground: var(--color-neutral-400);
+  --color-border: var(--color-neutral-800);
+
+  --color-primary: var(--color-primary-base);
+  --color-primary-foreground: var(--color-neutral-950);
+  --color-primary-hover: var(--color-primary-400);
+  --color-primary-active: var(--color-primary-400);
+  --color-accent-foreground: var(--color-neutral-950);
+
+  --color-code-background: var(--color-neutral-900);
+  --color-code-foreground: var(--color-neutral-200);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Base                                                                    */
+/* ---------------------------------------------------------------------- */
+
+html {
+  color-scheme: light;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  font-size: 100%;
+  line-height: var(--typography-body-leading);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+}
+
+/* Accessible focus ring — WCAG 2.4.7 */
+:focus-visible {
+  outline: 2px solid var(--color-ring);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* Screen-reader-only utility — WCAG 1.3.1 companion for visual-only cues */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Reduced motion — WCAG 2.3.3 / 2.2.2 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
