@@ -1,3 +1,14 @@
+## 0.2.0 (2026-07-08)
+
+### 🚀 Features
+
+- **blog:** serve a real RSS feed at /rss.xml ([14feaf9](https://github.com/fmmenchi/dev-blog/commit/14feaf9))
+
+### ❤️ Thank You
+
+- Claude Fable 5
+- Fabio Menchicchi @fmmenchi
+
 ## 0.1.0 (2026-07-08)
 
 ### 🚀 Features
