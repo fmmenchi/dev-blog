@@ -1,16 +1,12 @@
 import { createRoutesStub } from 'react-router';
-import { render, screen, waitFor } from '@testing-library/react';
-import App from '../../app/app';
+import { render, screen } from '@testing-library/react';
 
-test('renders loader data', async () => {
-  const ReactRouterStub = createRoutesStub([
-    {
-      path: '/',
-      Component: App,
-    },
-  ]);
+import Home from '../../app/routes/home';
+
+test('renders the home landmark', async () => {
+  const ReactRouterStub = createRoutesStub([{ path: '/', Component: Home }]);
 
   render(<ReactRouterStub />);
 
-  await waitFor(() => screen.findByText('Hello there,'));
+  expect(await screen.findByRole('main')).toBeTruthy();
 });
