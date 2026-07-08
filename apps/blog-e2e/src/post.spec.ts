@@ -24,10 +24,10 @@ test.describe('article', () => {
     const response = await page.goto('/blog/does-not-exist');
     expect(response?.status()).toBe(404);
     await expect(
-      page.getByRole('heading', { name: /doesn't exist/ }),
+      page.getByRole('heading', { name: 'Page not found' }),
     ).toBeVisible();
     await expect(
-      page.getByRole('link', { name: '← back to the blog' }),
+      page.getByRole('link', { name: 'Back to the blog' }),
     ).toBeVisible();
   });
 
@@ -35,7 +35,7 @@ test.describe('article', () => {
     const response = await page.goto('/this/never/existed');
     expect(response?.status()).toBe(404);
     await expect(
-      page.getByRole('heading', { name: /doesn't exist/ }),
+      page.getByRole('heading', { name: 'Page not found' }),
     ).toBeVisible();
   });
 });

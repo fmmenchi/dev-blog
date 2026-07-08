@@ -10,7 +10,7 @@ import {
 } from 'react-router';
 
 import themeStylesheetUrl from '@dev-blog/theme/styles/theme.css?url';
-import { Link } from '@dev-blog/ui';
+import { Button, ErrorState, Link } from '@dev-blog/ui';
 
 import { SiteFooter } from './components/site-footer';
 import { SiteHeader } from './components/site-header';
@@ -92,32 +92,36 @@ export function ErrorBoundary() {
 
   return (
     <main className={styles['error']}>
-      <p className={styles['errorLabel']}>
-        <span aria-hidden="true" className={styles['errorAccent']}>
-          $
-        </span>{' '}
-        {notFound ? '404 — NOT FOUND' : 'UNEXPECTED ERROR'}
-      </p>
-      <h1 className={styles['errorTitle']}>
-        {notFound ? (
-          <>
-            This page doesn't{' '}
-            <span className={styles['errorAccent']}>exist</span>.
-          </>
-        ) : (
-          <>
-            Something <span className={styles['errorAccent']}>broke</span>.
-          </>
-        )}
-      </h1>
-      <p className={styles['errorText']}>
+      <p className={styles['errorTerminal']}>
         {notFound
-          ? 'Maybe it never did, maybe it moved. Either way, the good stuff is on the homepage.'
-          : 'Not your fault. Try again in a moment, or head back home.'}
+          ? '$ curl fabiomenchicchi.com/this-page '
+          : '$ tail -f /var/log/fabiomenchicchi.com '}
+        <span className={styles['errorAccent']}>
+          → HTTP {notFound ? 404 : 500}
+        </span>
       </p>
-      <Link to="/" variant="plain" className={styles['errorLink']}>
-        ← back to the blog
-      </Link>
+      {notFound ? (
+        <ErrorState
+          title="Page not found"
+          description="The URL you're looking for doesn't exist — or I deleted it. Deleting code is an art form; deleting pages, an accident."
+        >
+          <Link to="/" variant="plain" className={styles['errorAction']}>
+            Back to the blog
+          </Link>
+        </ErrorState>
+      ) : (
+        <ErrorState
+          title="Something broke"
+          description="A server-side error. The good news: this blog is 200 lines of code, so I'll find it quickly. Try again in a moment."
+        >
+          <Button onClick={() => window.location.reload()}>
+            Reload the page
+          </Button>
+          <Link to="/" variant="plain" className={styles['errorSecondary']}>
+            ← or back to the blog
+          </Link>
+        </ErrorState>
+      )}
     </main>
   );
 }

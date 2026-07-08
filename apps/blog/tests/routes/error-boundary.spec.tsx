@@ -18,24 +18,31 @@ function renderWithStatus(status: number) {
 }
 
 describe('ErrorBoundary', () => {
-  it('renders the styled 404 page with a way home', async () => {
+  it('renders the 404 page from the mock with a way home', async () => {
     renderWithStatus(404);
     expect(
-      await screen.findByRole('heading', { name: /doesn't exist/ }),
+      await screen.findByRole('heading', { level: 1, name: 'Page not found' }),
     ).toBeTruthy();
-    expect(screen.getByText(/404 — NOT FOUND/)).toBeTruthy();
+    expect(screen.getByText(/HTTP 404/)).toBeTruthy();
+    expect(screen.getByText(/Deleting code is an art form/)).toBeTruthy();
     expect(
       screen
-        .getByRole('link', { name: '← back to the blog' })
+        .getByRole('link', { name: 'Back to the blog' })
         .getAttribute('href'),
     ).toBe('/');
   });
 
-  it('renders the generic page for other errors', async () => {
+  it('renders the 500 page with reload action and home fallback', async () => {
     renderWithStatus(500);
     expect(
-      await screen.findByRole('heading', { name: /Something/ }),
+      await screen.findByRole('heading', { level: 1, name: 'Something broke' }),
     ).toBeTruthy();
-    expect(screen.getByText(/UNEXPECTED ERROR/)).toBeTruthy();
+    expect(screen.getByText(/HTTP 500/)).toBeTruthy();
+    expect(
+      screen.getByRole('button', { name: 'Reload the page' }),
+    ).toBeTruthy();
+    expect(
+      screen.getByRole('link', { name: '← or back to the blog' }),
+    ).toBeTruthy();
   });
 });
