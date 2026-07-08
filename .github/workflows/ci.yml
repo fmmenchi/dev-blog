@@ -49,6 +49,8 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     permissions:
       contents: write
+    env:
+      HUSKY: 0 # git hooks are for humans; the release commit is machine-generated
     steps:
       - uses: actions/checkout@v5
         with:
