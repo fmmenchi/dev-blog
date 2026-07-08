@@ -10,21 +10,36 @@ import {
 
 import themeStylesheetUrl from '@dev-blog/theme/styles/theme.css?url';
 
-import { AppNav } from './app-nav';
+import { SiteFooter } from './components/site-footer';
+import { SiteHeader } from './components/site-header';
+import styles from './root.module.css';
 
 export const meta: MetaFunction = () => [
+  { title: 'fabio.dev — software, sistemi e decisioni' },
   {
-    title: 'New Nx React Router App',
+    name: 'description',
+    content:
+      'Niente hype, niente thread-boy. Post-mortem onesti, architettura, TypeScript e developer experience.',
   },
 ];
 
 export const links: LinksFunction = () => [
+  { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+  {
+    rel: 'preconnect',
+    href: 'https://fonts.gstatic.com',
+    crossOrigin: 'anonymous',
+  },
+  {
+    rel: 'stylesheet',
+    href: 'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap',
+  },
   { rel: 'stylesheet', href: themeStylesheetUrl },
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="it" data-accent="giallo">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -32,8 +47,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <AppNav />
-        {children}
+        <div className={styles['shell']}>
+          <SiteHeader />
+          <div id="contenuto" className={styles['content']}>
+            {children}
+          </div>
+          <SiteFooter />
+        </div>
         <ScrollRestoration />
         <Scripts />
       </body>
