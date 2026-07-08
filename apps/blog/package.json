@@ -30,20 +30,18 @@
         ]
       },
       "maintenance": {
-        "command": "wrangler deploy",
+        "command": "wrangler kv key put maintenance off --binding MAINTENANCE_KV --remote",
         "options": {
           "cwd": "{projectRoot}"
         },
         "configurations": {
           "on": {
-            "command": "wrangler deploy --var MAINTENANCE:true"
+            "command": "wrangler kv key put maintenance on --binding MAINTENANCE_KV --remote"
           },
           "off": {}
         },
         "defaultConfiguration": "off",
-        "dependsOn": [
-          "build"
-        ]
+        "cache": false
       }
     }
   },

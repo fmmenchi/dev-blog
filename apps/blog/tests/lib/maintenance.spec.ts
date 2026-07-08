@@ -1,10 +1,15 @@
 import { isMaintenance, maintenanceResponse } from '../../app/lib/maintenance';
 
+function kv(value: string | null) {
+  return { MAINTENANCE_KV: { get: async () => value } };
+}
+
 describe('maintenance mode', () => {
-  it('is on only when the var is exactly "true"', () => {
-    expect(isMaintenance({ MAINTENANCE: 'true' })).toBe(true);
-    expect(isMaintenance({ MAINTENANCE: 'false' })).toBe(false);
-    expect(isMaintenance({})).toBe(false);
+  it('is on only when the KV flag is exactly "on"', async () => {
+    expect(await isMaintenance(kv('on'))).toBe(true);
+    expect(await isMaintenance(kv('off'))).toBe(false);
+    expect(await isMaintenance(kv(null))).toBe(false);
+    expect(await isMaintenance({})).toBe(false);
   });
 
   it('answers 503 with retry hint and no caching or indexing', async () => {

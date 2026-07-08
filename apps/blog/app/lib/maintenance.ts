@@ -1,12 +1,22 @@
 /**
- * Maintenance mode: when the worker's MAINTENANCE var is "true", every page
- * answers 503 with a styled curtain. Toggle without touching code:
+ * Maintenance mode: the flag lives in KV (key "maintenance", value "on"),
+ * so deploys can never flip it and toggling is instant — no build, no
+ * redeploy:
  *   pnpm nx run blog:maintenance:on   /   blog:maintenance:off
  * or the "Maintenance" GitHub Actions workflow.
  */
 
-export function isMaintenance(env: { MAINTENANCE?: string }): boolean {
-  return env.MAINTENANCE === 'true';
+interface MaintenanceKV {
+  get(key: string): Promise<string | null>;
+}
+
+export interface MaintenanceEnv {
+  MAINTENANCE_KV?: MaintenanceKV;
+}
+
+export async function isMaintenance(env: MaintenanceEnv): Promise<boolean> {
+  const flag = await env.MAINTENANCE_KV?.get('maintenance');
+  return flag === 'on';
 }
 
 /**
