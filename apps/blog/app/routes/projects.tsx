@@ -1,4 +1,4 @@
-import { Card } from '@dev-blog/ui';
+import { Card, Link } from '@dev-blog/ui';
 
 import { projects } from '../lib/content';
 import { originFromMatches, seoMeta } from '../lib/seo';
@@ -39,7 +39,11 @@ export default function Projects() {
       <ul className={styles['grid']} aria-label="Projects">
         {projects.map((project) => (
           <li key={project.name}>
-            <a href={project.url} className={styles['cardLink']}>
+            <Link
+              href={project.url}
+              variant="plain"
+              className={styles['cardLink']}
+            >
               <Card as="article" interactive className={styles['card']}>
                 <div className={styles['cardHead']}>
                   <h2 className={styles['name']}>{project.name}</h2>
@@ -62,7 +66,7 @@ export default function Projects() {
                   <span className={styles['repo']}>repo →</span>
                 </div>
               </Card>
-            </a>
+            </Link>
           </li>
         ))}
       </ul>

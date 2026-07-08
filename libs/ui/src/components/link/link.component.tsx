@@ -4,33 +4,49 @@ import { Link as RouterLink } from 'react-router';
 import { cn } from '../../internal/cn';
 import styles from './link.module.css';
 
-const EXTERNAL_HREF = /^([a-z][a-z0-9+.-]*:|\/\/)/i;
+const PROTOCOL_HREF = /^([a-z][a-z0-9+.-]*:|\/\/)/i;
+const NEW_TAB_HREF = /^(https?:|\/\/)/i;
 
-export type LinkVariant = 'default' | 'subtle';
+export type LinkVariant = 'default' | 'subtle' | 'plain';
 
-export interface LinkProps extends Omit<
+interface BaseLinkProps extends Omit<
   AnchorHTMLAttributes<HTMLAnchorElement>,
   'href'
 > {
-  href: string;
   variant?: LinkVariant;
   children: ReactNode;
+  /** Forwarded to the router link: forces a full document load (e.g. /rss.xml). */
+  reloadDocument?: boolean;
 }
 
+export type LinkProps = BaseLinkProps &
+  ({ to: string; href?: never } | { href: string; to?: never });
+
 /**
- * Internal hrefs client-navigate via React Router; external hrefs open in a
- * new tab with a screen-reader hint (WCAG 2.4.4 / 3.2.5).
+ * The one way to link things, andes-routes style:
+ * - `to`   → React Router navigation (client-side, no reload);
+ * - `href` → a normal anchor: http(s) opens in a new tab with rel protection
+ *   and a screen-reader hint (WCAG 2.4.4 / 3.2.5); hash anchors and other
+ *   protocols (mailto:) render plain. An internal-path `href` is promoted to
+ *   a router navigation so internal links can never full-reload by mistake.
+ * The `plain` variant carries no visual styling — behavior only.
  */
 export function Link({
+  to,
   href,
   variant = 'default',
   className,
   children,
+  reloadDocument,
   ...props
 }: LinkProps) {
-  const classes = cn(styles['link'], styles[variant], className);
+  const classes = cn(
+    variant !== 'plain' && styles['link'],
+    variant !== 'plain' && styles[variant],
+    className,
+  );
 
-  if (EXTERNAL_HREF.test(href)) {
+  if (href !== undefined && NEW_TAB_HREF.test(href)) {
     return (
       <a
         href={href}
@@ -45,8 +61,24 @@ export function Link({
     );
   }
 
+  if (
+    href !== undefined &&
+    (PROTOCOL_HREF.test(href) || href.startsWith('#'))
+  ) {
+    return (
+      <a href={href} className={classes} {...props}>
+        {children}
+      </a>
+    );
+  }
+
   return (
-    <RouterLink to={href} className={classes} {...props}>
+    <RouterLink
+      to={(to ?? href) as string}
+      reloadDocument={reloadDocument}
+      className={classes}
+      {...props}
+    >
       {children}
     </RouterLink>
   );

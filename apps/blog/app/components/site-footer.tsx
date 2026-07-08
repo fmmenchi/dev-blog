@@ -1,4 +1,4 @@
-import { Link as RouterLink } from 'react-router';
+import { Link } from '@dev-blog/ui';
 
 import styles from './site-footer.module.css';
 
@@ -12,12 +12,12 @@ export function SiteFooter() {
           <a href="/rss.xml" className={styles['link']}>
             rss
           </a>
-          <RouterLink to="/colophon" className={styles['link']}>
+          <Link to="/colophon" variant="plain" className={styles['link']}>
             colophon
-          </RouterLink>
-          <RouterLink to="/uses" className={styles['link']}>
+          </Link>
+          <Link to="/uses" variant="plain" className={styles['link']}>
             uses
-          </RouterLink>
+          </Link>
         </nav>
       </div>
     </footer>

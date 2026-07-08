@@ -1,4 +1,4 @@
-import { Button, Card } from '@dev-blog/ui';
+import { Button, Card, Link } from '@dev-blog/ui';
 
 import { Avatar } from '../components/avatar';
 import { SectionHeading } from '../components/section-heading';
@@ -38,16 +38,15 @@ export default function About() {
           <Button>Say hi</Button>
         </Card>
         <nav aria-label="Social" className={styles['social']}>
-          <a href="https://github.com/fmmenchi">
-            github<span className="sr-only"> (opens in a new tab)</span>
-          </a>
-          <a href="https://x.com/fmmenchi">
-            x<span className="sr-only"> (opens in a new tab)</span>
-          </a>
-          <a href="https://www.linkedin.com/in/fmmenchi">
+          <Link href="https://github.com/fmmenchi" variant="plain">
+            github
+          </Link>
+          <Link href="https://x.com/fmmenchi" variant="plain">
+            x
+          </Link>
+          <Link href="https://www.linkedin.com/in/fmmenchi" variant="plain">
             linkedin
-            <span className="sr-only"> (opens in a new tab)</span>
-          </a>
+          </Link>
         </nav>
       </aside>
 

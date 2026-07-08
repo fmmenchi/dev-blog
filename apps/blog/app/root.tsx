@@ -1,6 +1,5 @@
 import {
   isRouteErrorResponse,
-  Link as RouterLink,
   Links,
   Meta,
   Outlet,
@@ -11,6 +10,7 @@ import {
 } from 'react-router';
 
 import themeStylesheetUrl from '@dev-blog/theme/styles/theme.css?url';
+import { Link } from '@dev-blog/ui';
 
 import { SiteFooter } from './components/site-footer';
 import { SiteHeader } from './components/site-header';
@@ -115,9 +115,9 @@ export function ErrorBoundary() {
           ? 'Maybe it never did, maybe it moved. Either way, the good stuff is on the homepage.'
           : 'Not your fault. Try again in a moment, or head back home.'}
       </p>
-      <RouterLink to="/" className={styles['errorLink']}>
+      <Link to="/" variant="plain" className={styles['errorLink']}>
         ← back to the blog
-      </RouterLink>
+      </Link>
     </main>
   );
 }

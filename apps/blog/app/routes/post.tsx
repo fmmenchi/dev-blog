@@ -1,9 +1,5 @@
-import { Button, Card, Prose } from '@dev-blog/ui';
-import {
-  Link as RouterLink,
-  useLoaderData,
-  type LoaderFunctionArgs,
-} from 'react-router';
+import { Button, Card, Link, Prose } from '@dev-blog/ui';
+import { useLoaderData, type LoaderFunctionArgs } from 'react-router';
 
 import { Avatar } from '../components/avatar';
 import { SectionHeading } from '../components/section-heading';
@@ -70,9 +66,9 @@ export default function Post() {
   return (
     <div className={styles['page']}>
       <article className={styles['article']}>
-        <RouterLink to="/" className={styles['back']}>
+        <Link to="/" variant="plain" className={styles['back']}>
           ← /blog
-        </RouterLink>
+        </Link>
         <div className={styles['meta']}>
           <span className={styles['metaDate']}>{post.date}</span>
           <span>{post.minutes} min read</span>
@@ -96,25 +92,30 @@ export default function Post() {
 
         <nav aria-label="More articles" className={styles['siblings']}>
           {prev ? (
-            <RouterLink to={`/blog/${prev.slug}`} className={styles['sibling']}>
+            <Link
+              to={`/blog/${prev.slug}`}
+              variant="plain"
+              className={styles['sibling']}
+            >
               <Card interactive className={styles['siblingCard']}>
                 <span className={styles['siblingLabel']}>← previous</span>
                 <span className={styles['siblingTitle']}>{prev.title}</span>
               </Card>
-            </RouterLink>
+            </Link>
           ) : (
             <span />
           )}
           {next ? (
-            <RouterLink
+            <Link
               to={`/blog/${next.slug}`}
+              variant="plain"
               className={`${styles['sibling']} ${styles['siblingNext']}`}
             >
               <Card interactive className={styles['siblingCard']}>
                 <span className={styles['siblingLabel']}>next →</span>
                 <span className={styles['siblingTitle']}>{next.title}</span>
               </Card>
-            </RouterLink>
+            </Link>
           ) : (
             <span />
           )}
@@ -125,21 +126,23 @@ export default function Post() {
         <SectionHeading>on this page</SectionHeading>
         <nav aria-label="On this page" className={styles['toc']}>
           {toc.map((entry, i) => (
-            <a
+            <Link
               key={entry.id}
               href={`#${entry.id}`}
+              variant="plain"
               className={styles['tocLink']}
             >
               {String(i + 1).padStart(2, '0')} · {entry.text}
-            </a>
+            </Link>
           ))}
         </nav>
-        <a
+        <Link
           href={`https://x.com/intent/post?text=${encodeURIComponent(post.title)}`}
+          variant="plain"
           className={styles['share']}
         >
-          share ↗<span className="sr-only"> (opens in a new tab)</span>
-        </a>
+          share ↗
+        </Link>
       </aside>
     </div>
   );
