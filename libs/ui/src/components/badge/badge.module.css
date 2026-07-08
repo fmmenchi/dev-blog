@@ -1,10 +1,24 @@
 .badge {
   display: inline-block;
+  line-height: var(--leading-normal);
+}
+
+/* Skill/topic chips (sidebar) */
+.outline {
   padding: calc(var(--space-1) / 2) var(--space-2);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-full);
-  background-color: var(--color-muted);
   color: var(--color-muted-foreground);
   font-size: var(--typography-small-size);
   font-weight: var(--font-weight-medium);
-  line-height: var(--leading-normal);
+}
+
+/* Post tags (#web, #minimalismo) */
+.tag {
+  padding: calc(var(--space-1) / 2) var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-primary);
+  font-family: var(--font-mono);
+  font-size: var(--typography-mono-size);
 }

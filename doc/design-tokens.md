@@ -25,16 +25,21 @@ colors) → **semantic** (what you use). This doc lists the semantic layer.
 | `--color-accent` / `--color-accent-foreground`           | occasional highlights            |
 | `--color-code-background` / `--color-code-foreground`    | inline code and code blocks      |
 
-Every `X` / `X-foreground` pair is picked for WCAG AA contrast in both themes.
-Dark mode redefines only this semantic layer under `[data-theme='dark']` —
-components need no conditional styles.
+Every `X` / `X-foreground` pair is picked for WCAG AA contrast.
+
+The blog is **dark-first**: `:root` holds the dark theme from the design mocks
+(claude.ai/design project "Blog design chat"). The **accent is switchable** —
+`<html data-accent="giallo|lime|ambra">` (default giallo) redefines only the
+`--color-primary` family, so components need no conditional styles.
 
 ## Typography
 
 Role tokens: `--typography-h1/h2/h3-size`, `--typography-heading-weight`,
-`--typography-heading-leading`, `--typography-body-size`,
-`--typography-body-leading`, `--typography-small-size`; families `--font-sans`
-and `--font-mono` (system stacks — the blog loads no webfonts).
+`--typography-heading-leading`, `--typography-heading-tracking`,
+`--typography-body-size`, `--typography-body-leading`,
+`--typography-small-size`, `--typography-mono-size`; families `--font-sans`
+(Space Grotesk) and `--font-mono` (JetBrains Mono) — the app loads the
+webfonts, the theme only names them with system fallbacks.
 
 ## Spacing
 

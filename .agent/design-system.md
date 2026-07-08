@@ -17,8 +17,9 @@ layer**. Violations fail the build:
 - **Never hardcode colors or fonts** in `*.module.css` — Stylelint
   `declaration-strict-value` fails the build (`transparent`, `currentColor`,
   `inherit` are allowed).
-- Dark mode is automatic: semantic tokens flip under
-  `<html data-theme="dark">`. Never write per-theme styles in components.
+- The blog is dark-first (`:root` is the dark theme) and the accent is
+  switchable via `<html data-accent="giallo|lime|ambra">` — it remaps only
+  the `--color-primary` family. Never write per-accent styles in components.
 
 ## Component pattern
 

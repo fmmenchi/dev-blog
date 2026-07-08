@@ -3,11 +3,13 @@
  *
  * Three levels:
  *   1. Primitives  — raw palette/scales. Implementation detail: never consume directly.
- *   2. Derived     — ramps computed from the primitives (OKLCH relative colors).
+ *   2. Derived     — accent ramps. Implementation detail.
  *   3. Semantic    — role tokens. The ONLY level components and app code may consume.
  *
- * Light theme lives on :root; dark mode redefines the semantic level only,
- * activated by <html data-theme="dark">.
+ * The blog is dark-first: :root holds the dark theme from the design mocks
+ * (claude.ai/design project "Blog design chat"). The accent is switchable via
+ * <html data-accent="giallo|lime|ambra"> (default giallo); only the primary
+ * family changes per accent.
  */
 
 :root {
@@ -15,23 +17,17 @@
   /* LEVEL 1 — primitives                                                */
   /* ------------------------------------------------------------------ */
 
-  /* Brand base colors (OKLCH) */
-  --color-primary-base: oklch(55% 0.18 255);
-  --color-accent-base: oklch(70% 0.15 55);
-
-  /* Neutral ramp — hand-tuned, shared by both themes */
-  --color-neutral-0: oklch(100% 0 0);
-  --color-neutral-50: oklch(98% 0.003 250);
-  --color-neutral-100: oklch(96% 0.004 250);
-  --color-neutral-200: oklch(91% 0.005 250);
-  --color-neutral-300: oklch(84% 0.006 250);
-  --color-neutral-400: oklch(70% 0.008 250);
-  --color-neutral-500: oklch(55% 0.01 250);
-  --color-neutral-600: oklch(45% 0.01 250);
-  --color-neutral-700: oklch(37% 0.01 250);
-  --color-neutral-800: oklch(28% 0.01 250);
-  --color-neutral-900: oklch(21% 0.012 250);
-  --color-neutral-950: oklch(15% 0.012 250);
+  /* Neutral ramp — cool dark slate (hue 256) */
+  --color-neutral-50: oklch(93% 0.01 256);
+  --color-neutral-100: oklch(88% 0.01 256);
+  --color-neutral-300: oklch(72% 0.015 256);
+  --color-neutral-400: oklch(65% 0.015 256);
+  --color-neutral-500: oklch(55% 0.02 256);
+  --color-neutral-700: oklch(32% 0.02 256);
+  --color-neutral-800: oklch(27% 0.02 256);
+  --color-neutral-850: oklch(24% 0.02 256);
+  --color-neutral-900: oklch(21% 0.02 256);
+  --color-neutral-950: oklch(17% 0.015 256);
 
   /* Spacing scale (raw) */
   --space-1: 0.25rem;
@@ -44,81 +40,91 @@
   --space-16: 4rem;
 
   /* Type scale (raw) */
+  --text-2xs: 0.6875rem;
+  --text-xs: 0.75rem;
   --text-sm: 0.875rem;
   --text-base: 1rem;
-  --text-lg: 1.125rem;
-  --text-xl: 1.375rem;
-  --text-2xl: 1.75rem;
-  --text-3xl: 2.25rem;
+  --text-lg: 1.0625rem;
+  --text-xl: 1.4375rem;
+  --text-2xl: 1.625rem;
+  --text-3xl: 2.5rem;
 
   --font-weight-regular: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
 
-  --leading-tight: 1.2;
+  --leading-tight: 1.1;
   --leading-normal: 1.5;
-  --leading-relaxed: 1.7;
+  --leading-relaxed: 1.75;
 
   --font-sans:
-    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-mono:
-    ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
+    'Space Grotesk', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /* Radius, motion */
-  --radius: 0.5rem;
-  --duration-s: 120ms;
-  --duration-m: 200ms;
-  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
-
-  /* ------------------------------------------------------------------ */
-  /* LEVEL 2 — derived                                                   */
-  /* ------------------------------------------------------------------ */
-
-  --color-primary-400: oklch(from var(--color-primary-base) calc(l + 0.1) c h);
-  --color-primary-600: oklch(from var(--color-primary-base) calc(l - 0.07) c h);
-  --color-primary-700: oklch(from var(--color-primary-base) calc(l - 0.14) c h);
-
-  --radius-sm: calc(var(--radius) - 0.25rem);
-  --radius-md: var(--radius);
-  --radius-lg: calc(var(--radius) + 0.25rem);
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
   --radius-full: 9999px;
+
+  --duration-s: 150ms;
+  --duration-m: 200ms;
+  --ease-standard: ease;
+
+  /* ------------------------------------------------------------------ */
+  /* LEVEL 2 — derived (accent palettes; see data-accent overrides)      */
+  /* ------------------------------------------------------------------ */
+
+  --accent-giallo: oklch(86% 0.16 95);
+  --accent-giallo-hover: oklch(90% 0.14 95);
+  --accent-giallo-active: oklch(93% 0.12 95);
+  --accent-giallo-foreground: oklch(24% 0.04 95);
+  --accent-lime: oklch(86% 0.19 130);
+  --accent-lime-hover: oklch(90% 0.17 130);
+  --accent-lime-active: oklch(93% 0.15 130);
+  --accent-lime-foreground: oklch(23% 0.05 130);
+  --accent-ambra: oklch(80% 0.15 70);
+  --accent-ambra-hover: oklch(85% 0.13 70);
+  --accent-ambra-active: oklch(89% 0.11 70);
+  --accent-ambra-foreground: oklch(24% 0.05 70);
 
   /* ------------------------------------------------------------------ */
   /* LEVEL 3 — semantic (the only tokens components may consume)         */
   /* ------------------------------------------------------------------ */
 
   /* Surfaces */
-  --color-background: var(--color-neutral-0);
-  --color-foreground: var(--color-neutral-900);
-  --color-card: var(--color-neutral-50);
-  --color-card-foreground: var(--color-neutral-900);
-  --color-muted: var(--color-neutral-100);
-  --color-muted-foreground: var(--color-neutral-600);
-  --color-border: var(--color-neutral-200);
-  --color-ring: var(--color-primary-base);
+  --color-background: var(--color-neutral-900);
+  --color-foreground: var(--color-neutral-50);
+  --color-card: var(--color-neutral-850);
+  --color-card-foreground: var(--color-neutral-50);
+  --color-muted: var(--color-neutral-800);
+  --color-muted-foreground: var(--color-neutral-400);
+  --color-border: var(--color-neutral-700);
+  --color-ring: var(--color-primary);
 
-  /* Brand roles */
-  --color-primary: var(--color-primary-base);
-  --color-primary-foreground: var(--color-neutral-0);
-  --color-primary-hover: var(--color-primary-600);
-  --color-primary-active: var(--color-primary-700);
-  --color-accent: var(--color-accent-base);
-  --color-accent-foreground: var(--color-neutral-950);
+  /* Brand roles — default accent: giallo */
+  --color-primary: var(--accent-giallo);
+  --color-primary-foreground: var(--accent-giallo-foreground);
+  --color-primary-hover: var(--accent-giallo-hover);
+  --color-primary-active: var(--accent-giallo-active);
 
   /* Code blocks */
-  --color-code-background: var(--color-neutral-100);
-  --color-code-foreground: var(--color-neutral-800);
+  --color-code-background: var(--color-neutral-950);
+  --color-code-foreground: var(--color-neutral-100);
 
   /* Typography roles */
   --typography-h1-size: var(--text-3xl);
-  --typography-h2-size: var(--text-2xl);
-  --typography-h3-size: var(--text-xl);
+  --typography-h2-size: var(--text-xl);
+  --typography-h3-size: var(--text-lg);
   --typography-heading-weight: var(--font-weight-bold);
   --typography-heading-leading: var(--leading-tight);
+  --typography-heading-tracking: -0.03em;
   --typography-body-size: var(--text-base);
   --typography-body-leading: var(--leading-relaxed);
   --typography-small-size: var(--text-sm);
+  --typography-mono-size: var(--text-xs);
 
   /* Semantic spacing */
   --spacing-stack-s: var(--space-2);
@@ -135,33 +141,28 @@
     color var(--duration-s) var(--ease-standard),
     background-color var(--duration-s) var(--ease-standard),
     border-color var(--duration-s) var(--ease-standard);
+  --transition-lift:
+    border-color var(--duration-m) var(--ease-standard),
+    transform var(--duration-m) var(--ease-standard);
 
   /* Layout */
-  --layout-content-width: 42rem;
+  --layout-content-width: 70rem;
+  --layout-prose-width: 42.5rem;
 }
 
-/* Dark theme — semantic level only */
-[data-theme='dark'] {
-  color-scheme: dark;
+/* Switchable accent — primary family only */
+[data-accent='lime'] {
+  --color-primary: var(--accent-lime);
+  --color-primary-foreground: var(--accent-lime-foreground);
+  --color-primary-hover: var(--accent-lime-hover);
+  --color-primary-active: var(--accent-lime-active);
+}
 
-  --color-primary-base: oklch(70% 0.15 255);
-
-  --color-background: var(--color-neutral-950);
-  --color-foreground: var(--color-neutral-100);
-  --color-card: var(--color-neutral-900);
-  --color-card-foreground: var(--color-neutral-100);
-  --color-muted: var(--color-neutral-900);
-  --color-muted-foreground: var(--color-neutral-400);
-  --color-border: var(--color-neutral-800);
-
-  --color-primary: var(--color-primary-base);
-  --color-primary-foreground: var(--color-neutral-950);
-  --color-primary-hover: var(--color-primary-400);
-  --color-primary-active: var(--color-primary-400);
-  --color-accent-foreground: var(--color-neutral-950);
-
-  --color-code-background: var(--color-neutral-900);
-  --color-code-foreground: var(--color-neutral-200);
+[data-accent='ambra'] {
+  --color-primary: var(--accent-ambra);
+  --color-primary-foreground: var(--accent-ambra-foreground);
+  --color-primary-hover: var(--accent-ambra-hover);
+  --color-primary-active: var(--accent-ambra-active);
 }
 
 /* ---------------------------------------------------------------------- */
@@ -169,7 +170,7 @@
 /* ---------------------------------------------------------------------- */
 
 html {
-  color-scheme: light;
+  color-scheme: dark;
   background-color: var(--color-background);
   color: var(--color-foreground);
   font-family: var(--font-sans);
