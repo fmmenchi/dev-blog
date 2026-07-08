@@ -102,7 +102,6 @@
   font-size: var(--text-2xs);
   font-weight: var(--font-weight-semibold);
   margin: 0 0 var(--spacing-stack-s);
-  opacity: 0.8;
 }
 
 .buildingTitle {
@@ -116,7 +115,6 @@
   font-family: var(--font-mono);
   font-size: var(--text-2xs);
   margin: var(--spacing-stack-m) 0 0;
-  opacity: 0.7;
 }
 
 .social {

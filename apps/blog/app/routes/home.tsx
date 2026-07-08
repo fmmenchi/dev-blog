@@ -55,14 +55,14 @@ export default function Home() {
           <div className={styles['building']}>
             <p className={styles['buildingLabel']}>$ NOW BUILDING</p>
             <p className={styles['buildingTitle']}>{profile.building}</p>
-            <p
-              className={styles['buildingProgress']}
-              aria-label={`Progress ${profile.buildingProgress}%`}
-            >
+            <p className={styles['buildingProgress']}>
               <span aria-hidden="true">
                 [{'█'.repeat(profile.buildingProgress / 10)}
                 {'░'.repeat(10 - profile.buildingProgress / 10)}]{' '}
                 {profile.buildingProgress}%
+              </span>
+              <span className="sr-only">
+                Progress {profile.buildingProgress}%
               </span>
             </p>
           </div>

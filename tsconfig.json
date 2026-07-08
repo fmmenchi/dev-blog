@@ -11,6 +11,9 @@
     },
     {
       "path": "./libs/ui"
+    },
+    {
+      "path": "./apps/blog-e2e"
     }
   ]
 }

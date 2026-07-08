@@ -1,0 +1,14 @@
+{
+  "name": "blog-e2e",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "implicitDependencies": [
+      "blog"
+    ],
+    "tags": [
+      "scope:blog",
+      "type:e2e"
+    ]
+  }
+}
