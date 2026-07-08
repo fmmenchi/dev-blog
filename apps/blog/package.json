@@ -1,0 +1,30 @@
+{
+  "name": "blog",
+  "private": true,
+  "type": "module",
+  "scripts": {},
+  "sideEffects": false,
+  "nx": {
+    "name": "blog",
+    "tags": [
+      "scope:blog",
+      "type:app"
+    ]
+  },
+  "dependencies": {
+    "@dev-blog/theme": "workspace:*",
+    "@dev-blog/ui": "workspace:*",
+    "@react-router/node": "^8.1.0",
+    "@react-router/serve": "^8.1.0",
+    "isbot": "^4.4.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router": "^8.1.0"
+  },
+  "devDependencies": {
+    "@react-router/dev": "^8.1.0",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0"
+  }
+}
