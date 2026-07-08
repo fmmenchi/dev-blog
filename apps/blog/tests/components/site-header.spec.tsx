@@ -11,9 +11,9 @@ function renderHeader() {
 describe('SiteHeader', () => {
   it('exposes the main navigation with all sections', () => {
     renderHeader();
-    const nav = screen.getByRole('navigation', { name: 'Principale' });
+    const nav = screen.getByRole('navigation', { name: 'Main' });
     expect(nav).toBeTruthy();
-    for (const label of ['/blog', '/progetti', '/about', '/rss']) {
+    for (const label of ['/blog', '/projects', '/about', '/rss']) {
       expect(screen.getByRole('link', { name: label })).toBeTruthy();
     }
   });
@@ -25,21 +25,21 @@ describe('SiteHeader', () => {
     ).toBe('page');
     expect(
       screen
-        .getByRole('link', { name: '/progetti' })
+        .getByRole('link', { name: '/projects' })
         .getAttribute('aria-current'),
     ).toBeNull();
   });
 
   it('offers a skip link to the content', () => {
     renderHeader();
-    const skip = screen.getByRole('link', { name: 'Salta al contenuto' });
-    expect(skip.getAttribute('href')).toBe('#contenuto');
+    const skip = screen.getByRole('link', { name: 'Skip to content' });
+    expect(skip.getAttribute('href')).toBe('#content');
   });
 
   it('cycles the accent and persists the choice', () => {
     renderHeader();
     const button = screen.getByRole('button', {
-      name: /Cambia colore accento/,
+      name: /Change accent color/,
     });
     fireEvent.click(button);
     expect(document.documentElement.dataset['accent']).toBe('lime');

@@ -15,7 +15,7 @@ import styles from './post.module.css';
 export function loader({ params }: LoaderFunctionArgs) {
   const post = getPost(params['slug'] ?? '');
   if (!post) {
-    throw new Response('Articolo non trovato', { status: 404 });
+    throw new Response('Post not found', { status: 404 });
   }
   const posts = getPosts();
   const index = posts.findIndex((p) => p.slug === post.slug);
@@ -45,7 +45,7 @@ export default function Post() {
         </RouterLink>
         <div className={styles['meta']}>
           <span className={styles['metaDate']}>{post.date}</span>
-          <span>{post.minutes} min di lettura</span>
+          <span>{post.minutes} min read</span>
           <span>{post.tags.map((tag) => `#${tag}`).join(' ')}</span>
         </div>
         <h1 className={styles['title']}>{post.title}</h1>
@@ -64,11 +64,11 @@ export default function Post() {
           <Button>Newsletter</Button>
         </Card>
 
-        <nav aria-label="Altri articoli" className={styles['siblings']}>
+        <nav aria-label="More articles" className={styles['siblings']}>
           {prev ? (
             <RouterLink to={`/blog/${prev.slug}`} className={styles['sibling']}>
               <Card interactive className={styles['siblingCard']}>
-                <span className={styles['siblingLabel']}>← precedente</span>
+                <span className={styles['siblingLabel']}>← previous</span>
                 <span className={styles['siblingTitle']}>{prev.title}</span>
               </Card>
             </RouterLink>
@@ -81,7 +81,7 @@ export default function Post() {
               className={`${styles['sibling']} ${styles['siblingNext']}`}
             >
               <Card interactive className={styles['siblingCard']}>
-                <span className={styles['siblingLabel']}>successivo →</span>
+                <span className={styles['siblingLabel']}>next →</span>
                 <span className={styles['siblingTitle']}>{next.title}</span>
               </Card>
             </RouterLink>
@@ -92,8 +92,8 @@ export default function Post() {
       </article>
 
       <aside className={styles['sidebar']}>
-        <SectionHeading>in questa pagina</SectionHeading>
-        <nav aria-label="In questa pagina" className={styles['toc']}>
+        <SectionHeading>on this page</SectionHeading>
+        <nav aria-label="On this page" className={styles['toc']}>
           {toc.map((entry, i) => (
             <a
               key={entry.id}
@@ -108,8 +108,7 @@ export default function Post() {
           href={`https://x.com/intent/post?text=${encodeURIComponent(post.title)}`}
           className={styles['share']}
         >
-          condividi ↗
-          <span className="sr-only"> (si apre in una nuova scheda)</span>
+          share ↗<span className="sr-only"> (opens in a new tab)</span>
         </a>
       </aside>
     </div>

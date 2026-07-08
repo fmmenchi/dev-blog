@@ -7,7 +7,7 @@ export interface SectionHeadingProps {
   aside?: ReactNode;
 }
 
-/** Monospace section label in the mock style: `// articoli ——— 5 post`. */
+/** Monospace section label in the mock style: `// articles ——— 5 posts`. */
 export function SectionHeading({ children, aside }: SectionHeadingProps) {
   return (
     <div className={styles['heading']}>

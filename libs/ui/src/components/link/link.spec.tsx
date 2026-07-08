@@ -26,7 +26,7 @@ describe('Link', () => {
     render(<Link href="https://example.com">Esempio</Link>);
     expect(
       screen.getByRole('link', {
-        name: /si apre in una nuova scheda/,
+        name: /opens in a new tab/,
       }),
     ).toBeTruthy();
   });

@@ -24,13 +24,13 @@ export default function Home() {
     <main className={styles['page']}>
       <div className={styles['hero']}>
         <h1 className={styles['heroTitle']}>
-          Software, sistemi e le{' '}
-          <span className={styles['heroAccent']}>decisioni</span> dietro al
-          codice.
+          Software, systems and the{' '}
+          <span className={styles['heroAccent']}>decisions</span> behind the
+          code.
         </h1>
         <p className={styles['heroTagline']}>
-          Niente hype, niente thread-boy. Post-mortem onesti, architettura,
-          TypeScript e developer experience.
+          No hype, no thread-boy takes. Honest post-mortems, architecture,
+          TypeScript and developer experience.
         </p>
       </div>
 
@@ -42,7 +42,7 @@ export default function Home() {
               <p className={styles['profileName']}>{profile.name}</p>
               <p className={styles['profileBio']}>{profile.bioShort}</p>
             </div>
-            <ul className={styles['skills']} aria-label="Competenze">
+            <ul className={styles['skills']} aria-label="Skills">
               {profile.skills.map((skill) => (
                 <li key={skill}>
                   <Badge>{skill}</Badge>
@@ -53,11 +53,11 @@ export default function Home() {
           </Card>
 
           <div className={styles['building']}>
-            <p className={styles['buildingLabel']}>$ ORA IN BUILD</p>
+            <p className={styles['buildingLabel']}>$ NOW BUILDING</p>
             <p className={styles['buildingTitle']}>{profile.building}</p>
             <p
               className={styles['buildingProgress']}
-              aria-label={`Avanzamento ${profile.buildingProgress}%`}
+              aria-label={`Progress ${profile.buildingProgress}%`}
             >
               <span aria-hidden="true">
                 [{'█'.repeat(profile.buildingProgress / 10)}
@@ -70,18 +70,18 @@ export default function Home() {
           <nav aria-label="Social" className={styles['social']}>
             <a href="https://github.com/fmmenchi">
               github
-              <span className="sr-only"> (si apre in una nuova scheda)</span>
+              <span className="sr-only"> (opens in a new tab)</span>
             </a>
             <a href="https://x.com/fmmenchi">
-              x<span className="sr-only"> (si apre in una nuova scheda)</span>
+              x<span className="sr-only"> (opens in a new tab)</span>
             </a>
             <a href="mailto:f.menchicchi@gmail.com">mail</a>
           </nav>
         </aside>
 
-        <section className={styles['list']} aria-label="Articoli">
-          <SectionHeading aside={`${posts.length} post`}>
-            articoli
+        <section className={styles['list']} aria-label="Articles">
+          <SectionHeading aside={`${posts.length} posts`}>
+            articles
           </SectionHeading>
 
           <RouterLink
@@ -90,7 +90,7 @@ export default function Home() {
           >
             <Card as="article" interactive className={styles['featured']}>
               <div className={styles['featuredMeta']}>
-                <span className={styles['featuredStar']}>★ ultimo</span>
+                <span className={styles['featuredStar']}>★ latest</span>
                 <span>
                   {featured.date} · {featured.minutes} min
                 </span>
@@ -126,7 +126,7 @@ export default function Home() {
           ))}
 
           <RouterLink to="/" className={styles['all']}>
-            → tutti gli articoli
+            → all articles
           </RouterLink>
         </section>
       </div>

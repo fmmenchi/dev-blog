@@ -40,7 +40,7 @@ export function Link({
         {...props}
       >
         {children}
-        <span className="sr-only"> (si apre in una nuova scheda)</span>
+        <span className="sr-only"> (opens in a new tab)</span>
       </a>
     );
   }

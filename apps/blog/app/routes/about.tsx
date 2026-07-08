@@ -28,58 +28,57 @@ export default function About() {
             <span>{profile.location}</span>
             <span>{profile.experience}</span>
           </div>
-          <Button>Scrivimi</Button>
+          <Button>Say hi</Button>
         </Card>
         <nav aria-label="Social" className={styles['social']}>
           <a href="https://github.com/fmmenchi">
-            github
-            <span className="sr-only"> (si apre in una nuova scheda)</span>
+            github<span className="sr-only"> (opens in a new tab)</span>
           </a>
           <a href="https://x.com/fmmenchi">
-            x<span className="sr-only"> (si apre in una nuova scheda)</span>
+            x<span className="sr-only"> (opens in a new tab)</span>
           </a>
           <a href="https://www.linkedin.com/in/fmmenchi">
             linkedin
-            <span className="sr-only"> (si apre in una nuova scheda)</span>
+            <span className="sr-only"> (opens in a new tab)</span>
           </a>
         </nav>
       </aside>
 
       <main className={styles['main']}>
         <h1 className={styles['title']}>
-          Ciao, sono <span className={styles['accent']}>{profile.name}</span>.
+          Hi, I'm <span className={styles['accent']}>{profile.name}</span>.
         </h1>
         <p className={styles['paragraph']}>
-          Costruisco software da una decina d'anni, quasi sempre lato web:
-          backend, frontend e tutto quello che sta in mezzo. Oggi lavoro su
-          sistemi distribuiti — code, eventi, consistenza — e sul perché la
-          maggior parte dei team non ne ha bisogno.
+          I've been building software for about ten years, almost always for the
+          web: backend, frontend and everything in between. These days I work on
+          distributed systems — queues, events, consistency — and on why most
+          teams don't need them.
         </p>
         <p className={styles['paragraph']}>
-          Questo blog è il mio quaderno pubblico: scrivo per capire, non per
-          insegnare. Se un post ti è utile è un effetto collaterale gradito.
+          This blog is my public notebook: I write to understand, not to teach.
+          If a post happens to be useful to you, that's a welcome side effect.
         </p>
         <p className={styles['paragraph']}>
-          Credo nei monoliti ben fatti, nei tipi come documentazione e nel
-          cancellare codice come forma d'arte.
+          I believe in well-built monoliths, in types as documentation and in
+          deleting code as an art form.
         </p>
 
         <div className={styles['now']}>
-          <SectionHeading>ora</SectionHeading>
+          <SectionHeading>now</SectionHeading>
         </div>
         <div className={styles['nowGrid']}>
           <div className={styles['nowBuild']}>
-            <p className={styles['nowLabel']}>$ IN BUILD</p>
+            <p className={styles['nowLabel']}>$ NOW BUILDING</p>
             <p className={styles['nowText']}>
-              rss-gen — feed RSS type-safe in Rust
+              rss-gen — type-safe RSS feeds in Rust
             </p>
           </div>
           <Card className={styles['nowRead']}>
             <p className={`${styles['nowLabel']} ${styles['nowLabelAccent']}`}>
-              $ IN LETTURA
+              $ NOW READING
             </p>
             <p className={styles['nowText']}>
-              Designing Data-Intensive Applications (rilettura)
+              Designing Data-Intensive Applications (re-read)
             </p>
           </Card>
         </div>

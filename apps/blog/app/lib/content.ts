@@ -16,36 +16,36 @@ export const projects: Project[] = [
   {
     name: 'rss-gen',
     period: '2026',
-    status: 'attivo',
+    status: 'active',
     description:
-      'Generatore di feed RSS type-safe. Lo schema del feed è un tipo, gli errori sono a compile time.',
+      'Type-safe RSS feed generator. The feed schema is a type, the errors are compile-time.',
     language: 'Rust',
     url: '#',
   },
   {
     name: 'tempo',
     period: '2025',
-    status: 'stabile',
+    status: 'stable',
     description:
-      'Time tracker da terminale. Un comando per iniziare, uno per fermare, un report a fine settimana.',
+      'Terminal time tracker. One command to start, one to stop, a report at the end of the week.',
     language: 'Go',
     url: '#',
   },
   {
     name: 'quaderno',
     period: '2025',
-    status: 'in pausa',
+    status: 'paused',
     description:
-      "Note locali-first con sync CRDT. L'esperimento che mi ha insegnato perché il sync è difficile.",
+      'Local-first notes with CRDT sync. The experiment that taught me why sync is hard.',
     language: 'TypeScript',
     url: '#',
   },
   {
     name: 'dotfiles',
-    period: 'sempre',
-    status: 'in evoluzione',
+    period: 'always',
+    status: 'evolving',
     description:
-      'Neovim, tmux, zsh. La config è documentazione: ogni riga ha un perché scritto accanto.',
+      'Neovim, tmux, zsh. The config is documentation: every line has its why written next to it.',
     language: 'Lua',
     url: '#',
   },
@@ -54,12 +54,13 @@ export const projects: Project[] = [
 export const profile = {
   name: 'Fabio',
   role: 'full-stack developer',
-  location: 'Torino, IT',
-  experience: '~10 anni di codice',
+  location: 'Turin, IT',
+  experience: '~10 years of code',
   bioShort:
-    'Full-stack dev a Torino. Di giorno sistemi distribuiti, di notte questo blog.',
-  bioCard: 'Full-stack dev a Torino. Scrive di sistemi, tipi e decisioni.',
-  skills: ['TypeScript', 'Rust', 'Architettura', 'DX'],
-  building: 'Generatore di feed RSS type-safe in Rust',
+    'Full-stack dev in Turin. Distributed systems by day, this blog by night.',
+  bioCard:
+    'Full-stack dev in Turin. Writes about systems, types and decisions.',
+  skills: ['TypeScript', 'Rust', 'Architecture', 'DX'],
+  building: 'Type-safe RSS feed generator in Rust',
   buildingProgress: 80,
 };

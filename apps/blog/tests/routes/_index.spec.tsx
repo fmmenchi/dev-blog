@@ -15,7 +15,7 @@ describe('Home', () => {
     expect(
       screen.getByRole('heading', {
         level: 1,
-        name: /decisioni dietro al codice/,
+        name: /decisions behind the code/,
       }),
     ).toBeTruthy();
   });
@@ -25,11 +25,11 @@ describe('Home', () => {
     expect(
       await screen.findByRole('heading', {
         level: 2,
-        name: 'Ho riscritto il mio blog in 200 righe',
+        name: 'I rewrote my blog in 200 lines',
       }),
     ).toBeTruthy();
     expect(screen.getByText('#web')).toBeTruthy();
-    expect(screen.getByText('★ ultimo')).toBeTruthy();
+    expect(screen.getByText('★ latest')).toBeTruthy();
   });
 
   it('lists every post as a link to its article', async () => {
@@ -43,9 +43,7 @@ describe('Home', () => {
 
   it('exposes profile skills accessibly', async () => {
     renderHome();
-    expect(
-      await screen.findByRole('list', { name: 'Competenze' }),
-    ).toBeTruthy();
+    expect(await screen.findByRole('list', { name: 'Skills' })).toBeTruthy();
     expect(screen.getByText('TypeScript')).toBeTruthy();
   });
 });
