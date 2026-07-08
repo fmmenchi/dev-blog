@@ -1,3 +1,14 @@
+## 0.1.0 (2026-07-08)
+
+### 🚀 Features
+
+- **blog:** make the site English-only ([cc8b1fd](https://github.com/fmmenchi/dev-blog/commit/cc8b1fd))
+
+### ❤️ Thank You
+
+- Claude Fable 5
+- Fabio Menchicchi @fmmenchi
+
 ## 0.0.8 (2026-07-08)
 
 ### 🩹 Fixes
