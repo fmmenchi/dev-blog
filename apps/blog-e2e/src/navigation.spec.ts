@@ -1,6 +1,34 @@
 import { expect, test } from '@playwright/test';
 
+declare global {
+  interface Window {
+    __spaMarker?: boolean;
+  }
+}
+
 test.describe('navigation', () => {
+  test('internal navigation is client-side — no full reloads', async ({
+    page,
+  }) => {
+    await page.goto('/');
+    // A full document reload would wipe this marker.
+    await page.evaluate(() => {
+      window.__spaMarker = true;
+    });
+
+    const nav = page.getByRole('navigation', { name: 'Main' });
+    await nav.getByRole('link', { name: '/projects' }).click();
+    await expect(page).toHaveURL(/\/projects$/);
+
+    const footer = page.getByRole('navigation', { name: 'Secondary' });
+    await footer.getByRole('link', { name: 'colophon' }).click();
+    await expect(page).toHaveURL(/\/colophon$/);
+    await footer.getByRole('link', { name: 'uses' }).click();
+    await expect(page).toHaveURL(/\/uses$/);
+
+    expect(await page.evaluate(() => window.__spaMarker)).toBe(true);
+  });
+
   test('reaches projects and about, marking the active section', async ({
     page,
   }) => {
