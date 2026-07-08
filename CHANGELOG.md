@@ -1,3 +1,14 @@
+## 0.0.7 (2026-07-08)
+
+### 🚀 Features
+
+- **blog:** build the about page from the design mock ([2a05625](https://github.com/fmmenchi/dev-blog/commit/2a05625))
+
+### ❤️ Thank You
+
+- Claude Fable 5
+- Fabio Menchicchi @fmmenchi
+
 ## 0.0.6 (2026-07-08)
 
 ### 🚀 Features
