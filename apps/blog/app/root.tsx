@@ -1,9 +1,12 @@
 import {
+  isRouteErrorResponse,
+  Link as RouterLink,
   Links,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
+  useRouteError,
   type LinksFunction,
 } from 'react-router';
 
@@ -35,6 +38,7 @@ export const meta = ({
   });
 
 export const links: LinksFunction = () => [
+  { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
   {
     rel: 'preconnect',
@@ -80,4 +84,40 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return <Outlet />;
+}
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+  const notFound = isRouteErrorResponse(error) && error.status === 404;
+
+  return (
+    <main className={styles['error']}>
+      <p className={styles['errorLabel']}>
+        <span aria-hidden="true" className={styles['errorAccent']}>
+          $
+        </span>{' '}
+        {notFound ? '404 — NOT FOUND' : 'UNEXPECTED ERROR'}
+      </p>
+      <h1 className={styles['errorTitle']}>
+        {notFound ? (
+          <>
+            This page doesn't{' '}
+            <span className={styles['errorAccent']}>exist</span>.
+          </>
+        ) : (
+          <>
+            Something <span className={styles['errorAccent']}>broke</span>.
+          </>
+        )}
+      </h1>
+      <p className={styles['errorText']}>
+        {notFound
+          ? 'Maybe it never did, maybe it moved. Either way, the good stuff is on the homepage.'
+          : 'Not your fault. Try again in a moment, or head back home.'}
+      </p>
+      <RouterLink to="/" className={styles['errorLink']}>
+        ← back to the blog
+      </RouterLink>
+    </main>
+  );
 }

@@ -20,8 +20,14 @@ test.describe('article', () => {
     await expect(page).toHaveURL(/\/blog\/why-i-left-microservices/);
   });
 
-  test('unknown slugs return 404', async ({ page }) => {
+  test('unknown slugs return the styled 404 page', async ({ page }) => {
     const response = await page.goto('/blog/does-not-exist');
     expect(response?.status()).toBe(404);
+    await expect(
+      page.getByRole('heading', { name: /doesn't exist/ }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole('link', { name: '← back to the blog' }),
+    ).toBeVisible();
   });
 });
