@@ -1,3 +1,18 @@
+## 0.0.4 (2026-07-08)
+
+### 🚀 Features
+
+- **blog:** add markdown content pipeline ([aa398da](https://github.com/fmmenchi/dev-blog/commit/aa398da))
+
+### 🩹 Fixes
+
+- **theme:** use exact andes-routes neutral values ([736638a](https://github.com/fmmenchi/dev-blog/commit/736638a))
+
+### ❤️ Thank You
+
+- Claude Fable 5
+- Fabio Menchicchi @fmmenchi
+
 ## 0.0.3 (2026-07-08)
 
 ### 🚀 Features
