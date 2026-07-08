@@ -38,8 +38,15 @@ jobs:
         run: pnpm exec playwright install --with-deps chromium
 
       # Prepend any command with "nx record --" to record its logs to Nx Cloud
-      - run: pnpm nx record -- pnpm nx format:check --base="remotes/origin/main"
-      - run: pnpm nx run-many -t lint test build typecheck e2e
+      - name: Format check
+        run: pnpm nx record -- pnpm nx format:check --base="remotes/origin/main"
+
+      - name: Lint, test, build, typecheck, lint-css (all projects)
+        run: pnpm nx run-many -t lint test build typecheck lint-css
+
+      - name: E2E — Playwright flows + axe a11y sweep (real worker in miniflare)
+        run: pnpm nx run-many -t e2e
+
       # Nx Cloud recommends fixes for failures to help you get CI green faster. Learn more: https://nx.dev/docs/features/ci-features/self-healing-ci
       - run: pnpm nx fix-ci
         if: always()
