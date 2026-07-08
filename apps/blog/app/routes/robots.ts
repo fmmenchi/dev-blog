@@ -1,11 +1,10 @@
-import type { LoaderFunctionArgs } from 'react-router';
+import { SITE_URL } from '../lib/site';
 
-export function loader({ request }: LoaderFunctionArgs) {
-  const origin = new URL(request.url).origin;
+export function loader() {
   const body = `User-agent: *
 Allow: /
 
-Sitemap: ${origin}/sitemap.xml
+Sitemap: ${SITE_URL}/sitemap.xml
 `;
   return new Response(body, {
     headers: {

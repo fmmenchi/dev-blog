@@ -1,11 +1,9 @@
-import type { LoaderFunctionArgs } from 'react-router';
-
 import { getPosts } from '../lib/posts.server';
 import { buildRssFeed } from '../lib/rss.server';
+import { SITE_URL } from '../lib/site';
 
-export function loader({ request }: LoaderFunctionArgs) {
-  const origin = new URL(request.url).origin;
-  const feed = buildRssFeed(origin, getPosts());
+export function loader() {
+  const feed = buildRssFeed(SITE_URL, getPosts());
   return new Response(feed, {
     headers: {
       'Content-Type': 'application/rss+xml; charset=utf-8',

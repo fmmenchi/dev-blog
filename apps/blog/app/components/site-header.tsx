@@ -17,7 +17,7 @@ export function SiteHeader() {
       </a>
       <div className={styles['inner']}>
         <RouterLink to="/" className={styles['logo']}>
-          fabio<span className={styles['logoAccent']}>.dev</span>
+          fabiomenchicchi<span className={styles['logoAccent']}>.com</span>
         </RouterLink>
         <nav aria-label="Main" className={styles['nav']}>
           {NAV.map(({ to, label }) => (

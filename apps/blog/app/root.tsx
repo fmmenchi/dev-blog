@@ -4,7 +4,6 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  type LoaderFunctionArgs,
   type LinksFunction,
 } from 'react-router';
 
@@ -13,10 +12,11 @@ import themeStylesheetUrl from '@dev-blog/theme/styles/theme.css?url';
 import { SiteFooter } from './components/site-footer';
 import { SiteHeader } from './components/site-header';
 import { seoMeta } from './lib/seo';
+import { SITE_NAME, SITE_URL } from './lib/site';
 import styles from './root.module.css';
 
-export function loader({ request }: LoaderFunctionArgs) {
-  return { origin: new URL(request.url).origin };
+export function loader() {
+  return { origin: SITE_URL };
 }
 
 export const meta = ({
@@ -27,9 +27,9 @@ export const meta = ({
   location: { pathname: string };
 }) =>
   seoMeta({
-    origin: loaderData?.origin ?? '',
+    origin: loaderData?.origin ?? SITE_URL,
     path: location.pathname,
-    title: 'fabio.dev — software, systems and decisions',
+    title: `${SITE_NAME} — software, systems and decisions`,
     description:
       'No hype, no thread-boy takes. Honest post-mortems, architecture, TypeScript and developer experience.',
   });
@@ -49,7 +49,7 @@ export const links: LinksFunction = () => [
   {
     rel: 'alternate',
     type: 'application/rss+xml',
-    title: 'fabio.dev',
+    title: SITE_NAME,
     href: '/rss.xml',
   },
 ];
