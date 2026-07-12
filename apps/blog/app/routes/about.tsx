@@ -57,11 +57,12 @@ export default function About() {
         <p className={styles['paragraph']}>
           Born in Arezzo, computer engineering in Bologna, now writing code from
           Cusco, Peru. Thirteen years of software, nearly all of it for the web.
-          These days I'm a staff engineer on a supply-chain platform: React and
-          NestJS on top, Java and SQL underneath, and a lot of hours spent on
-          the parts nobody demos — the design system, the monorepo, the pipeline
-          that ships it. Lately, on teaching an LLM to find its way around all
-          of that.
+          Before this I spent a decade on an enterprise supply-chain platform,
+          where I built a frontend department from nothing. These days I work on
+          Wishew: a React Native app, a NestJS backend, a handful of Go services
+          and the cloud they run on — plus the usual hours on the parts nobody
+          demos, the monorepo, the design system, the pipeline that ships it.
+          Lately, on teaching an LLM to find its way around all of that.
         </p>
         <p className={styles['paragraph']}>
           This blog is my public notebook: I write to understand, not to teach.
