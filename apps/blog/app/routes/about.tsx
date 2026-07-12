@@ -67,10 +67,10 @@ export default function About() {
           learned what conventions are worth.
         </p>
         <p className={styles['paragraph']}>
-          My convictions are dull ones. Types and tests are what let you change
-          your mind a year later, and a release should be fast and automatic.
-          But the only thing that really matters is the direction: get that
-          right, and every change can be a small one.
+          Types and tests are what let you change your mind a year later, and a
+          release should be fast and automatic. But the only thing that really
+          matters is the direction: get that right, and every change can be a
+          small one.
         </p>
         <p className={styles['paragraph']}>
           This blog is my notebook. I write things down here to find out whether
