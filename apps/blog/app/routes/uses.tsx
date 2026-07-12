@@ -81,13 +81,16 @@ export default function Uses() {
               detail: 'MacBook Pro 16" — Apple M5 Pro, 48 GB.',
             },
             {
-              term: 'display',
-              detail: 'The built-in Liquid Retina XDR. No second monitor.',
+              term: 'displays',
+              detail:
+                'A curved LG and a Samsung turned vertical for the code, both on an Anker Thunderbolt dock.',
             },
             {
               term: 'keyboard',
-              detail: "The laptop's own. It travels better than a mechanical.",
+              detail:
+                'NuPhy Air V3 — low-profile mechanical, and yes, audible.',
             },
+            { term: 'mouse', detail: 'Logitech MX Vertical.' },
           ]}
         />
       </section>
