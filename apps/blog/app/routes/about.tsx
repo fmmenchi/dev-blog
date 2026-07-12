@@ -59,7 +59,7 @@ export default function About() {
           almost all of them on the web.
         </p>
         <p className={styles['paragraph']}>
-          These days it's a product on mobile and web: the apps, the backend,
+          These days I build a product on mobile and web: the apps, the backend,
           and the Nx monorepo and release pipeline under all of it. A lot of
           that work, lately, is with AI. Before it, ten years on an enterprise
           supply-chain platform, where I built the frontend department from
