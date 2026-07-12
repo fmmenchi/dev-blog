@@ -53,7 +53,7 @@ export const projects: Project[] = [
 
 export const profile = {
   name: 'Fabio',
-  role: 'full-stack developer',
+  role: 'staff engineer',
   location: 'Cusco, PE',
   experience: '~13 years of code',
   bioShort:

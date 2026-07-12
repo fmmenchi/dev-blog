@@ -56,18 +56,22 @@ export default function About() {
         </h1>
         <p className={styles['paragraph']}>
           Born in Arezzo, computer engineering in Bologna, now writing code from
-          Cusco, Peru. I've been building software for about thirteen years,
-          almost always for the web: backend, frontend and everything in
-          between. These days I work on distributed systems — queues, events,
-          consistency — and on why most teams don't need them.
+          Cusco, Peru. Thirteen years of software, nearly all of it for the web.
+          These days I'm a staff engineer on a supply-chain platform: React and
+          NestJS on top, Java and SQL underneath, and a lot of hours spent on
+          the parts nobody demos — the design system, the monorepo, the pipeline
+          that ships it. Lately, on teaching an LLM to find its way around all
+          of that.
         </p>
         <p className={styles['paragraph']}>
           This blog is my public notebook: I write to understand, not to teach.
           If a post happens to be useful to you, that's a welcome side effect.
         </p>
         <p className={styles['paragraph']}>
-          I believe in well-built monoliths, in types as documentation and in
-          deleting code as an art form.
+          What I actually care about is the boring half — conventions a team can
+          follow, types that save a comment, tests that catch what I forgot, a
+          release that runs itself. And reviewing other people's code, which is
+          still the fastest way I know to learn something.
         </p>
 
         <div className={styles['now']}>
