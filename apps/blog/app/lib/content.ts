@@ -64,7 +64,7 @@ export const profile = {
     'TypeScript',
     'React & React Native',
     'Node & Nest',
-    'Go',
+    'Go & Java',
     'GCP',
     'Architecture',
     'DX',
