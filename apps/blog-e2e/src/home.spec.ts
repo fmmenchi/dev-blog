@@ -10,19 +10,17 @@ test.describe('home', () => {
       }),
     ).toBeVisible();
     await expect(
-      page.getByRole('heading', { name: 'I rewrote my blog in 200 lines' }),
+      page.getByRole('heading', { name: 'Starting a notebook' }),
     ).toBeVisible();
     await expect(page.getByText('★ latest')).toBeVisible();
   });
 
   test('navigates from a post card to the article', async ({ page }) => {
     await page.goto('/');
-    await page
-      .getByRole('heading', { name: 'I rewrote my blog in 200 lines' })
-      .click();
-    await expect(page).toHaveURL(/\/blog\/rewrote-my-blog-in-200-lines/);
+    await page.getByRole('heading', { name: 'Starting a notebook' }).click();
+    await expect(page).toHaveURL(/\/blog\/starting-a-notebook/);
     await expect(
-      page.getByRole('heading', { level: 1, name: /200 lines/ }),
+      page.getByRole('heading', { level: 1, name: /Starting a notebook/ }),
     ).toBeVisible();
   });
 
