@@ -42,9 +42,9 @@ describe('sitemap.xml', () => {
     expect(xml).toContain('<loc>https://fabiomenchicchi.com/</loc>');
     expect(xml).toContain('<loc>https://fabiomenchicchi.com/projects</loc>');
     expect(xml).toContain(
-      '<loc>https://fabiomenchicchi.com/blog/rewrote-my-blog-in-200-lines</loc>',
+      '<loc>https://fabiomenchicchi.com/blog/starting-a-notebook</loc>',
     );
-    expect(xml).toContain('<lastmod>2026-07-02</lastmod>');
+    expect(xml).toContain('<lastmod>2026-07-12</lastmod>');
   });
 });
 

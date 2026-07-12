@@ -3,7 +3,14 @@ import { SITE_URL } from '../lib/site';
 
 export function loader() {
   const origin = SITE_URL;
-  const staticPaths = ['/', '/projects', '/about', '/colophon', '/uses'];
+  const staticPaths = [
+    '/',
+    '/blog',
+    '/projects',
+    '/about',
+    '/colophon',
+    '/uses',
+  ];
   const urls = [
     ...staticPaths.map((path) => `  <url><loc>${origin}${path}</loc></url>`),
     ...getPosts().map(

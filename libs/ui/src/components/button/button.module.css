@@ -9,6 +9,8 @@
   font-size: var(--typography-body-size);
   font-weight: var(--font-weight-medium);
   line-height: var(--leading-normal);
+  /* An href renders an <a>, which would otherwise underline itself. */
+  text-decoration: none;
   cursor: pointer;
   transition: var(--transition-color);
 }

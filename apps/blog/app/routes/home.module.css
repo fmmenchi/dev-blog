@@ -28,6 +28,8 @@
   line-height: 1.6;
   color: var(--color-muted-foreground);
   max-width: 560px;
+  /* Split the tagline into even lines instead of dropping the last word alone. */
+  text-wrap: balance;
 }
 
 .grid {
@@ -115,24 +117,6 @@
   font-family: var(--font-mono);
   font-size: var(--text-2xs);
   margin: var(--spacing-stack-m) 0 0;
-}
-
-.social {
-  display: flex;
-  gap: 18px;
-  padding: 2px 6px;
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-}
-
-.social a {
-  color: var(--color-muted-foreground);
-  text-decoration: none;
-  transition: var(--transition-color);
-}
-
-.social a:hover {
-  color: var(--color-primary);
 }
 
 .list {

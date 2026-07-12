@@ -1,7 +1,7 @@
 import { Button, Card, Link } from '@dev-blog/ui';
 
 import { Avatar } from '../components/avatar';
-import { profile } from '../lib/content';
+import { profile, socials } from '../lib/content';
 import { originFromMatches, seoMeta } from '../lib/seo';
 import { SITE_NAME } from '../lib/site';
 import styles from './about.module.css';
@@ -34,18 +34,17 @@ export default function About() {
             <span>{profile.location}</span>
             <span>{profile.experience}</span>
           </div>
-          <Button>Say hi</Button>
+          <Button href="mailto:f.menchicchi@gmail.com">Say hi</Button>
         </Card>
+        {/* No mail here: the "Say hi" button above is already the mail link. */}
         <nav aria-label="Social" className={styles['social']}>
-          <Link href="https://github.com/fmmenchi" variant="plain">
-            github
-          </Link>
-          <Link
-            href="https://www.linkedin.com/in/fabio-menchicchi-055a36176/"
-            variant="plain"
-          >
-            linkedin
-          </Link>
+          {socials
+            .filter(({ href }) => !href.startsWith('mailto:'))
+            .map(({ label, href }) => (
+              <Link key={label} href={href} variant="plain">
+                {label}
+              </Link>
+            ))}
         </nav>
       </aside>
 

@@ -24,17 +24,17 @@ describe('parseFrontmatter', () => {
 describe('posts', () => {
   it('loads all markdown posts sorted by date desc', () => {
     const posts = getPosts();
-    expect(posts.length).toBeGreaterThanOrEqual(5);
+    expect(posts.length).toBeGreaterThanOrEqual(1);
     const dates = posts.map((p) => p.date);
     expect(dates).toEqual([...dates].sort().reverse());
   });
 
   it('exposes the featured post with parsed frontmatter', () => {
-    const post = getPost('rewrote-my-blog-in-200-lines');
-    expect(post?.title).toBe('I rewrote my blog in 200 lines');
-    expect(post?.minutes).toBe(6);
-    expect(post?.tags).toEqual(['web', 'minimalism']);
+    const post = getPost('starting-a-notebook');
+    expect(post?.title).toBe('Starting a notebook');
+    expect(post?.minutes).toBe(2);
+    expect(post?.tags).toEqual(['meta']);
     expect(post?.featured).toBe(true);
-    expect(post?.body).toContain('## The problem');
+    expect(post?.body).toContain('## What goes here');
   });
 });

@@ -1,4 +1,4 @@
-import { Button, Card, Link, Prose } from '@dev-blog/ui';
+import { Card, Link, Prose } from '@dev-blog/ui';
 import { useLoaderData, type LoaderFunctionArgs } from 'react-router';
 
 import { Avatar } from '../components/avatar';
@@ -87,39 +87,41 @@ export default function Post() {
             <p className={styles['authorName']}>{profile.name}</p>
             <p className={styles['authorBio']}>{profile.bioCard}</p>
           </div>
-          <Button>Newsletter</Button>
         </Card>
 
-        <nav aria-label="More articles" className={styles['siblings']}>
-          {prev ? (
-            <Link
-              to={`/blog/${prev.slug}`}
-              variant="plain"
-              className={styles['sibling']}
-            >
-              <Card interactive className={styles['siblingCard']}>
-                <span className={styles['siblingLabel']}>← previous</span>
-                <span className={styles['siblingTitle']}>{prev.title}</span>
-              </Card>
-            </Link>
-          ) : (
-            <span />
-          )}
-          {next ? (
-            <Link
-              to={`/blog/${next.slug}`}
-              variant="plain"
-              className={`${styles['sibling']} ${styles['siblingNext']}`}
-            >
-              <Card interactive className={styles['siblingCard']}>
-                <span className={styles['siblingLabel']}>next →</span>
-                <span className={styles['siblingTitle']}>{next.title}</span>
-              </Card>
-            </Link>
-          ) : (
-            <span />
-          )}
-        </nav>
+        {/* The first post has no siblings: an empty nav landmark helps nobody. */}
+        {prev || next ? (
+          <nav aria-label="More articles" className={styles['siblings']}>
+            {prev ? (
+              <Link
+                to={`/blog/${prev.slug}`}
+                variant="plain"
+                className={styles['sibling']}
+              >
+                <Card interactive className={styles['siblingCard']}>
+                  <span className={styles['siblingLabel']}>← previous</span>
+                  <span className={styles['siblingTitle']}>{prev.title}</span>
+                </Card>
+              </Link>
+            ) : (
+              <span />
+            )}
+            {next ? (
+              <Link
+                to={`/blog/${next.slug}`}
+                variant="plain"
+                className={`${styles['sibling']} ${styles['siblingNext']}`}
+              >
+                <Card interactive className={styles['siblingCard']}>
+                  <span className={styles['siblingLabel']}>next →</span>
+                  <span className={styles['siblingTitle']}>{next.title}</span>
+                </Card>
+              </Link>
+            ) : (
+              <span />
+            )}
+          </nav>
+        ) : null}
       </article>
 
       <aside className={styles['sidebar']}>

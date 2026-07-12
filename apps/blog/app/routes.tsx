@@ -5,6 +5,7 @@ export default [
   route('rss.xml', './routes/rss.ts'),
   route('sitemap.xml', './routes/sitemap.ts'),
   route('robots.txt', './routes/robots.ts'),
+  route('blog', './routes/blog.tsx'),
   route('blog/:slug', './routes/post.tsx'),
   route('projects', './routes/projects.tsx'),
   route('about', './routes/about.tsx'),

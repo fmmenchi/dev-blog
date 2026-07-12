@@ -19,7 +19,7 @@ describe('buildRssFeed', () => {
         `<link>https://fabiomenchicchi.com/blog/${post.slug}</link>`,
       );
     }
-    expect(feed).toContain('<pubDate>Thu, 02 Jul 2026 00:00:00 GMT</pubDate>');
+    expect(feed).toContain('<pubDate>Sun, 12 Jul 2026 00:00:00 GMT</pubDate>');
   });
 
   it('escapes XML entities in text content', () => {

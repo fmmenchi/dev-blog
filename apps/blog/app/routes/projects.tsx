@@ -1,4 +1,4 @@
-import { Card, Link } from '@dev-blog/ui';
+import { Card, EmptyState, Link } from '@dev-blog/ui';
 
 import { projects } from '../lib/content';
 import { originFromMatches, seoMeta } from '../lib/seo';
@@ -20,11 +20,10 @@ export const meta = ({
       'Things I build to understand how they work. Almost all open source, almost none finished.',
   });
 
+/** Unlisted languages fall back to the muted dot. */
 const LANGUAGE_COLOR: Record<string, string> = {
-  Rust: 'oklch(60% 0.16 40)',
-  Go: 'oklch(75% 0.15 130)',
   TypeScript: 'oklch(70% 0.13 250)',
-  Lua: 'oklch(75% 0.12 145)',
+  Go: 'oklch(75% 0.15 130)',
 };
 
 export default function Projects() {
@@ -36,40 +35,49 @@ export default function Projects() {
         almost none finished.
       </p>
 
-      <ul className={styles['grid']} aria-label="Projects">
-        {projects.map((project) => (
-          <li key={project.name}>
-            <Link
-              href={project.url}
-              variant="plain"
-              className={styles['cardLink']}
-            >
-              <Card as="article" interactive className={styles['card']}>
-                <div className={styles['cardHead']}>
-                  <h2 className={styles['name']}>{project.name}</h2>
-                  <span className={styles['period']}>
-                    {project.period} · {project.status}
-                  </span>
-                </div>
-                <p className={styles['description']}>{project.description}</p>
-                <div className={styles['cardFoot']}>
-                  <span
-                    aria-hidden="true"
-                    className={styles['dot']}
-                    style={{
-                      background:
-                        LANGUAGE_COLOR[project.language] ??
-                        'var(--color-muted-foreground)',
-                    }}
-                  />
-                  {project.language}
-                  <span className={styles['repo']}>repo →</span>
-                </div>
-              </Card>
-            </Link>
-          </li>
-        ))}
-      </ul>
+      {projects.length === 0 ? (
+        <EmptyState
+          title="No projects yet"
+          description="Nothing here I'd ask you to read. When there is, it lands here first."
+        >
+          <Link href="https://github.com/fmmenchi">github</Link>
+        </EmptyState>
+      ) : (
+        <ul className={styles['grid']} aria-label="Projects">
+          {projects.map((project) => (
+            <li key={project.name}>
+              <Link
+                href={project.url}
+                variant="plain"
+                className={styles['cardLink']}
+              >
+                <Card as="article" interactive className={styles['card']}>
+                  <div className={styles['cardHead']}>
+                    <h2 className={styles['name']}>{project.name}</h2>
+                    <span className={styles['period']}>
+                      {project.period} · {project.status}
+                    </span>
+                  </div>
+                  <p className={styles['description']}>{project.description}</p>
+                  <div className={styles['cardFoot']}>
+                    <span
+                      aria-hidden="true"
+                      className={styles['dot']}
+                      style={{
+                        background:
+                          LANGUAGE_COLOR[project.language] ??
+                          'var(--color-muted-foreground)',
+                      }}
+                    />
+                    {project.language}
+                    <span className={styles['repo']}>repo →</span>
+                  </div>
+                </Card>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
     </main>
   );
 }

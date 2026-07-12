@@ -1,6 +1,7 @@
 import { createRoutesStub } from 'react-router';
 import { render, screen } from '@testing-library/react';
 
+import { projects } from '../../app/lib/content';
 import Projects from '../../app/routes/projects';
 
 function renderPage() {
@@ -17,11 +18,11 @@ describe('Projects', () => {
     expect(screen.getByText(/Almost all open source/)).toBeTruthy();
   });
 
-  it('lists all four projects with their names as headings', () => {
+  // Driven by the data, not by a hardcoded list: the projects change, the test shouldn't.
+  it('lists every project with its name as a heading', () => {
     renderPage();
-    const list = screen.getByRole('list', { name: 'Projects' });
-    expect(list).toBeTruthy();
-    for (const name of ['rss-gen', 'tempo', 'quaderno', 'dotfiles']) {
+    expect(screen.getByRole('list', { name: 'Projects' })).toBeTruthy();
+    for (const { name } of projects) {
       expect(screen.getByRole('heading', { level: 2, name })).toBeTruthy();
     }
   });

@@ -1,6 +1,7 @@
 import { createRoutesStub } from 'react-router';
 import { render, screen } from '@testing-library/react';
 
+import { getPosts } from '../../app/lib/posts.server';
 import Home, { loader } from '../../app/routes/home';
 
 function renderHome() {
@@ -25,10 +26,10 @@ describe('Home', () => {
     expect(
       await screen.findByRole('heading', {
         level: 2,
-        name: 'I rewrote my blog in 200 lines',
+        name: 'Starting a notebook',
       }),
     ).toBeTruthy();
-    expect(screen.getByText('#web')).toBeTruthy();
+    expect(screen.getByText('#meta')).toBeTruthy();
     expect(screen.getByText('★ latest')).toBeTruthy();
   });
 
@@ -38,7 +39,7 @@ describe('Home', () => {
     const postLinks = links.filter((l) =>
       l.getAttribute('href')?.startsWith('/blog/'),
     );
-    expect(postLinks.length).toBe(5);
+    expect(postLinks.length).toBe(getPosts().length);
   });
 
   it('exposes profile skills accessibly', async () => {
