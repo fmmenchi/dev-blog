@@ -69,7 +69,9 @@ export default function About() {
         <p className={styles['paragraph']}>
           My convictions are dull ones: a team moves at the speed of its
           conventions, types and tests are what let you change your mind a year
-          later, a release should be fast and should not need a person.
+          later, a release should be fast and should not need a person. And the
+          only thing that really matters is the direction: get that right, and
+          every change can be a small one.
         </p>
         <p className={styles['paragraph']}>
           This blog is my notebook. I write things down here to find out whether
