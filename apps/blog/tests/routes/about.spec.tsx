@@ -31,6 +31,6 @@ describe('About', () => {
   it('tells the reader where Fabio is and what he works on', () => {
     renderPage();
     expect(screen.getByText(/Peruvian Andes/)).toBeTruthy();
-    expect(screen.getByText(/mobile product/)).toBeTruthy();
+    expect(screen.getByText(/product on mobile and web/)).toBeTruthy();
   });
 });
