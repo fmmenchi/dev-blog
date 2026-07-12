@@ -7,13 +7,14 @@
  * standalone on claude.ai/design with the real token values.
  *
  * Three levels:
- *   1. Primitives  — raw palette/scales. Implementation detail: never consume directly.
- *   2. Derived     — accent ramps. Implementation detail.
- *   3. Semantic    — role tokens. The ONLY level components and app code may consume.
+ *   1. Primitives — the raw palette and the shared scales. Components may use
+ *      the SCALES; the raw palette is off limits.
+ *   2. Derived    — the accent ramps. Never consumed directly.
+ *   3. Semantic   — the role tokens. Every colour and typography value a
+ *      component uses comes from here.
  *
- * The blog is dark-first: :root holds the dark theme from the design mocks.
- * The accent is switchable via <html data-accent="yellow|lime|amber"> (default
- * yellow); only the primary family changes per accent.
+ * There is ONE theme, and it is dark. No light theme, no [data-theme] switch.
+ * The ACCENT is what switches: <html data-accent="yellow|lime|amber">.
  */
 
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
@@ -23,44 +24,42 @@
   /* LEVEL 1 — primitives                                                */
   /* ------------------------------------------------------------------ */
 
-  /* Neutral ramp — cool dark slate (hue 256), from the andes-routes palette */
-  --color-neutral-50: oklch(96.5% 0.006 256);
+  /* Neutral ramp — cool dark slate (hue 256). Every step below is consumed by a
+     semantic role; if you add one, give it a role or don't add it. */
   --color-neutral-100: oklch(95% 0.007 256);
   --color-neutral-400: oklch(74% 0.014 256);
-  --color-neutral-700: oklch(38% 0.02 256);
   --color-neutral-800: oklch(31% 0.02 256);
   --color-neutral-850: oklch(26% 0.02 256);
-  --color-neutral-900: oklch(24% 0.02 256);
   --color-neutral-950: oklch(21% 0.02 256);
   --color-neutral-1000: oklch(17% 0.015 256);
 
-  /* Spacing scale (raw) */
+  /* Spacing scale */
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 0.75rem;
   --space-4: 1rem;
   --space-6: 1.5rem;
   --space-8: 2rem;
-  --space-12: 3rem;
   --space-16: 4rem;
 
-  /* Type scale (raw) */
+  /* Type scale */
   --text-2xs: 0.6875rem;
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
   --text-base: 1rem;
   --text-lg: 1.0625rem;
   --text-xl: 1.4375rem;
-  --text-2xl: 1.625rem;
   --text-3xl: 2.5rem;
 
-  --font-weight-regular: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
 
   --leading-tight: 1.1;
   --leading-normal: 1.5;
+  /* Muted copy — excerpts, descriptions, card blurbs. Was written by hand as a
+     literal 1.6 in ten different files before it had a name. */
+  --leading-copy: 1.6;
   --leading-relaxed: 1.75;
 
   --font-sans:
@@ -104,10 +103,17 @@
   --color-foreground: var(--color-neutral-100);
   --color-card: var(--color-neutral-850);
   --color-card-foreground: var(--color-neutral-100);
-  --color-muted: var(--color-neutral-850);
+  /* A muted surface must read as muted ON a card too. It used to be the same
+     value as --color-card, so it disappeared on the site's commonest surface. */
+  --color-muted: var(--color-neutral-800);
   --color-muted-foreground: var(--color-neutral-400);
   --color-border: var(--color-neutral-800);
-  --color-ring: var(--color-primary);
+
+  /* Focus ring — deliberately NOT the accent. A yellow ring vanishes the moment
+     a focusable element sits on a yellow surface, and we have one. The offset
+     colour paints a dark gap under the ring so it survives any background. */
+  --color-ring: var(--color-foreground);
+  --color-ring-offset: var(--color-background);
 
   /* Brand roles — default accent: yellow */
   --color-primary: var(--accent-yellow);
@@ -128,6 +134,8 @@
   --typography-heading-tracking: -0.03em;
   --typography-body-size: var(--text-base);
   --typography-body-leading: var(--leading-relaxed);
+  /* Excerpts, descriptions, blurbs — tighter than an article body. */
+  --typography-copy-leading: var(--leading-copy);
   --typography-small-size: var(--text-sm);
   --typography-mono-size: var(--text-xs);
 
@@ -190,10 +198,13 @@ body {
   color: var(--color-foreground);
 }
 
-/* Accessible focus ring — WCAG 2.4.7 */
+/* Accessible focus ring — WCAG 2.4.7.
+   The box-shadow fills the outline's 2px gap with the page colour, so the ring
+   always has a dark edge to contrast against — even on the accent surfaces. */
 :focus-visible {
   outline: 2px solid var(--color-ring);
   outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--color-ring-offset);
   border-radius: var(--radius-sm);
 }
 

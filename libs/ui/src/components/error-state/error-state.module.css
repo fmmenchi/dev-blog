@@ -16,7 +16,7 @@
 
 .description {
   color: var(--color-muted-foreground);
-  line-height: 1.6;
+  line-height: var(--typography-copy-leading);
   max-width: 28rem;
   margin: 0;
 }
