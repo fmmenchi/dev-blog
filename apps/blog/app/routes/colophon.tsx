@@ -143,9 +143,7 @@ export default function Colophon() {
         />
       </section>
 
-      <p className={styles['note']}>
-        No analytics, no cookies, no tracking. Made with too much coffee.
-      </p>
+      <p className={styles['note']}>No analytics, no cookies, no tracking.</p>
     </main>
   );
 }

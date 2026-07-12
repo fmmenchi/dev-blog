@@ -1,7 +1,6 @@
 import { Button, Card, Link } from '@dev-blog/ui';
 
 import { Avatar } from '../components/avatar';
-import { SectionHeading } from '../components/section-heading';
 import { profile } from '../lib/content';
 import { originFromMatches, seoMeta } from '../lib/seo';
 import { SITE_NAME } from '../lib/site';
@@ -41,10 +40,10 @@ export default function About() {
           <Link href="https://github.com/fmmenchi" variant="plain">
             github
           </Link>
-          <Link href="https://x.com/fmmenchi" variant="plain">
-            x
-          </Link>
-          <Link href="https://www.linkedin.com/in/fmmenchi" variant="plain">
+          <Link
+            href="https://www.linkedin.com/in/fabio-menchicchi-055a36176/"
+            variant="plain"
+          >
             linkedin
           </Link>
         </nav>
@@ -55,39 +54,29 @@ export default function About() {
           Hi, I'm <span className={styles['accent']}>{profile.name}</span>.
         </h1>
         <p className={styles['paragraph']}>
-          I've been building software for about ten years, almost always for the
-          web: backend, frontend and everything in between. These days I work on
-          distributed systems — queues, events, consistency — and on why most
-          teams don't need them.
+          I grew up in Arezzo, studied computer engineering in Bologna, and now
+          write code from Cusco, in the Peruvian Andes. Thirteen years in,
+          almost all of them on the web.
         </p>
         <p className={styles['paragraph']}>
-          This blog is my public notebook: I write to understand, not to teach.
-          If a post happens to be useful to you, that's a welcome side effect.
+          These days I build a product on mobile and web: the apps, the backend,
+          and the Nx monorepo and release pipeline under all of it. A lot of
+          that work, lately, is with AI. Before it, ten years on an enterprise
+          supply-chain platform, where I built the frontend department from
+          nothing: standards, design system, tooling, people. That is where I
+          learned what conventions are worth.
         </p>
         <p className={styles['paragraph']}>
-          I believe in well-built monoliths, in types as documentation and in
-          deleting code as an art form.
+          I've come to believe that types and tests are what let you change your
+          mind a year later, and that a release should be fast and automatic.
+          But the only thing that really matters, to me, is the direction: get
+          that right, and every change can be a small one.
         </p>
-
-        <div className={styles['now']}>
-          <SectionHeading>now</SectionHeading>
-        </div>
-        <div className={styles['nowGrid']}>
-          <div className={styles['nowBuild']}>
-            <p className={styles['nowLabel']}>$ NOW BUILDING</p>
-            <p className={styles['nowText']}>
-              rss-gen — type-safe RSS feeds in Rust
-            </p>
-          </div>
-          <Card className={styles['nowRead']}>
-            <p className={`${styles['nowLabel']} ${styles['nowLabelAccent']}`}>
-              $ NOW READING
-            </p>
-            <p className={styles['nowText']}>
-              Designing Data-Intensive Applications (re-read)
-            </p>
-          </Card>
-        </div>
+        <p className={styles['paragraph']}>
+          This blog is my notebook. I write things down here to find out whether
+          I actually understood them. If a post helps you understand something
+          too, that makes me happy. I hope it does.
+        </p>
       </main>
     </div>
   );

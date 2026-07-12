@@ -17,6 +17,7 @@ describe('Uses', () => {
     for (const label of [
       'Editor and terminal',
       'Hardware',
+      'Toolchain',
       'Apps and services',
     ]) {
       expect(screen.getByRole('region', { name: label })).toBeTruthy();
@@ -25,6 +26,6 @@ describe('Uses', () => {
 
   it('lists the editor', () => {
     renderPage();
-    expect(screen.getByText(/Neovim/)).toBeTruthy();
+    expect(screen.getByText(/VS Code/)).toBeTruthy();
   });
 });

@@ -55,10 +55,17 @@ export default function Uses() {
             {
               term: 'editor',
               detail:
-                'Neovim — config lives in my dotfiles, every line has its why written next to it.',
+                'VS Code, with ESLint, Prettier, Nx Console, Git Graph — and Claude Code doing a good share of the typing.',
             },
-            { term: 'terminal', detail: 'Ghostty with tmux and zsh.' },
-            { term: 'font', detail: 'JetBrains Mono, everywhere.' },
+            {
+              term: 'terminal',
+              detail:
+                'The one macOS ships with, zsh and oh-my-zsh on top. I never got around to changing it.',
+            },
+            {
+              term: 'font',
+              detail: "The editor default. I've never felt the need to argue.",
+            },
           ]}
         />
       </section>
@@ -69,11 +76,50 @@ export default function Uses() {
         </div>
         <Rows
           rows={[
-            { term: 'machine', detail: 'MacBook Pro 14" (M3).' },
-            { term: 'monitor', detail: 'One big 27" 4K display, no more.' },
+            {
+              term: 'machine',
+              detail: 'MacBook Pro 16" — Apple M5 Pro, 48 GB.',
+            },
+            {
+              term: 'displays',
+              detail:
+                'A curved LG 34WQ75C-B ultrawide, and a 24" Samsung ViewFinity S6 turned vertical for the code.',
+            },
+            {
+              term: 'dock',
+              detail:
+                'Anker Prime TB5 — Thunderbolt 5, fourteen ports, one cable to the laptop.',
+            },
             {
               term: 'keyboard',
-              detail: 'A mechanical one that annoys everyone on calls.',
+              detail:
+                'NuPhy Air V3 — low-profile mechanical, and yes, audible.',
+            },
+            { term: 'mouse', detail: 'Logitech MX Vertical.' },
+            {
+              term: 'arm',
+              detail: 'North Bayou H180 — both screens float, the desk stays.',
+            },
+            { term: 'webcam', detail: 'Logitech C930e.' },
+            { term: 'speakers', detail: 'Creative Pebble V3.' },
+          ]}
+        />
+      </section>
+
+      <section className={styles['section']} aria-label="Toolchain">
+        <div className={styles['sectionHeading']}>
+          <SectionHeading>toolchain</SectionHeading>
+        </div>
+        <Rows
+          rows={[
+            { term: 'runtime', detail: 'Node 24 and pnpm, in Nx monorepos.' },
+            {
+              term: 'also on the machine',
+              detail: 'Go, the JDK, Docker and Xcode — the work decides which.',
+            },
+            {
+              term: 'cloud',
+              detail: 'Google Cloud, driven with gcloud and Terraform.',
             },
           ]}
         />
@@ -85,12 +131,12 @@ export default function Uses() {
         </div>
         <Rows
           rows={[
-            { term: 'notes', detail: 'Plain Markdown files in a git repo.' },
-            { term: 'passwords', detail: 'A password manager. Use one.' },
+            { term: 'notes', detail: 'Notion.' },
             {
-              term: 'music',
-              detail: 'Lo-fi playlists on repeat while writing.',
+              term: 'code hosting',
+              detail: 'GitHub for mine, GitLab at work.',
             },
+            { term: 'music', detail: 'Spotify, while writing.' },
           ]}
         />
       </section>

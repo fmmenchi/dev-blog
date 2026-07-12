@@ -71,9 +71,6 @@ export default function Home() {
             <Link href="https://github.com/fmmenchi" variant="plain">
               github
             </Link>
-            <Link href="https://x.com/fmmenchi" variant="plain">
-              x
-            </Link>
             <Link href="mailto:f.menchicchi@gmail.com" variant="plain">
               mail
             </Link>

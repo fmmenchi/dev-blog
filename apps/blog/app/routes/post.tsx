@@ -136,13 +136,6 @@ export default function Post() {
             </Link>
           ))}
         </nav>
-        <Link
-          href={`https://x.com/intent/post?text=${encodeURIComponent(post.title)}`}
-          variant="plain"
-          className={styles['share']}
-        >
-          share ↗
-        </Link>
       </aside>
     </div>
   );
