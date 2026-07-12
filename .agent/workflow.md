@@ -1,7 +1,8 @@
 # Workflow — agent rules
 
-Trunk-based. `main` is always releasable: every merge into it runs `nx release`
-and deploys.
+Trunk-based. `main` is not a branch, it is the site: every merge into it runs
+`nx release` and deploys. The reasoning behind each rule below — and the
+incident that produced it — is in [`doc/workflow.md`](../doc/workflow.md).
 
 ## Branch
 
