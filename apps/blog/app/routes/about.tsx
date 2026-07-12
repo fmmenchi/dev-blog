@@ -40,9 +40,6 @@ export default function About() {
           <Link href="https://github.com/fmmenchi" variant="plain">
             github
           </Link>
-          <Link href="https://x.com/fmmenchi" variant="plain">
-            x
-          </Link>
           <Link href="https://www.linkedin.com/in/fmmenchi" variant="plain">
             linkedin
           </Link>
