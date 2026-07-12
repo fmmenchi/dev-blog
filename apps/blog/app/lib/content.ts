@@ -14,41 +14,29 @@ export interface Project {
 
 export const projects: Project[] = [
   {
-    name: 'rss-gen',
+    name: 'dev-blog',
     period: '2026',
     status: 'active',
     description:
-      'Type-safe RSS feed generator. The feed schema is a type, the errors are compile-time.',
-    language: 'Rust',
-    url: '#',
-  },
-  {
-    name: 'tempo',
-    period: '2025',
-    status: 'stable',
-    description:
-      'Terminal time tracker. One command to start, one to stop, a report at the end of the week.',
-    language: 'Go',
-    url: '#',
-  },
-  {
-    name: 'quaderno',
-    period: '2025',
-    status: 'paused',
-    description:
-      'Local-first notes with CRDT sync. The experiment that taught me why sync is hard.',
+      'The site you are reading. React Router in an Nx monorepo, with its own design tokens and component library.',
     language: 'TypeScript',
-    url: '#',
+    url: 'https://github.com/fmmenchi/dev-blog',
   },
+];
+
+export interface Social {
+  label: string;
+  href: string;
+}
+
+/** The one list of places to find Fabio: the footer and both profile cards read it. */
+export const socials: Social[] = [
+  { label: 'github', href: 'https://github.com/fmmenchi' },
   {
-    name: 'dotfiles',
-    period: 'always',
-    status: 'evolving',
-    description:
-      'Neovim, tmux, zsh. The config is documentation: every line has its why written next to it.',
-    language: 'Lua',
-    url: '#',
+    label: 'linkedin',
+    href: 'https://www.linkedin.com/in/fabio-menchicchi-055a36176/',
   },
+  { label: 'mail', href: 'mailto:f.menchicchi@gmail.com' },
 ];
 
 export const profile = {
@@ -57,9 +45,9 @@ export const profile = {
   location: 'Cusco, PE',
   experience: '~13 years of code',
   bioShort:
-    'Full-stack dev in Cusco, Peru. Distributed systems by day, this blog by night.',
+    'Full stack engineer in Cusco, Peru. Apps and backends by day, this blog by night.',
   bioCard:
-    'Full-stack dev in Cusco, Peru. Writes about systems, types and decisions.',
+    'Full stack engineer in Cusco, Peru. Writes about architecture, tooling and developer experience.',
   skills: [
     'TypeScript',
     'React & React Native',
@@ -70,6 +58,6 @@ export const profile = {
     'DX',
     'AI',
   ],
-  building: 'Type-safe RSS feed generator in Rust',
-  buildingProgress: 80,
+  building: 'this blog — rewriting it in the open',
+  buildingProgress: 70,
 };

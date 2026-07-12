@@ -34,7 +34,7 @@ export const meta = ({
     path: location.pathname,
     title: `${SITE_NAME} — software, systems and decisions`,
     description:
-      'No hype, no thread-boy takes. Honest post-mortems, architecture, TypeScript and developer experience.',
+      'Honest notes on architecture, tooling and developer experience.',
   });
 
 export const links: LinksFunction = () => [
