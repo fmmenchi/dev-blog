@@ -1,0 +1,97 @@
+<!-- @dsCard group="Components" -->
+<!doctype html>
+<html lang="en" data-accent="yellow">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Container</title>
+    <link rel="stylesheet" href="../tokens.css" />
+    <style>
+      /* --- page scaffolding (not part of the component) --- */
+      .wrap {
+        padding-block: var(--space-8);
+      }
+      .page-title {
+        font-size: var(--text-3xl);
+        font-weight: var(--font-weight-bold);
+        line-height: var(--leading-tight);
+        letter-spacing: -0.03em;
+        margin: 0 0 var(--space-2);
+      }
+      .lede {
+        color: var(--color-muted-foreground);
+        margin: 0 0 var(--space-8);
+      }
+      .label {
+        font-family: var(--font-mono);
+        font-size: var(--text-xs);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--color-muted-foreground);
+        margin: var(--space-8) 0 var(--space-3);
+      }
+      /* Ruled backdrop so the container's max-width and gutters are visible. */
+      .bleed {
+        background-color: var(--color-muted);
+        padding-block: var(--space-6);
+      }
+      .fill {
+        border: 1px dashed var(--color-border);
+        border-radius: var(--radius-md);
+        padding: var(--space-6);
+        background-color: var(--color-background);
+        font-family: var(--font-mono);
+        font-size: var(--text-xs);
+        color: var(--color-muted-foreground);
+        text-align: center;
+      }
+
+      /* --- container.module.css --- */
+      .container {
+        width: 100%;
+        max-width: var(--layout-content-width);
+        margin-inline: auto;
+        padding-inline: var(--spacing-inset-m);
+        box-sizing: border-box;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="container">
+        <h1 class="page-title">Container</h1>
+        <p class="lede">
+          The content wrapper. Centres its children, caps them at
+          <code>--layout-content-width</code> (70rem) and adds a
+          <code>--spacing-inset-m</code> gutter so text never touches the
+          viewport edge. Renders as <code>div</code> (default),
+          <code>main</code>, <code>header</code> or <code>footer</code>.
+        </p>
+
+        <p class="label">
+          The band is full-bleed; the dashed box is the container
+        </p>
+      </div>
+
+      <div class="bleed">
+        <div class="container">
+          <div class="fill">
+            max-width: var(--layout-content-width) &nbsp;|&nbsp; margin-inline:
+            auto &nbsp;|&nbsp; padding-inline: var(--spacing-inset-m)
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        <p class="label">as="main" — the page's main landmark</p>
+      </div>
+
+      <main class="container">
+        <div class="fill">
+          Exactly one &lt;main&gt; per page. Header and footer use the same
+          container so every band lines up on the same grid.
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

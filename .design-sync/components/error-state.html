@@ -1,0 +1,156 @@
+<!-- @dsCard group="Components" -->
+<!doctype html>
+<html lang="en" data-accent="yellow">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Error state</title>
+    <link rel="stylesheet" href="../tokens.css" />
+    <style>
+      /* --- page scaffolding (not part of the component) --- */
+      .wrap {
+        padding: var(--space-8);
+        max-width: 48rem;
+        margin-inline: auto;
+      }
+      .label {
+        font-family: var(--font-mono);
+        font-size: var(--text-xs);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--color-muted-foreground);
+        margin: var(--space-8) 0 var(--space-3);
+        text-align: center;
+      }
+      .stage {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 22rem;
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-xl);
+        padding: var(--space-12) var(--space-6);
+      }
+      .note {
+        color: var(--color-muted-foreground);
+        font-size: var(--text-sm);
+        margin: var(--space-6) 0 0;
+      }
+
+      /* --- error-state.module.css --- */
+      .state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: var(--spacing-stack-m);
+      }
+
+      .title {
+        font-weight: var(--font-weight-bold);
+        font-size: clamp(1.75rem, 4vw, 2.75rem);
+        line-height: var(--typography-heading-leading);
+        letter-spacing: var(--typography-heading-tracking);
+        margin: 0;
+      }
+
+      .description {
+        color: var(--color-muted-foreground);
+        line-height: 1.6;
+        max-width: 28rem;
+        margin: 0;
+      }
+
+      .actions {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-inline-m);
+        margin-top: var(--spacing-stack-s);
+      }
+
+      /* --- button.module.css (used for the actions) --- */
+      .button {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--spacing-inline-s);
+        padding: var(--space-2) var(--space-4);
+        border: 1px solid transparent;
+        border-radius: var(--radius-md);
+        font-family: var(--font-sans);
+        font-size: var(--typography-body-size);
+        font-weight: var(--font-weight-medium);
+        line-height: var(--leading-normal);
+        text-decoration: none;
+        cursor: pointer;
+        transition: var(--transition-color);
+      }
+      .primary {
+        background-color: var(--color-primary);
+        color: var(--color-primary-foreground);
+      }
+      .primary:hover {
+        background-color: var(--color-primary-hover);
+      }
+      .ghost {
+        background-color: transparent;
+        color: var(--color-foreground);
+        border-color: var(--color-border);
+      }
+      .ghost:hover {
+        background-color: var(--color-muted);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <p class="label">404 — the component owns the page's &lt;h1&gt;</p>
+      <div class="stage">
+        <div class="state">
+          <h1 class="title">Page not found</h1>
+          <p class="description">
+            This URL does not exist — or it did, and the post moved. Head back
+            to the archive and pick another one.
+          </p>
+          <div class="actions">
+            <a class="button primary" href="#">Back to the blog</a>
+            <a class="button ghost" href="#">All posts</a>
+          </div>
+        </div>
+      </div>
+
+      <p class="label">500 — same component, different copy</p>
+      <div class="stage">
+        <div class="state">
+          <h1 class="title">Something broke</h1>
+          <p class="description">
+            An unexpected error stopped the page from rendering. Reloading often
+            fixes it; if it does not, it is on me.
+          </p>
+          <div class="actions">
+            <button type="button" class="button primary">Reload</button>
+            <a class="button ghost" href="#">Back to the blog</a>
+          </div>
+        </div>
+      </div>
+
+      <p class="label">Title + description, no actions</p>
+      <div class="stage">
+        <div class="state">
+          <h1 class="title">Offline</h1>
+          <p class="description">
+            You are not connected. The page will come back on its own once the
+            network does.
+          </p>
+        </div>
+      </div>
+
+      <p class="note">
+        The title scales fluidly — <code>clamp(1.75rem, 4vw, 2.75rem)</code> —
+        rather than using <code>--typography-h1-size</code>: an error page has
+        nothing else on it, so the heading is allowed to run larger than a
+        normal <code>h1</code>. Unlike <code>EmptyState</code>, this component
+        DOES render the <code>&lt;h1&gt;</code>: it is the whole page.
+      </p>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,183 @@
+<!-- @dsCard group="Foundations" -->
+<!doctype html>
+<html lang="en" data-accent="yellow">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Typography</title>
+    <link rel="stylesheet" href="../tokens.css" />
+    <style>
+      /* Page scaffolding (may use primitives — it is not a component). */
+      .wrap {
+        padding: var(--space-8);
+        max-width: 64rem;
+        margin-inline: auto;
+      }
+      .page-title {
+        font-size: var(--text-3xl);
+        font-weight: var(--font-weight-bold);
+        line-height: var(--leading-tight);
+        letter-spacing: -0.03em;
+        margin: 0 0 var(--space-2);
+      }
+      .lede {
+        color: var(--color-muted-foreground);
+        margin: 0 0 var(--space-8);
+        max-width: 42rem;
+      }
+      .section {
+        font-family: var(--font-mono);
+        font-size: var(--text-xs);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--color-muted-foreground);
+        font-weight: var(--font-weight-medium);
+        margin: var(--space-12) 0 var(--space-4);
+      }
+      .row {
+        display: grid;
+        grid-template-columns: 1fr 20rem;
+        gap: var(--space-6);
+        align-items: baseline;
+        padding: var(--space-4) 0;
+        border-top: 1px solid var(--color-border);
+      }
+      .meta {
+        font-family: var(--font-mono);
+        font-size: var(--typography-mono-size);
+        color: var(--color-muted-foreground);
+        line-height: var(--leading-normal);
+      }
+      .meta b {
+        color: var(--color-foreground);
+        font-weight: var(--font-weight-medium);
+      }
+      /* Roles — semantic tokens only. */
+      .h1 {
+        font-family: var(--font-sans);
+        font-size: var(--typography-h1-size);
+        font-weight: var(--typography-heading-weight);
+        line-height: var(--typography-heading-leading);
+        letter-spacing: var(--typography-heading-tracking);
+        margin: 0;
+      }
+      .h2 {
+        font-family: var(--font-sans);
+        font-size: var(--typography-h2-size);
+        font-weight: var(--typography-heading-weight);
+        line-height: var(--typography-heading-leading);
+        letter-spacing: var(--typography-heading-tracking);
+        margin: 0;
+      }
+      .h3 {
+        font-family: var(--font-sans);
+        font-size: var(--typography-h3-size);
+        font-weight: var(--typography-heading-weight);
+        line-height: var(--typography-heading-leading);
+        letter-spacing: var(--typography-heading-tracking);
+        margin: 0;
+      }
+      .body {
+        font-family: var(--font-sans);
+        font-size: var(--typography-body-size);
+        line-height: var(--typography-body-leading);
+        margin: 0;
+        max-width: var(--layout-prose-width);
+      }
+      .small {
+        font-family: var(--font-sans);
+        font-size: var(--typography-small-size);
+        color: var(--color-muted-foreground);
+        margin: 0;
+      }
+      .mono {
+        font-family: var(--font-mono);
+        font-size: var(--typography-mono-size);
+        color: var(--color-primary);
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1 class="page-title">Typography</h1>
+      <p class="lede">
+        Two families: <b>Space Grotesk</b> for every piece of text, and
+        <b>JetBrains Mono</b> for labels, metadata, dates and tags. Sizes are
+        consumed through the <code>--typography-*</code> semantic roles, never
+        through the raw <code>--text-*</code> scale.
+      </p>
+
+      <p class="section">Headings — Space Grotesk</p>
+
+      <div class="row">
+        <h2 class="h1">Writing about the web</h2>
+        <p class="meta">
+          <b>--typography-h1-size</b><br />
+          2.5rem / --text-3xl<br />
+          weight --typography-heading-weight (700)<br />
+          leading --typography-heading-leading (1.1)<br />
+          tracking --typography-heading-tracking (-0.03em)
+        </p>
+      </div>
+
+      <div class="row">
+        <h3 class="h2">Latest posts</h3>
+        <p class="meta">
+          <b>--typography-h2-size</b><br />
+          1.4375rem / --text-xl<br />
+          same weight, leading and tracking as h1
+        </p>
+      </div>
+
+      <div class="row">
+        <h4 class="h3">Why CSS Modules</h4>
+        <p class="meta">
+          <b>--typography-h3-size</b><br />
+          1.0625rem / --text-lg<br />
+          same weight, leading and tracking as h1
+        </p>
+      </div>
+
+      <p class="section">Text — Space Grotesk</p>
+
+      <div class="row">
+        <p class="body">
+          The body role carries the long-form rhythm: a generous 1.75 leading
+          that keeps an article readable at the prose width of 42.5rem. This is
+          the default size of the document — everything else is a deviation from
+          it.
+        </p>
+        <p class="meta">
+          <b>--typography-body-size</b><br />
+          1rem / --text-base<br />
+          leading --typography-body-leading (1.75)<br />
+          width --layout-prose-width (42.5rem)
+        </p>
+      </div>
+
+      <div class="row">
+        <p class="small">
+          Small text — secondary copy, captions, skill chips. Muted by default.
+        </p>
+        <p class="meta">
+          <b>--typography-small-size</b><br />
+          0.875rem / --text-sm<br />
+          color --color-muted-foreground
+        </p>
+      </div>
+
+      <p class="section">Labels &amp; metadata — JetBrains Mono</p>
+
+      <div class="row">
+        <p class="mono">#web · 2026-07-12 · 6 min read</p>
+        <p class="meta">
+          <b>--typography-mono-size</b><br />
+          0.75rem / --text-xs<br />
+          family --font-mono (JetBrains Mono)<br />
+          used by Badge <code>tag</code>, EmptyState title, dates
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
