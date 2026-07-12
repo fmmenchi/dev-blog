@@ -101,6 +101,7 @@ export default function Uses() {
               detail: 'North Bayou H180 — both screens float, the desk stays.',
             },
             { term: 'webcam', detail: 'Logitech C930e.' },
+            { term: 'speakers', detail: 'Creative Pebble V3.' },
           ]}
         />
       </section>
