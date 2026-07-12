@@ -76,6 +76,7 @@ doc/                   # human reference (the "why")
 | [`.agent/workflow.md`](./.agent/workflow.md)           | branching, worktrees, committing, verifying, merging               |
 | [`.agent/architecture.md`](./.agent/architecture.md)   | adding routes/libs, changing deps, module boundaries, CI           |
 | [`.agent/design-system.md`](./.agent/design-system.md) | styling, theming, authoring/changing a component, any UI/a11y work |
+| [`.agent/seo.md`](./.agent/seo.md)                     | adding a route or a page, meta tags, sitemap, feeds, canonicals    |
 
 > `.agent/*` is documentation **for agents** (operational rules). `doc/*` is
 > human reference (rationale, onboarding) — read it only for the "why", never

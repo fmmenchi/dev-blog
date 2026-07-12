@@ -66,7 +66,7 @@ export default function Post() {
   return (
     <div className={styles['page']}>
       <article className={styles['article']}>
-        <Link to="/" variant="plain" className={styles['back']}>
+        <Link to="/blog" variant="plain" className={styles['back']}>
           ← /blog
         </Link>
         <div className={styles['meta']}>

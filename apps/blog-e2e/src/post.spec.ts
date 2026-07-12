@@ -27,6 +27,16 @@ test.describe('article', () => {
     ).toHaveCount(0);
   });
 
+  // The link is labelled "← /blog"; it used to go to "/".
+  test('the back link goes to the archive it names', async ({ page }) => {
+    await page.goto('/blog/starting-a-notebook');
+    await page.getByRole('link', { name: '← /blog' }).click();
+    await expect(page).toHaveURL(/\/blog$/);
+    await expect(
+      page.getByRole('heading', { level: 1, name: 'Blog' }),
+    ).toBeVisible();
+  });
+
   test('unknown slugs return the styled 404 page', async ({ page }) => {
     const response = await page.goto('/blog/does-not-exist');
     expect(response?.status()).toBe(404);
