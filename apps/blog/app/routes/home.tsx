@@ -15,10 +15,16 @@ function compactDate(date: string) {
   return date.slice(5);
 }
 
+/** The home is a shop window, not the archive: featured post plus this many. */
+const COMPACT_POSTS = 4;
+
 export default function Home() {
   const { posts } = useLoaderData<typeof loader>();
   const featured = posts.find((post) => post.featured) ?? posts[0];
-  const rest = posts.filter((post) => post !== featured);
+  const rest = posts
+    .filter((post) => post !== featured)
+    .slice(0, COMPACT_POSTS);
+  const hasMore = posts.length > rest.length + 1;
 
   return (
     <main className={styles['page']}>
@@ -123,9 +129,11 @@ export default function Home() {
                 </Link>
               ))}
 
-              <Link to="/blog" variant="plain" className={styles['all']}>
-                → all articles
-              </Link>
+              {hasMore ? (
+                <Link to="/blog" variant="plain" className={styles['all']}>
+                  → all articles
+                </Link>
+              ) : null}
             </>
           )}
         </section>

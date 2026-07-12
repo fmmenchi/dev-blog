@@ -33,13 +33,25 @@ describe('Home', () => {
     expect(screen.getByText('★ latest')).toBeTruthy();
   });
 
-  it('lists every post as a link to its article', async () => {
+  // The home shows the featured post plus at most four more; the archive has the rest.
+  it('shows at most five posts, each linking to its article', async () => {
     renderHome();
     const links = await screen.findAllByRole('link', { name: /./ });
     const postLinks = links.filter((l) =>
       l.getAttribute('href')?.startsWith('/blog/'),
     );
-    expect(postLinks.length).toBe(getPosts().length);
+    expect(postLinks.length).toBe(Math.min(getPosts().length, 5));
+  });
+
+  it('only offers the archive link when there is more to see', async () => {
+    renderHome();
+    await screen.findByRole('main');
+    const archiveLink = screen.queryByRole('link', { name: /all articles/ });
+    if (getPosts().length > 5) {
+      expect(archiveLink).toBeTruthy();
+    } else {
+      expect(archiveLink).toBeNull();
+    }
   });
 
   it('exposes profile skills accessibly', async () => {
