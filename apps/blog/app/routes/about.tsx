@@ -74,8 +74,8 @@ export default function About() {
           later. A release should not need a human.
         </p>
         <p className={styles['paragraph']}>
-          What I enjoy most is experimenting. Not with new toys for their own
-          sake, but with things that end up solving a real problem.
+          I like experimenting. What I like more is the moment the experiment
+          stops being one and fixes an actual problem.
         </p>
 
         <div className={styles['now']}>
