@@ -1,4 +1,4 @@
-import { Badge, Button, Card, Link } from '@dev-blog/ui';
+import { Badge, Card, EmptyState, Link } from '@dev-blog/ui';
 import { useLoaderData } from 'react-router';
 
 import { Avatar } from '../components/avatar';
@@ -29,8 +29,7 @@ export default function Home() {
           code.
         </h1>
         <p className={styles['heroTagline']}>
-          No hype, no thread-boy takes. Honest post-mortems, architecture,
-          TypeScript and developer experience.
+          Honest notes on architecture, tooling and developer experience.
         </p>
       </div>
 
@@ -49,7 +48,6 @@ export default function Home() {
                 </li>
               ))}
             </ul>
-            <Button>Newsletter</Button>
           </Card>
 
           <div className={styles['building']}>
@@ -66,15 +64,6 @@ export default function Home() {
               </span>
             </p>
           </div>
-
-          <nav aria-label="Social" className={styles['social']}>
-            <Link href="https://github.com/fmmenchi" variant="plain">
-              github
-            </Link>
-            <Link href="mailto:f.menchicchi@gmail.com" variant="plain">
-              mail
-            </Link>
-          </nav>
         </aside>
 
         <section className={styles['list']} aria-label="Articles">
@@ -82,52 +71,63 @@ export default function Home() {
             articles
           </SectionHeading>
 
-          <Link
-            to={`/blog/${featured.slug}`}
-            variant="plain"
-            className={styles['cardLink']}
-          >
-            <Card as="article" interactive className={styles['featured']}>
-              <div className={styles['featuredMeta']}>
-                <span className={styles['featuredStar']}>★ latest</span>
-                <span>
-                  {featured.date} · {featured.minutes} min
-                </span>
-              </div>
-              <h2 className={styles['featuredTitle']}>{featured.title}</h2>
-              <p className={styles['featuredExcerpt']}>{featured.excerpt}</p>
-              <div className={styles['tags']}>
-                {featured.tags.map((tag) => (
-                  <Badge key={tag} variant="tag">
-                    #{tag}
-                  </Badge>
-                ))}
-              </div>
-            </Card>
-          </Link>
+          {featured === undefined ? (
+            <EmptyState
+              title="No posts yet"
+              description="The first one is being written. The feed is already live, if you'd rather be told than come back."
+            />
+          ) : (
+            <>
+              <Link
+                to={`/blog/${featured.slug}`}
+                variant="plain"
+                className={styles['cardLink']}
+              >
+                <Card as="article" interactive className={styles['featured']}>
+                  <div className={styles['featuredMeta']}>
+                    <span className={styles['featuredStar']}>★ latest</span>
+                    <span>
+                      {featured.date} · {featured.minutes} min
+                    </span>
+                  </div>
+                  <h2 className={styles['featuredTitle']}>{featured.title}</h2>
+                  <p className={styles['featuredExcerpt']}>
+                    {featured.excerpt}
+                  </p>
+                  <div className={styles['tags']}>
+                    {featured.tags.map((tag) => (
+                      <Badge key={tag} variant="tag">
+                        #{tag}
+                      </Badge>
+                    ))}
+                  </div>
+                </Card>
+              </Link>
 
-          {rest.map((post) => (
-            <Link
-              key={post.slug}
-              to={`/blog/${post.slug}`}
-              variant="plain"
-              className={styles['cardLink']}
-            >
-              <Card as="article" interactive className={styles['compact']}>
-                <div>
-                  <h2 className={styles['compactTitle']}>{post.title}</h2>
-                  <p className={styles['compactExcerpt']}>{post.excerpt}</p>
-                </div>
-                <span className={styles['compactMeta']}>
-                  {compactDate(post.date)} · {post.minutes} min
-                </span>
-              </Card>
-            </Link>
-          ))}
+              {rest.map((post) => (
+                <Link
+                  key={post.slug}
+                  to={`/blog/${post.slug}`}
+                  variant="plain"
+                  className={styles['cardLink']}
+                >
+                  <Card as="article" interactive className={styles['compact']}>
+                    <div>
+                      <h2 className={styles['compactTitle']}>{post.title}</h2>
+                      <p className={styles['compactExcerpt']}>{post.excerpt}</p>
+                    </div>
+                    <span className={styles['compactMeta']}>
+                      {compactDate(post.date)} · {post.minutes} min
+                    </span>
+                  </Card>
+                </Link>
+              ))}
 
-          <Link to="/" variant="plain" className={styles['all']}>
-            → all articles
-          </Link>
+              <Link to="/blog" variant="plain" className={styles['all']}>
+                → all articles
+              </Link>
+            </>
+          )}
         </section>
       </div>
     </main>

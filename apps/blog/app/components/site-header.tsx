@@ -7,7 +7,7 @@ import { AccentSwitcher } from './accent-switcher';
 import styles from './site-header.module.css';
 
 const NAV = [
-  { to: '/', label: '/blog' },
+  { to: '/blog', label: '/blog' },
   { to: '/projects', label: '/projects' },
   { to: '/about', label: '/about' },
 ] as const;
@@ -24,10 +24,10 @@ export function SiteHeader() {
         </Link>
         <nav aria-label="Main" className={styles['nav']}>
           {NAV.map(({ to, label }) => (
+            // No `end`: reading /blog/:slug keeps /blog marked as the section.
             <NavLink
               key={to}
               to={to}
-              end={to === '/'}
               className={({ isActive }) =>
                 isActive
                   ? `${styles['navlink']} ${styles['active']}`

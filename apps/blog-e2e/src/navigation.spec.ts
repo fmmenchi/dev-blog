@@ -48,6 +48,22 @@ test.describe('navigation', () => {
     await expect(
       page.getByRole('heading', { level: 1, name: /Hi, I'm Fabio/ }),
     ).toBeVisible();
+
+    await nav.getByRole('link', { name: '/blog' }).click();
+    await expect(
+      page.getByRole('heading', { level: 1, name: 'Blog' }),
+    ).toBeVisible();
+    await expect(nav.getByRole('link', { name: '/blog' })).toHaveAttribute(
+      'aria-current',
+      'page',
+    );
+  });
+
+  test('the home links to the full archive', async ({ page }) => {
+    await page.goto('/');
+    await page.getByRole('link', { name: '→ all articles' }).click();
+    await expect(page).toHaveURL(/\/blog$/);
+    await expect(page.getByRole('list', { name: 'Posts' })).toBeVisible();
   });
 
   test('cycles and persists the accent', async ({ page }) => {

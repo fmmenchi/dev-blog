@@ -3,9 +3,9 @@ import { fireEvent, render, screen } from '@testing-library/react';
 
 import { SiteHeader } from '../../app/components/site-header';
 
-function renderHeader() {
-  const Stub = createRoutesStub([{ path: '/', Component: SiteHeader }]);
-  return render(<Stub />);
+function renderHeader(at = '/blog') {
+  const Stub = createRoutesStub([{ path: '*', Component: SiteHeader }]);
+  return render(<Stub initialEntries={[at]} />);
 }
 
 describe('SiteHeader', () => {
@@ -19,7 +19,7 @@ describe('SiteHeader', () => {
   });
 
   it('marks the active section for assistive tech', () => {
-    renderHeader();
+    renderHeader('/blog');
     expect(
       screen.getByRole('link', { name: '/blog' }).getAttribute('aria-current'),
     ).toBe('page');
