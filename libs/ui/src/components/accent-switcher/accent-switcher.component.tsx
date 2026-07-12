@@ -5,10 +5,16 @@ import { cn } from '../../internal/cn';
 const ACCENTS = ['yellow', 'lime', 'amber'] as const;
 type Accent = (typeof ACCENTS)[number];
 
+/*
+ * `-base`, not the old bare name: when the accents became derived, the authored
+ * colour was renamed and this swatch kept reading a token that no longer exists.
+ * An undefined var() in `background` invalidates the declaration, so the square
+ * simply went colourless — and no test could see it, because it is inline style.
+ */
 const SWATCH: Record<Accent, string> = {
-  yellow: 'var(--accent-yellow)',
-  lime: 'var(--accent-lime)',
-  amber: 'var(--accent-amber)',
+  yellow: 'var(--accent-yellow-base)',
+  lime: 'var(--accent-lime-base)',
+  amber: 'var(--accent-amber-base)',
 };
 
 const STORAGE_KEY = 'fabio-accent';

@@ -1,16 +1,14 @@
 import {
-  isRouteErrorResponse,
   Links,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
-  useRouteError,
   type LinksFunction,
 } from 'react-router';
 
 import themeStylesheetUrl from '@dev-blog/theme/styles/tailwind.css?url';
-import { Button, ErrorState, Link } from '@dev-blog/ui';
+import { Button, Link, RouteErrorBoundary } from '@dev-blog/ui';
 
 import { SiteFooter } from './components/site-footer';
 import { SiteHeader } from './components/site-header';
@@ -85,47 +83,51 @@ export default function App() {
 }
 
 export function ErrorBoundary() {
-  const error = useRouteError();
-  const notFound = isRouteErrorResponse(error) && error.status === 404;
-
   return (
-    <main className="flex flex-1 flex-col items-center justify-center px-8 py-16 text-center">
-      <p className="mb-7 font-mono text-[12.5px] text-muted-foreground">
-        {notFound
-          ? '$ curl fabiomenchicchi.com/this-page '
-          : '$ tail -f /var/log/fabiomenchicchi.com '}
-        <span className="text-primary">→ HTTP {notFound ? 404 : 500}</span>
-      </p>
-      {notFound ? (
-        <ErrorState
-          title="Page not found"
-          description="The URL you're looking for doesn't exist — or I deleted it. Deleting code is an art form; deleting pages, an accident."
-        >
-          <Link
-            to="/"
-            variant="plain"
-            className="inline-flex items-center rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground no-underline [transition:var(--transition-color)] hover:bg-primary-hover"
-          >
-            Back to the blog
-          </Link>
-        </ErrorState>
-      ) : (
-        <ErrorState
-          title="Something broke"
-          description="A server-side error. The good news: this blog is 200 lines of code, so I'll find it quickly. Try again in a moment."
-        >
-          <Button onClick={() => window.location.reload()}>
-            Reload the page
+    <RouteErrorBoundary
+      notFound={{
+        prompt: (
+          <>
+            $ curl fabiomenchicchi.com/this-page{' '}
+            <span className="text-primary">→ HTTP 404</span>
+          </>
+        ),
+        title: 'Page not found',
+        description:
+          "The URL you're looking for doesn't exist — or I deleted it. Deleting code is an art form; deleting pages, an accident.",
+        actions: (
+          <Button asChild>
+            <Link to="/" variant="plain">
+              Back to the blog
+            </Link>
           </Button>
-          <Link
-            to="/"
-            variant="plain"
-            className="font-mono text-[12.5px] text-muted-foreground no-underline [transition:var(--transition-color)] hover:text-primary"
-          >
-            ← or back to the blog
-          </Link>
-        </ErrorState>
-      )}
-    </main>
+        ),
+      }}
+      unexpected={{
+        prompt: (
+          <>
+            $ tail -f /var/log/fabiomenchicchi.com{' '}
+            <span className="text-primary">→ HTTP 500</span>
+          </>
+        ),
+        title: 'Something broke',
+        description:
+          'A server-side error on my side, not yours. Try again in a moment; if it keeps happening, it is worth telling me.',
+        actions: (
+          <>
+            <Button onClick={() => window.location.reload()}>
+              Reload the page
+            </Button>
+            <Link
+              to="/"
+              variant="plain"
+              className="font-mono text-xs text-muted-foreground no-underline [transition:var(--transition-color)] hover:text-primary"
+            >
+              ← or back to the blog
+            </Link>
+          </>
+        ),
+      }}
+    />
   );
 }

@@ -1,13 +1,11 @@
-import { Avatar, Button, Card, Link } from '@dev-blog/ui';
+import { Avatar, Button, Card, IconLinks, Link } from '@dev-blog/ui';
 
-import { profile, socials } from '../lib/content';
+import { profile } from '../lib/content';
+import { socialLinks } from '../lib/social-links';
 import { avatarSrc } from '../lib/avatar-image';
+
 import { originFromMatches, seoMeta } from '../lib/seo';
 import { SITE_NAME } from '../lib/site';
-
-/** The `plain` Link variant carries no styling: the nav gives it its own. */
-const SOCIAL_LINK =
-  'text-muted-foreground no-underline [transition:var(--transition-color)] hover:text-primary';
 
 const PARAGRAPH = 'mb-4.5 text-[16.5px] leading-relaxed';
 
@@ -47,25 +45,11 @@ export default function About() {
               Say hi
             </Link>
           </Button>
+          {/* Icons, inside the card: on /about the socials are content, not
+              furniture — a reader here is deciding whether to follow, and the
+              footer's copy is for everyone else. */}
+          <IconLinks label="Social" links={socialLinks} />
         </Card>
-        {/* No mail here: the "Say hi" button above is already the mail link. */}
-        <nav
-          aria-label="Social"
-          className="flex gap-4.5 px-1.5 py-0.5 font-mono text-xs"
-        >
-          {socials
-            .filter(({ href }) => !href.startsWith('mailto:'))
-            .map(({ label, href }) => (
-              <Link
-                key={label}
-                href={href}
-                variant="plain"
-                className={SOCIAL_LINK}
-              >
-                {label}
-              </Link>
-            ))}
-        </nav>
       </aside>
 
       <main className="min-w-0 max-w-[40rem]">

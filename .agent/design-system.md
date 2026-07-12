@@ -99,6 +99,11 @@ arbitrary. (This is the exception. A one-off `--typography-copy-leading` that
 nothing consumes _is_ dead weight; a `--color-neutral-300` nobody has needed yet
 is the scale.)
 
+**Accents are derived, not authored.** One base colour each
+(`--accent-yellow-base`); hover, active and foreground are computed from it with
+OKLCH relative colours. Never hand-write an accent value — twelve literals is how
+amber silently drifted away from the other two. A fourth accent is one line.
+
 **Semantic roles hold no values.** They point at the palette:
 `--color-card: var(--color-neutral-850)`. That indirection is what makes a theme
 switch possible at all — re-point the roles, keep the palette. The accent switch

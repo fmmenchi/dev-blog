@@ -46,6 +46,7 @@
     }
   },
   "dependencies": {
+    "@dev-blog/icons": "workspace:*",
     "@dev-blog/theme": "workspace:*",
     "@dev-blog/ui": "workspace:*",
     "isbot": "^4.4.0",
