@@ -54,12 +54,12 @@ export const projects: Project[] = [
 export const profile = {
   name: 'Fabio',
   role: 'full-stack developer',
-  location: 'Turin, IT',
-  experience: '~10 years of code',
+  location: 'Cusco, PE',
+  experience: '~13 years of code',
   bioShort:
-    'Full-stack dev in Turin. Distributed systems by day, this blog by night.',
+    'Full-stack dev in Cusco, Peru. Distributed systems by day, this blog by night.',
   bioCard:
-    'Full-stack dev in Turin. Writes about systems, types and decisions.',
+    'Full-stack dev in Cusco, Peru. Writes about systems, types and decisions.',
   skills: ['TypeScript', 'Rust', 'Architecture', 'DX'],
   building: 'Type-safe RSS feed generator in Rust',
   buildingProgress: 80,

@@ -55,10 +55,11 @@ export default function About() {
           Hi, I'm <span className={styles['accent']}>{profile.name}</span>.
         </h1>
         <p className={styles['paragraph']}>
-          I've been building software for about ten years, almost always for the
-          web: backend, frontend and everything in between. These days I work on
-          distributed systems — queues, events, consistency — and on why most
-          teams don't need them.
+          Born in Arezzo, computer engineering in Bologna, now writing code from
+          Cusco, Peru. I've been building software for about thirteen years,
+          almost always for the web: backend, frontend and everything in
+          between. These days I work on distributed systems — queues, events,
+          consistency — and on why most teams don't need them.
         </p>
         <p className={styles['paragraph']}>
           This blog is my public notebook: I write to understand, not to teach.
