@@ -100,6 +100,7 @@ export default function Uses() {
               term: 'arm',
               detail: 'North Bayou H180 — both screens float, the desk stays.',
             },
+            { term: 'webcam', detail: 'Logitech C930e.' },
           ]}
         />
       </section>
