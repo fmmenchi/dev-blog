@@ -60,7 +60,7 @@ export const profile = {
     'Full-stack dev in Cusco, Peru. Distributed systems by day, this blog by night.',
   bioCard:
     'Full-stack dev in Cusco, Peru. Writes about systems, types and decisions.',
-  skills: ['TypeScript', 'Rust', 'Architecture', 'DX'],
+  skills: ['TypeScript', 'React', 'React Native', 'Node & Nest', 'Go', 'GCP'],
   building: 'Type-safe RSS feed generator in Rust',
   buildingProgress: 80,
 };
