@@ -1,7 +1,6 @@
 import { Button, Card, Link } from '@dev-blog/ui';
 
 import { Avatar } from '../components/avatar';
-import { SectionHeading } from '../components/section-heading';
 import { profile } from '../lib/content';
 import { originFromMatches, seoMeta } from '../lib/seo';
 import { SITE_NAME } from '../lib/site';
@@ -55,48 +54,29 @@ export default function About() {
           Hi, I'm <span className={styles['accent']}>{profile.name}</span>.
         </h1>
         <p className={styles['paragraph']}>
-          Born in Arezzo, studied computer engineering in Bologna, and these
-          days I write code from Cusco, in Peru. Thirteen years of it, almost
-          all on the web. Ten of those went into an enterprise supply-chain
-          platform, where I ended up building the frontend team from scratch.
-          Now I'm on Wishew: a React Native app, a NestJS backend, some Go
-          services, Google Cloud underneath. I work on the product, and on the
-          Nx monorepo and the release pipeline under it. Lately a good chunk of
-          the week goes into AI.
+          I grew up in Arezzo, studied computer engineering in Bologna, and now
+          write code from Cusco, in the Peruvian Andes. Thirteen years in,
+          almost all of them on the web.
         </p>
         <p className={styles['paragraph']}>
-          This blog is my public notebook: I write to understand, not to teach.
-          If a post happens to be useful to you, that's a welcome side effect.
+          Ten of those went into an enterprise supply-chain platform, where I
+          built the frontend department from nothing: the standards, the design
+          system, the tooling, the people. Now I'm at Wishew, on the product and
+          on the machinery under it, the Nx monorepo and the release pipeline.
+          Lately most of my week goes into putting an LLM inside a product that
+          already exists, which turns out to be mostly plumbing, not prompting.
         </p>
         <p className={styles['paragraph']}>
-          Most of my convictions are boring ones. A team only moves as fast as
-          its conventions. Types and tests are what let you change things a year
-          later. A release should not need a human.
+          That tension is the job, for me. My convictions are dull ones: a team
+          moves at the speed of its conventions, types and tests are what let
+          you change your mind a year later, a release should not need a person.
+          What I enjoy is the opposite, taking apart something nobody has proven
+          yet. The discipline is what makes the experiments affordable.
         </p>
         <p className={styles['paragraph']}>
-          I like experimenting. What I like more is the moment the experiment
-          stops being one and fixes an actual problem.
+          This blog is where the two meet. I write things down here to find out
+          whether I actually understood them.
         </p>
-
-        <div className={styles['now']}>
-          <SectionHeading>now</SectionHeading>
-        </div>
-        <div className={styles['nowGrid']}>
-          <div className={styles['nowBuild']}>
-            <p className={styles['nowLabel']}>$ NOW BUILDING</p>
-            <p className={styles['nowText']}>
-              rss-gen — type-safe RSS feeds in Rust
-            </p>
-          </div>
-          <Card className={styles['nowRead']}>
-            <p className={`${styles['nowLabel']} ${styles['nowLabelAccent']}`}>
-              $ NOW READING
-            </p>
-            <p className={styles['nowText']}>
-              Designing Data-Intensive Applications (re-read)
-            </p>
-          </Card>
-        </div>
       </main>
     </div>
   );
