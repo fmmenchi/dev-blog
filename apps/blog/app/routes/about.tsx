@@ -60,9 +60,9 @@ export default function About() {
           Before this I spent a decade on an enterprise supply-chain platform,
           where I built a frontend department from nothing. These days I work on
           Wishew: a React Native app, a NestJS backend, a handful of Go services
-          and the cloud they run on — plus the usual hours on the parts nobody
-          demos, the monorepo, the design system, the pipeline that ships it.
-          Lately, on teaching an LLM to find its way around all of that.
+          and the cloud they run on. As much of my time goes to the monorepo,
+          the design system and the release pipeline as to the features
+          themselves, and lately a good part of it goes to AI.
         </p>
         <p className={styles['paragraph']}>
           This blog is my public notebook: I write to understand, not to teach.
