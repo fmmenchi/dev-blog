@@ -83,7 +83,7 @@ export default function Uses() {
             {
               term: 'displays',
               detail:
-                'A curved LG, and a Samsung ViewFinity S6 turned vertical for the code.',
+                'A curved LG 34WQ75C-B ultrawide, and a 24" Samsung ViewFinity S6 turned vertical for the code.',
             },
             {
               term: 'dock',
@@ -96,6 +96,10 @@ export default function Uses() {
                 'NuPhy Air V3 — low-profile mechanical, and yes, audible.',
             },
             { term: 'mouse', detail: 'Logitech MX Vertical.' },
+            {
+              term: 'arm',
+              detail: 'North Bayou H180 — both screens float, the desk stays.',
+            },
           ]}
         />
       </section>
