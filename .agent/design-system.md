@@ -6,32 +6,24 @@
 
 ## Styling — tokens only
 
-The token system in `libs/theme/src/styles/theme.css` has 3 levels
-(primitives → derived → **semantic**).
+Tokens live in `libs/theme/src/styles/theme.css`: primitives → derived →
+**semantic**.
 
-- **Every colour and every typography value comes from a semantic role**:
-  `var(--color-…)`, `var(--typography-…)`. Stylelint `declaration-strict-value`
-  fails the build on a hardcoded colour or font (`transparent`, `currentColor`,
-  `inherit` are allowed). If the role you need does not exist, **add it** — do
-  not reach into the palette. `--color-neutral-*` is off limits in a component.
-- **The shared scales are fair game**: `--space-*`, `--text-*`, `--radius-*`,
-  `--font-weight-*`, `--leading-*`, `--font-sans/--font-mono`,
-  `--duration-*`/`--ease-*`. There is no semantic role for radius, weight or
-  font family, and inventing one per component would be worse. Prefer
-  `--spacing-inset-*` / `--spacing-stack-*` / `--spacing-inline-*` where a
-  semantic spacing role fits (inset = padding, stack = vertical rhythm,
-  inline = horizontal gaps).
-- **Never a bare number where a token exists.** A literal `line-height: 1.6`
-  written in ten files is a missing token, not ten decisions. Stylelint does not
-  catch these, so they are on you.
-- **A `var()` that is not defined silently deletes its whole declaration.** It
-  is invalid at computed-value time, so `padding: var(--nope) 1rem` renders as
-  _no padding at all_, and nothing warns you. Grep the theme before you invent a
-  token name.
-- **There is one theme, and it is dark.** No light theme, no `[data-theme]`
-  switch — do not add tokens "for the light theme", there isn't one. What _is_
-  switchable is the accent: `<html data-accent="yellow|lime|amber">` remaps only
-  the `--color-primary` family. Never write per-accent styles in a component.
+- **Colour and typography: semantic roles only** (`--color-…`, `--typography-…`).
+  The palette (`--color-neutral-*`) is off limits in a component. Role missing?
+  Add it. Stylelint fails the build on a hardcoded colour or font.
+- **Shared scales are fair game**: `--space-*`, `--text-*`, `--radius-*`,
+  `--font-weight-*`, `--leading-*`, `--font-sans/mono`, `--duration-*`.
+  Prefer the semantic spacing roles where they fit: `inset` = padding,
+  `stack` = vertical rhythm, `inline` = horizontal gaps.
+- **No bare number where a token exists.** A literal repeated in ten files is a
+  missing token. Stylelint won't catch it.
+- **An undefined `var()` deletes its whole declaration**, silently —
+  `padding: var(--nope) 1rem` renders as _no padding_. Grep the theme before
+  inventing a name.
+- **One theme, and it is dark.** No light theme, no `[data-theme]`. The
+  **accent** is what switches (`<html data-accent="yellow|lime|amber">`,
+  `--color-primary` family only) — never write per-accent styles.
 
 ## Component pattern
 
