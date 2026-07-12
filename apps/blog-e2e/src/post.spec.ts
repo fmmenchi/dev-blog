@@ -4,20 +4,27 @@ test.describe('article', () => {
   test('shows the table of contents and jumps to sections', async ({
     page,
   }) => {
-    await page.goto('/blog/rewrote-my-blog-in-200-lines');
+    await page.goto('/blog/starting-a-notebook');
     const toc = page.getByRole('navigation', { name: 'On this page' });
     await expect(toc).toBeVisible();
-    await toc.getByRole('link', { name: /02 · The solution/ }).click();
-    await expect(page).toHaveURL(/#the-solution$/);
+    await toc.getByRole('link', { name: /01 · What goes here/ }).click();
+    await expect(page).toHaveURL(/#what-goes-here$/);
     await expect(
-      page.getByRole('heading', { level: 2, name: /The solution/ }),
+      page.getByRole('heading', { level: 2, name: /What goes here/ }),
     ).toBeInViewport();
   });
 
-  test('walks to the previous article', async ({ page }) => {
-    await page.goto('/blog/rewrote-my-blog-in-200-lines');
-    await page.getByRole('link', { name: /previous/ }).click();
-    await expect(page).toHaveURL(/\/blog\/why-i-left-microservices/);
+  // With a single post there are no neighbours, and an empty nav landmark helps nobody.
+  test('hides the siblings nav when a post has no neighbours', async ({
+    page,
+  }) => {
+    await page.goto('/blog/starting-a-notebook');
+    await expect(
+      page.getByRole('heading', { level: 1, name: 'Starting a notebook' }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole('navigation', { name: 'More articles' }),
+    ).toHaveCount(0);
   });
 
   test('unknown slugs return the styled 404 page', async ({ page }) => {

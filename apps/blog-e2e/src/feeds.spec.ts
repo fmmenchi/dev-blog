@@ -8,7 +8,7 @@ test.describe('feeds and crawlers', () => {
     const body = await res.text();
     expect(body).toContain('<rss version="2.0"');
     expect(body).toContain(
-      'https://fabiomenchicchi.com/blog/rewrote-my-blog-in-200-lines',
+      'https://fabiomenchicchi.com/blog/starting-a-notebook',
     );
   });
 
@@ -17,6 +17,7 @@ test.describe('feeds and crawlers', () => {
     expect(res.status()).toBe(200);
     const body = await res.text();
     expect(body).toContain('<loc>https://fabiomenchicchi.com/</loc>');
+    expect(body).toContain('<loc>https://fabiomenchicchi.com/blog</loc>');
     expect(body).toContain('<loc>https://fabiomenchicchi.com/projects</loc>');
   });
 
