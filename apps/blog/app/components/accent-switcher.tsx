@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
 
-import styles from './accent-switcher.module.css';
-
 const ACCENTS = ['yellow', 'lime', 'amber'] as const;
 type Accent = (typeof ACCENTS)[number];
 
@@ -44,14 +42,14 @@ export function AccentSwitcher() {
   return (
     <button
       type="button"
-      className={styles['switcher']}
+      className="inline-flex cursor-pointer items-center gap-2 rounded-md border border-border bg-transparent px-2.75 py-1.5 font-mono text-2xs text-muted-foreground [transition:var(--transition-color)] hover:border-primary hover:text-foreground"
       onClick={cycle}
       title="switch accent"
       aria-label={`Change accent color to ${next}`}
     >
       <span
         aria-hidden="true"
-        className={styles['swatch']}
+        className="size-2.75 rounded-[3px]"
         style={{ background: SWATCH[next] }}
       />
       {next}

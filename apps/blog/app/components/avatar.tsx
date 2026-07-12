@@ -1,5 +1,3 @@
-import styles from './avatar.module.css';
-
 export interface AvatarProps {
   name: string;
   size?: number;
@@ -10,7 +8,7 @@ export function Avatar({ name, size = 60 }: AvatarProps) {
   return (
     <span
       aria-hidden="true"
-      className={styles['avatar']}
+      className="inline-flex items-center justify-center rounded-full bg-primary font-bold text-primary-foreground"
       style={{ width: size, height: size, fontSize: size * 0.42 }}
     >
       {name.charAt(0)}

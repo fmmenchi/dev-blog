@@ -9,22 +9,34 @@
 ## The rule
 
 Every **colour** and every **typography** value a component uses comes from a
-semantic role. The palette (`--color-neutral-*`) is off limits; hardcoded values
-(`#333`, `13px`, a bare `1.6`) more so. A missing role is a signal to extend the
-theme, not to inline a value. Stylelint fails the build on a hardcoded colour or
-font — it cannot catch the rest, so the rest is on you.
-
-The shared **scales** are a different matter, and components consume them
-directly: spacing, type sizes, radius, weight, leading, motion. There is no
-semantic role for "a radius" or "a font weight", and minting one per component
-would be worse than the disease.
+semantic role. The palette is off limits; hardcoded values (`#333`, `13px`, a
+bare `1.6`) more so. A missing role is a signal to extend the theme, not to
+inline a value.
 
 Three layers:
 
-1. **Primitives** — the raw palette and those scales.
+1. **Primitives** — the raw palette and the shared scales.
 2. **Derived** — the three accent ramps. Written out by hand; nothing is
    computed.
 3. **Semantic** — the roles. What you actually use.
+
+## How the tokens become Tailwind classes
+
+The styling is Tailwind, but Tailwind does not bring its own design system here.
+`libs/theme/src/styles/tailwind.css` does two things:
+
+- **It wipes Tailwind's defaults** — its palette, its type scale, its
+  breakpoints. `bg-neutral-800` does not exist. The design system cannot leak in
+  through a class nobody reviewed.
+- **It bridges our roles** into utilities with `@theme inline`. `--color-card`
+  becomes `bg-card`, `--color-muted-foreground` becomes `text-muted-foreground`,
+  and because the bridge points at the _variables_ rather than at values, the
+  accent switch keeps working for free.
+
+The trap is the mirror image of the old one: a role that exists in `theme.css`
+but is **missing from the bridge** produces a class that silently does not
+compile. Where an undefined `var()` used to delete a declaration, an unbridged
+role now deletes a utility. Same ghost, new name.
 
 ## Colour
 
@@ -91,6 +103,18 @@ Intent-based, T-shirt sized. Pick by **intent**, not by size:
 Two widths, not interchangeable: `--layout-content-width` (70rem — the page
 shell) and `--layout-prose-width` (42.5rem — the reading measure of an article's
 body).
+
+## Breakpoints — mobile first, by construction
+
+Two, and both are `min-width`: `sm:` (40rem) and `md:` (56rem). Tailwind's own
+`lg`/`xl`/`2xl` are wiped along with the rest of its defaults.
+
+This is the one place where the migration to Tailwind paid for itself. The CSS
+used to be **desktop-first**: nine `@media (max-width: …)` blocks, meaning the
+layouts were designed on a large screen and then patched for a phone. Now the
+base rules **are** the phone and the variants add the desktop — and, more to the
+point, there is no syntax for the old way. A rule you cannot express is a rule
+you cannot break.
 
 ## Radius & motion
 

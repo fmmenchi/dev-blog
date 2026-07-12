@@ -2,7 +2,6 @@ import type { AnchorHTMLAttributes, ReactNode } from 'react';
 import { Link as RouterLink } from 'react-router';
 
 import { cn } from '../../internal/cn';
-import styles from './link.module.css';
 
 const PROTOCOL_HREF = /^([a-z][a-z0-9+.-]*:|\/\/)/i;
 const NEW_TAB_HREF = /^(https?:|\/\/)/i;
@@ -21,6 +20,16 @@ interface BaseLinkProps extends Omit<
 
 export type LinkProps = BaseLinkProps &
   ({ to: string; href?: never } | { href: string; to?: never });
+
+const BASE =
+  'rounded-sm font-medium underline-offset-[0.25em] [transition:var(--transition-color)]';
+
+/* `plain` carries no visual styling — behavior only. */
+const VARIANT: Record<Exclude<LinkVariant, 'plain'>, string> = {
+  default: 'text-primary underline hover:text-primary-hover',
+  subtle:
+    'text-muted-foreground no-underline hover:text-foreground hover:underline',
+};
 
 /**
  * The one way to link things, andes-routes style:
@@ -41,8 +50,8 @@ export function Link({
   ...props
 }: LinkProps) {
   const classes = cn(
-    variant !== 'plain' && styles['link'],
-    variant !== 'plain' && styles[variant],
+    variant !== 'plain' && BASE,
+    variant !== 'plain' && VARIANT[variant],
     className,
   );
 

@@ -9,14 +9,13 @@ import {
   type LinksFunction,
 } from 'react-router';
 
-import themeStylesheetUrl from '@dev-blog/theme/styles/theme.css?url';
+import themeStylesheetUrl from '@dev-blog/theme/styles/tailwind.css?url';
 import { Button, ErrorState, Link } from '@dev-blog/ui';
 
 import { SiteFooter } from './components/site-footer';
 import { SiteHeader } from './components/site-header';
 import { seoMeta } from './lib/seo';
 import { SITE_NAME, SITE_URL } from './lib/site';
-import styles from './root.module.css';
 
 export function loader() {
   return { origin: SITE_URL };
@@ -68,9 +67,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <div className={styles['shell']}>
+        <div className="flex min-h-screen flex-col">
           <SiteHeader />
-          <div id="content" className={styles['content']}>
+          <div id="content" className="flex flex-1 flex-col">
             {children}
           </div>
           <SiteFooter />
@@ -91,21 +90,23 @@ export function ErrorBoundary() {
   const notFound = isRouteErrorResponse(error) && error.status === 404;
 
   return (
-    <main className={styles['error']}>
-      <p className={styles['errorTerminal']}>
+    <main className="flex flex-1 flex-col items-center justify-center px-8 py-16 text-center">
+      <p className="mb-7 font-mono text-[12.5px] text-muted-foreground">
         {notFound
           ? '$ curl fabiomenchicchi.com/this-page '
           : '$ tail -f /var/log/fabiomenchicchi.com '}
-        <span className={styles['errorAccent']}>
-          → HTTP {notFound ? 404 : 500}
-        </span>
+        <span className="text-primary">→ HTTP {notFound ? 404 : 500}</span>
       </p>
       {notFound ? (
         <ErrorState
           title="Page not found"
           description="The URL you're looking for doesn't exist — or I deleted it. Deleting code is an art form; deleting pages, an accident."
         >
-          <Link to="/" variant="plain" className={styles['errorAction']}>
+          <Link
+            to="/"
+            variant="plain"
+            className="inline-flex items-center rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground no-underline [transition:var(--transition-color)] hover:bg-primary-hover"
+          >
             Back to the blog
           </Link>
         </ErrorState>
@@ -117,7 +118,11 @@ export function ErrorBoundary() {
           <Button onClick={() => window.location.reload()}>
             Reload the page
           </Button>
-          <Link to="/" variant="plain" className={styles['errorSecondary']}>
+          <Link
+            to="/"
+            variant="plain"
+            className="font-mono text-[12.5px] text-muted-foreground no-underline [transition:var(--transition-color)] hover:text-primary"
+          >
             ← or back to the blog
           </Link>
         </ErrorState>

@@ -1,7 +1,5 @@
 import type { ReactNode } from 'react';
 
-import styles from './section-heading.module.css';
-
 export interface SectionHeadingProps {
   children: ReactNode;
   aside?: ReactNode;
@@ -10,12 +8,12 @@ export interface SectionHeadingProps {
 /** Monospace section label in the mock style: `// articles ——— 5 posts`. */
 export function SectionHeading({ children, aside }: SectionHeadingProps) {
   return (
-    <div className={styles['heading']}>
-      <span aria-hidden="true" className={styles['slashes']}>
+    <div className="flex items-center gap-4 font-mono text-xs text-muted-foreground">
+      <span aria-hidden="true" className="text-primary">
         {'//'}
       </span>
       <span>{children}</span>
-      <span aria-hidden="true" className={styles['rule']} />
+      <span aria-hidden="true" className="h-px flex-1 bg-border" />
       {aside ? <span>{aside}</span> : null}
     </div>
   );

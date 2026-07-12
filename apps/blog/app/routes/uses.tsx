@@ -3,7 +3,6 @@ import { Link } from '@dev-blog/ui';
 import { SectionHeading } from '../components/section-heading';
 import { originFromMatches, seoMeta } from '../lib/seo';
 import { SITE_NAME } from '../lib/site';
-import styles from './info-page.module.css';
 
 export const meta = ({
   matches,
@@ -24,13 +23,20 @@ interface Row {
   detail: string;
 }
 
+/**
+ * Phone: the term sits on its own line above the detail. From `sm` the pair
+ * becomes the two-column definition row of the desktop design.
+ */
+const ROW =
+  'grid grid-cols-1 items-baseline gap-0.5 sm:grid-cols-[10rem_1fr] sm:gap-4';
+
 function Rows({ rows }: { rows: Row[] }) {
   return (
-    <dl className={styles['rows']}>
+    <dl className="flex flex-col gap-2">
       {rows.map(({ term, detail }) => (
-        <div key={term} className={styles['row']}>
-          <dt className={styles['term']}>{term}</dt>
-          <dd className={styles['detail']}>{detail}</dd>
+        <div key={term} className={ROW}>
+          <dt className="font-mono text-xs text-primary">{term}</dt>
+          <dd className="text-sm leading-copy text-foreground">{detail}</dd>
         </div>
       ))}
     </dl>
@@ -39,15 +45,17 @@ function Rows({ rows }: { rows: Row[] }) {
 
 export default function Uses() {
   return (
-    <main className={styles['page']}>
-      <h1 className={styles['title']}>Uses</h1>
-      <p className={styles['intro']}>
+    <main className="mx-auto w-full max-w-[var(--layout-prose-width)] px-8 pt-14 pb-18">
+      <h1 className="mb-3.5 text-[clamp(1.875rem,4vw,2.75rem)] leading-tight font-bold tracking-[-0.03em]">
+        Uses
+      </h1>
+      <p className="mb-10 text-base leading-copy text-muted-foreground">
         The tools I actually work with, updated occasionally. Inspired by{' '}
         <Link href="https://uses.tech">uses.tech</Link>.
       </p>
 
-      <section className={styles['section']} aria-label="Editor and terminal">
-        <div className={styles['sectionHeading']}>
+      <section className="mb-8" aria-label="Editor and terminal">
+        <div className="mb-4">
           <SectionHeading>editor &amp; terminal</SectionHeading>
         </div>
         <Rows
@@ -70,8 +78,8 @@ export default function Uses() {
         />
       </section>
 
-      <section className={styles['section']} aria-label="Hardware">
-        <div className={styles['sectionHeading']}>
+      <section className="mb-8" aria-label="Hardware">
+        <div className="mb-4">
           <SectionHeading>hardware</SectionHeading>
         </div>
         <Rows
@@ -106,8 +114,8 @@ export default function Uses() {
         />
       </section>
 
-      <section className={styles['section']} aria-label="Toolchain">
-        <div className={styles['sectionHeading']}>
+      <section className="mb-8" aria-label="Toolchain">
+        <div className="mb-4">
           <SectionHeading>toolchain</SectionHeading>
         </div>
         <Rows
@@ -125,8 +133,8 @@ export default function Uses() {
         />
       </section>
 
-      <section className={styles['section']} aria-label="Apps and services">
-        <div className={styles['sectionHeading']}>
+      <section className="mb-8" aria-label="Apps and services">
+        <div className="mb-4">
           <SectionHeading>apps &amp; services</SectionHeading>
         </div>
         <Rows

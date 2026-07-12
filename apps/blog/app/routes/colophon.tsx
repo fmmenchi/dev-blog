@@ -3,7 +3,6 @@ import { Link } from '@dev-blog/ui';
 import { SectionHeading } from '../components/section-heading';
 import { originFromMatches, seoMeta } from '../lib/seo';
 import { SITE_NAME } from '../lib/site';
-import styles from './info-page.module.css';
 
 export const meta = ({
   matches,
@@ -24,13 +23,20 @@ interface Row {
   detail: React.ReactNode;
 }
 
+/**
+ * Phone: the term sits on its own line above the detail. From `sm` the pair
+ * becomes the two-column definition row of the desktop design.
+ */
+const ROW =
+  'grid grid-cols-1 items-baseline gap-0.5 sm:grid-cols-[10rem_1fr] sm:gap-4';
+
 function Rows({ rows }: { rows: Row[] }) {
   return (
-    <dl className={styles['rows']}>
+    <dl className="flex flex-col gap-2">
       {rows.map(({ term, detail }) => (
-        <div key={term} className={styles['row']}>
-          <dt className={styles['term']}>{term}</dt>
-          <dd className={styles['detail']}>{detail}</dd>
+        <div key={term} className={ROW}>
+          <dt className="font-mono text-xs text-primary">{term}</dt>
+          <dd className="text-sm leading-copy text-foreground">{detail}</dd>
         </div>
       ))}
     </dl>
@@ -39,14 +45,16 @@ function Rows({ rows }: { rows: Row[] }) {
 
 export default function Colophon() {
   return (
-    <main className={styles['page']}>
-      <h1 className={styles['title']}>Colophon</h1>
-      <p className={styles['intro']}>
+    <main className="mx-auto w-full max-w-[var(--layout-prose-width)] px-8 pt-14 pb-18">
+      <h1 className="mb-3.5 text-[clamp(1.875rem,4vw,2.75rem)] leading-tight font-bold tracking-[-0.03em]">
+        Colophon
+      </h1>
+      <p className="mb-10 text-base leading-copy text-muted-foreground">
         How this site is designed, built, tested and shipped.
       </p>
 
-      <section className={styles['section']} aria-label="Stack">
-        <div className={styles['sectionHeading']}>
+      <section className="mb-8" aria-label="Stack">
+        <div className="mb-4">
           <SectionHeading>stack</SectionHeading>
         </div>
         <Rows
@@ -66,8 +74,8 @@ export default function Colophon() {
         />
       </section>
 
-      <section className={styles['section']} aria-label="Design">
-        <div className={styles['sectionHeading']}>
+      <section className="mb-8" aria-label="Design">
+        <div className="mb-4">
           <SectionHeading>design</SectionHeading>
         </div>
         <Rows
@@ -89,14 +97,14 @@ export default function Colophon() {
             {
               term: 'styling',
               detail:
-                'CSS Modules consuming semantic tokens only; Stylelint fails the build on hardcoded values.',
+                'Tailwind v4 utilities bound to the semantic tokens; there is no palette to reach for.',
             },
           ]}
         />
       </section>
 
-      <section className={styles['section']} aria-label="Content">
-        <div className={styles['sectionHeading']}>
+      <section className="mb-8" aria-label="Content">
+        <div className="mb-4">
           <SectionHeading>content</SectionHeading>
         </div>
         <Rows
@@ -111,8 +119,8 @@ export default function Colophon() {
         />
       </section>
 
-      <section className={styles['section']} aria-label="Quality">
-        <div className={styles['sectionHeading']}>
+      <section className="mb-8" aria-label="Quality">
+        <div className="mb-4">
           <SectionHeading>quality</SectionHeading>
         </div>
         <Rows
@@ -143,7 +151,9 @@ export default function Colophon() {
         />
       </section>
 
-      <p className={styles['note']}>No analytics, no cookies, no tracking.</p>
+      <p className="rounded-e-lg border-s-[3px] border-primary bg-card px-6 py-4 text-sm text-muted-foreground">
+        No analytics, no cookies, no tracking.
+      </p>
     </main>
   );
 }

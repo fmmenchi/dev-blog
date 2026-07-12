@@ -1,0 +1,107 @@
+/*
+ * @dev-blog/theme — the app's single stylesheet entry point.
+ *
+ *   1. the tokens (three levels: primitives -> derived -> semantic)
+ *   2. Tailwind
+ *   3. the BRIDGE: which semantic roles become Tailwind utilities
+ *
+ * theme.css stays the source of truth for the VALUES. This file only decides
+ * which of them Tailwind is allowed to generate classes for.
+ */
+
+@import './theme.css';
+@import 'tailwindcss';
+
+/*
+ * Where the classes are written. Tailwind's automatic detection starts from the
+ * Vite root (apps/blog) and would never look inside libs/ui — its utilities
+ * would compile to nothing, silently.
+ */
+@source '../../../../apps/blog/app';
+@source '../../../../libs/ui/src';
+
+/*
+ * BRIDGE — a pointer, not a definition.
+ *
+ * Only the roles listed here produce utilities (`bg-card`, `text-muted-foreground`,
+ * `rounded-xl`, …). A role defined in :root but missing here yields a class that
+ * silently does not compile — the same failure mode as an undefined var(), with
+ * a different name. If a utility renders unstyled, look here first.
+ *
+ * Note what is NOT here: the neutral palette. It has no utilities on purpose, so
+ * `bg-neutral-850` cannot be written by accident.
+ */
+/*
+ * Tailwind ships its own palette, and its names collide with ours
+ * (--color-neutral-100/400/800/950 exist in both). Ours win — unlayered CSS
+ * beats @layer theme — but Tailwind would still generate `bg-neutral-800` from
+ * ITS grey, and the rule "no palette in a component" would quietly be a lie.
+ * Wipe the defaults; only what the bridge below re-adds exists.
+ */
+@theme {
+  --color-*: initial;
+  --font-*: initial;
+  --text-*: initial;
+  --radius-*: initial;
+  --leading-*: initial;
+  --breakpoint-*: initial;
+}
+
+@theme inline {
+  /* Surfaces and text */
+  --color-background: var(--color-background);
+  --color-foreground: var(--color-foreground);
+  --color-card: var(--color-card);
+  --color-card-foreground: var(--color-card-foreground);
+  --color-muted: var(--color-muted);
+  --color-muted-foreground: var(--color-muted-foreground);
+  --color-border: var(--color-border);
+  --color-ring: var(--color-ring);
+  --color-ring-offset: var(--color-ring-offset);
+
+  /* Brand — follows [data-accent] at runtime; components never know which. */
+  --color-primary: var(--color-primary);
+  --color-primary-foreground: var(--color-primary-foreground);
+  --color-primary-hover: var(--color-primary-hover);
+  --color-primary-active: var(--color-primary-active);
+
+  /* Code */
+  --color-code-background: var(--color-code-background);
+  --color-code-foreground: var(--color-code-foreground);
+
+  /* Type */
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+
+  --text-2xs: var(--text-2xs);
+  --text-xs: var(--text-xs);
+  --text-sm: var(--text-sm);
+  --text-base: var(--text-base);
+  --text-lg: var(--text-lg);
+  --text-xl: var(--text-xl);
+  --text-3xl: var(--text-3xl);
+
+  --font-weight-medium: var(--font-weight-medium);
+  --font-weight-semibold: var(--font-weight-semibold);
+  --font-weight-bold: var(--font-weight-bold);
+
+  --leading-tight: var(--leading-tight);
+  --leading-normal: var(--leading-normal);
+  --leading-copy: var(--leading-copy);
+  --leading-relaxed: var(--leading-relaxed);
+
+  /* Radius */
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-full: var(--radius-full);
+
+  /*
+   * Breakpoints — MOBILE FIRST, and there is no other option: Tailwind's
+   * variants are min-width. A `max-width` layout is now unwritable, which is
+   * the whole reason we are here.
+   */
+  --breakpoint-sm: 40rem;
+  --breakpoint-md: 56rem;
+}

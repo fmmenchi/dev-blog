@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
 
 import { cn } from '../../internal/cn';
-import styles from './error-state.module.css';
 
 export type ErrorStateVariant = 'error' | 'empty';
 
@@ -21,6 +20,32 @@ export interface ErrorStateProps {
   variant?: ErrorStateVariant;
 }
 
+const BASE = 'flex flex-col items-center text-center';
+
+const VARIANT: Record<ErrorStateVariant, string> = {
+  /* Owns the page — a 404 or a 500, with nothing else on it. */
+  error: 'gap-4',
+  /* Sits inside a page that already has a heading: a list with nothing in it. */
+  empty: 'gap-2 py-6 px-4 border border-dashed border-border rounded-lg',
+};
+
+/*
+ * The error title has no size token: it is fluid, and the type scale is not.
+ * The tracking has a token, but no utility — the bridge exposes colours, type
+ * and radii, not letter-spacing — so it is read through a var().
+ */
+const TITLE: Record<ErrorStateVariant, string> = {
+  error:
+    'm-0 font-bold text-[clamp(1.75rem,4vw,2.75rem)] leading-tight ' +
+    'tracking-[var(--typography-heading-tracking)]',
+  empty: 'm-0 font-mono font-medium text-foreground',
+};
+
+/* 28rem: a measure, not a spacing step — the scale has nothing for it. */
+const DESCRIPTION = 'm-0 text-muted-foreground leading-copy max-w-[28rem]';
+
+const ACTIONS = 'flex items-center gap-4 mt-2';
+
 /** Centered state block: title, muted explanation, actions. */
 export function ErrorState({
   title,
@@ -30,16 +55,14 @@ export function ErrorState({
   variant = 'error',
 }: ErrorStateProps) {
   return (
-    <div className={cn(styles['state'], styles[variant], className)}>
+    <div className={cn(BASE, VARIANT[variant], className)}>
       {variant === 'error' ? (
-        <h1 className={styles['title']}>{title}</h1>
+        <h1 className={TITLE.error}>{title}</h1>
       ) : (
-        <p className={styles['title']}>{title}</p>
+        <p className={TITLE.empty}>{title}</p>
       )}
-      {description ? (
-        <p className={styles['description']}>{description}</p>
-      ) : null}
-      {children ? <div className={styles['actions']}>{children}</div> : null}
+      {description ? <p className={DESCRIPTION}>{description}</p> : null}
+      {children ? <div className={ACTIONS}>{children}</div> : null}
     </div>
   );
 }
