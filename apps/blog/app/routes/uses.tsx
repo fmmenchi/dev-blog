@@ -83,7 +83,12 @@ export default function Uses() {
             {
               term: 'displays',
               detail:
-                'A curved LG and a Samsung turned vertical for the code, both on an Anker Thunderbolt dock.',
+                'A curved LG, and a Samsung ViewFinity S6 turned vertical for the code.',
+            },
+            {
+              term: 'dock',
+              detail:
+                'Anker Prime TB5 — Thunderbolt 5, fourteen ports, one cable to the laptop.',
             },
             {
               term: 'keyboard',
