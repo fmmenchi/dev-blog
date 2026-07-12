@@ -21,5 +21,9 @@
     },
   ],
   // custom_domain also creates the DNS record on the zone automatically.
+  // The apex is the only hostname this Worker serves. www is NOT here on purpose:
+  // it is a proxied `AAAA www 100::` record plus a Cloudflare Redirect Rule that
+  // 301s www -> apex at the edge, so the Worker never sees it. That pair lives in
+  // the Cloudflare dashboard, not in this repo — do not conclude www is unhandled.
   "routes": [{ "pattern": "fabiomenchicchi.com", "custom_domain": true }],
 }
