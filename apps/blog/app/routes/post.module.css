@@ -186,16 +186,3 @@
 .tocLink:hover {
   color: var(--color-primary);
 }
-
-.share {
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  color: var(--color-muted-foreground);
-  text-decoration: none;
-  margin-top: var(--spacing-stack-s);
-  transition: var(--transition-color);
-}
-
-.share:hover {
-  color: var(--color-primary);
-}
