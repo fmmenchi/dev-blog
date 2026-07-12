@@ -85,5 +85,13 @@ theme block to keep in step. Then run `pnpm nx run @dev-blog/theme:lint-css` and
 update [`doc/design-tokens.md`](../doc/design-tokens.md) when the semantic
 vocabulary changes.
 
-A primitive with no semantic role consuming it is dead weight: either give it a
-role or don't add it.
+**The palette is a scale, and a scale must be whole.** An unused step of the
+neutral ramp is not dead weight — it is what makes `850` legible instead of
+arbitrary. (This is the exception. A one-off `--typography-copy-leading` that
+nothing consumes _is_ dead weight; a `--color-neutral-300` nobody has needed yet
+is the scale.)
+
+**Semantic roles hold no values.** They point at the palette:
+`--color-card: var(--color-neutral-850)`. That indirection is what makes a theme
+switch possible at all — re-point the roles, keep the palette. The accent switch
+already works exactly this way.
