@@ -74,7 +74,8 @@ export default function About() {
         </p>
         <p className={styles['paragraph']}>
           This blog is my notebook. I write things down here to find out whether
-          I actually understood them.
+          I actually understood them. If a post helps you understand something
+          too, that makes me happy. I hope it does.
         </p>
       </main>
     </div>
