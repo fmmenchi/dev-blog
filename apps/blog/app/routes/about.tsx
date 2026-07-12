@@ -70,8 +70,9 @@ export default function About() {
         </p>
         <p className={styles['paragraph']}>
           I care about what keeps a codebase alive over time: conventions the
-          whole team follows, types, tests, and a release that runs without a
-          person. I also do a lot of code review and mentoring.
+          whole team follows, types, tests, a release that runs without a
+          person. And I like the research side of the job, trying things that
+          aren't settled yet to see whether they hold up.
         </p>
 
         <div className={styles['now']}>
