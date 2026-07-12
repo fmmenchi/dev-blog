@@ -1,7 +1,6 @@
-import { Badge, Card, EmptyState, Link } from '@dev-blog/ui';
+import { Avatar, Badge, Card, EmptyState, Link } from '@dev-blog/ui';
 import { useLoaderData } from 'react-router';
 
-import { Avatar } from '../components/avatar';
 import { SectionHeading } from '../components/section-heading';
 import { profile } from '../lib/content';
 import { getPosts } from '../lib/posts.server';

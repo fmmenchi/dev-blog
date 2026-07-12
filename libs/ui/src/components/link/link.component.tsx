@@ -1,3 +1,4 @@
+import { cva, type VariantProps } from 'class-variance-authority';
 import type { AnchorHTMLAttributes, ReactNode } from 'react';
 import { Link as RouterLink } from 'react-router';
 
@@ -6,13 +7,36 @@ import { cn } from '../../internal/cn';
 const PROTOCOL_HREF = /^([a-z][a-z0-9+.-]*:|\/\/)/i;
 const NEW_TAB_HREF = /^(https?:|\/\/)/i;
 
-export type LinkVariant = 'default' | 'subtle' | 'plain';
+/*
+ * The shared classes are NOT the cva base: `plain` must render nothing at all —
+ * cards and buttons wrap a `plain` Link and supply their own looks, and a base
+ * would leak a radius, a weight and a transition into them. cva cannot subtract
+ * from its base, so the base is empty and the shared part is spliced into the
+ * two variants that actually want it.
+ *
+ * Every class resolves to a SEMANTIC token through the Tailwind bridge:
+ * `text-primary` is `--color-primary`, `text-muted-foreground` is
+ * `--color-muted-foreground`. No palette, no literal colour.
+ */
+const SHARED =
+  'rounded-sm font-medium underline-offset-[0.25em] [transition:var(--transition-color)]';
 
-interface BaseLinkProps extends Omit<
-  AnchorHTMLAttributes<HTMLAnchorElement>,
-  'href'
-> {
-  variant?: LinkVariant;
+export const linkVariants = cva('', {
+  variants: {
+    variant: {
+      default: `${SHARED} text-primary underline hover:text-primary-hover`,
+      subtle: `${SHARED} text-muted-foreground no-underline hover:text-foreground hover:underline`,
+      /* `plain` carries no visual styling — behavior only. */
+      plain: '',
+    },
+  },
+  defaultVariants: { variant: 'default' },
+});
+
+export type LinkVariants = VariantProps<typeof linkVariants>;
+
+interface BaseLinkProps
+  extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href'>, LinkVariants {
   children: ReactNode;
   /** Forwarded to the router link: forces a full document load (e.g. /rss.xml). */
   reloadDocument?: boolean;
@@ -20,16 +44,6 @@ interface BaseLinkProps extends Omit<
 
 export type LinkProps = BaseLinkProps &
   ({ to: string; href?: never } | { href: string; to?: never });
-
-const BASE =
-  'rounded-sm font-medium underline-offset-[0.25em] [transition:var(--transition-color)]';
-
-/* `plain` carries no visual styling — behavior only. */
-const VARIANT: Record<Exclude<LinkVariant, 'plain'>, string> = {
-  default: 'text-primary underline hover:text-primary-hover',
-  subtle:
-    'text-muted-foreground no-underline hover:text-foreground hover:underline',
-};
 
 /**
  * The one way to link things, andes-routes style:
@@ -43,17 +57,13 @@ const VARIANT: Record<Exclude<LinkVariant, 'plain'>, string> = {
 export function Link({
   to,
   href,
-  variant = 'default',
+  variant,
   className,
   children,
   reloadDocument,
   ...props
 }: LinkProps) {
-  const classes = cn(
-    variant !== 'plain' && BASE,
-    variant !== 'plain' && VARIANT[variant],
-    className,
-  );
+  const classes = cn(linkVariants({ variant }), className);
 
   if (href !== undefined && NEW_TAB_HREF.test(href)) {
     return (

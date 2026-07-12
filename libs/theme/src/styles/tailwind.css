@@ -48,6 +48,14 @@
 }
 
 @theme inline {
+  /*
+   * Spacing. Tailwind computes `p-4` as `calc(var(--spacing) * 4)`, and its
+   * default base is its own 0.25rem. Pointing that base at OUR primitive is what
+   * makes the utilities measure with our ruler instead of theirs: the scale is
+   * ours, Tailwind is the syntax. Change --space-1 and every utility follows.
+   */
+  --spacing: var(--space-1);
+
   /* Surfaces and text */
   --color-background: var(--color-background);
   --color-foreground: var(--color-foreground);

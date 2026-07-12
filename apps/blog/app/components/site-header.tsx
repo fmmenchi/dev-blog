@@ -1,9 +1,7 @@
-import { Link } from '@dev-blog/ui';
+import { AccentSwitcher, Link } from '@dev-blog/ui';
 // NavLink stays a router primitive: the design-system Link has no notion of
 // the aria-current active state the main nav needs.
 import { NavLink } from 'react-router';
-
-import { AccentSwitcher } from './accent-switcher';
 
 const NAV = [
   { to: '/blog', label: '/blog' },

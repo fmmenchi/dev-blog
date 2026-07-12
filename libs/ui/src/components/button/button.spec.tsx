@@ -32,9 +32,15 @@ describe('Button', () => {
   });
 
   it('renders a link, not a button, when given an href', () => {
-    render(<Button href="mailto:hi@example.com">Say hi</Button>);
+    render(
+      <Button asChild>
+        <a href="mailto:hi@example.com">Say hi</a>
+      </Button>,
+    );
     const link = screen.getByRole('link', { name: 'Say hi' });
     expect(link.getAttribute('href')).toBe('mailto:hi@example.com');
     expect(screen.queryByRole('button')).toBeNull();
+    /* Slot must not leak a type attribute onto an anchor. */
+    expect(link.getAttribute('type')).toBeNull();
   });
 });

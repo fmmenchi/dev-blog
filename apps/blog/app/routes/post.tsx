@@ -1,7 +1,6 @@
-import { Card, Link, Prose } from '@dev-blog/ui';
+import { Avatar, Card, Link, Prose } from '@dev-blog/ui';
 import { useLoaderData, type LoaderFunctionArgs } from 'react-router';
 
-import { Avatar } from '../components/avatar';
 import { SectionHeading } from '../components/section-heading';
 import { profile } from '../lib/content';
 import { renderMarkdown } from '../lib/markdown.server';

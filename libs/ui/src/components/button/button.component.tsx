@@ -1,74 +1,74 @@
-import type { ButtonHTMLAttributes, ReactNode } from 'react';
+import { Slot } from '@radix-ui/react-slot';
+import { cva, type VariantProps } from 'class-variance-authority';
+import type { ButtonHTMLAttributes } from 'react';
 
 import { cn } from '../../internal/cn';
-import { Link } from '../link/link.component';
-
-export type ButtonVariant = 'primary' | 'ghost';
-
-interface CommonProps {
-  variant?: ButtonVariant;
-  className?: string;
-  children?: ReactNode;
-}
-
-export type ButtonProps =
-  | (CommonProps &
-      Omit<
-        ButtonHTMLAttributes<HTMLButtonElement>,
-        'className' | 'children'
-      > & { href?: never })
-  | (CommonProps & { href: string });
-
-const BASE =
-  'inline-flex items-center gap-2 py-2 px-4 border border-transparent ' +
-  'rounded-md font-sans text-base font-medium leading-normal ' +
-  /* An href renders an <a>, which would otherwise underline itself. */
-  'no-underline cursor-pointer [transition:var(--transition-color)] ' +
-  'disabled:cursor-not-allowed disabled:opacity-50';
 
 /*
- * `hover:not-disabled:` — not `enabled:hover:`. With an href the button renders
+ * Every class below resolves to a SEMANTIC token through the Tailwind bridge:
+ * `bg-primary` is `--color-primary`, `bg-muted` is `--color-muted`. No palette,
+ * no literal colour.
+ *
+ * `hover:not-disabled:` — not `enabled:hover:`. Through Slot the element may be
  * an <a>, and `:enabled` never matches an anchor: the hover state would silently
- * disappear on exactly the links that look like buttons.
+ * vanish on exactly the links that look like buttons.
  */
-const VARIANT: Record<ButtonVariant, string> = {
-  primary:
-    'bg-primary text-primary-foreground ' +
-    'hover:not-disabled:bg-primary-hover active:not-disabled:bg-primary-active',
-  ghost:
-    'bg-transparent text-foreground border-border ' +
-    'hover:not-disabled:bg-muted',
-};
+export const buttonVariants = cva(
+  'inline-flex items-center gap-2 py-2 px-4 border border-transparent ' +
+    'rounded-md font-sans text-base font-medium leading-normal ' +
+    /* Slotted onto an <a>, it would otherwise underline itself. */
+    'no-underline cursor-pointer [transition:var(--transition-color)] ' +
+    'disabled:cursor-not-allowed disabled:opacity-50',
+  {
+    variants: {
+      variant: {
+        primary:
+          'bg-primary text-primary-foreground ' +
+          'hover:not-disabled:bg-primary-hover active:not-disabled:bg-primary-active',
+        ghost:
+          'bg-transparent text-foreground border-border ' +
+          'hover:not-disabled:bg-muted',
+      },
+    },
+    defaultVariants: { variant: 'primary' },
+  },
+);
+
+export type ButtonVariants = VariantProps<typeof buttonVariants>;
+
+export interface ButtonProps
+  extends ButtonHTMLAttributes<HTMLButtonElement>, ButtonVariants {
+  /**
+   * Render the child instead of a `<button>`, keeping the button's looks.
+   *
+   * An action that navigates must stay a link — it needs middle-click, "open in
+   * a new tab" and the link role — so a `mailto:` is written as
+   * `<Button asChild><Link href="mailto:…">Say hi</Link></Button>`. Radix's Slot
+   * merges the classes onto that child. It replaces an `href` prop that
+   * reimplemented, worse, exactly this.
+   */
+  asChild?: boolean;
+}
 
 /**
  * Icon-only usage requires an `aria-label` (or `aria-labelledby`): the button
  * must always have an accessible name.
- *
- * With `href` it renders a real anchor that looks like a button — an action
- * that navigates (a `mailto:`, an external URL) must be a link, not a
- * `<button>`, or it loses middle-click, "open in new tab" and the right role.
- * The href is handed to `Link`, so protocol handling stays in one place.
  */
 export function Button({
-  variant = 'primary',
+  variant,
   className,
-  children,
-  ...rest
+  asChild = false,
+  type,
+  ...props
 }: ButtonProps) {
-  const classes = cn(BASE, VARIANT[variant], className);
+  const Component = asChild ? Slot : 'button';
 
-  if (rest.href !== undefined) {
-    return (
-      <Link href={rest.href} variant="plain" className={classes}>
-        {children}
-      </Link>
-    );
-  }
-
-  const { type = 'button', ...buttonProps } = rest;
   return (
-    <button type={type} className={classes} {...buttonProps}>
-      {children}
-    </button>
+    <Component
+      /* A <button> defaults to type="submit". A slotted <a> must get no type. */
+      {...(asChild ? {} : { type: type ?? 'button' })}
+      className={cn(buttonVariants({ variant }), className)}
+      {...props}
+    />
   );
 }

@@ -2,6 +2,9 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "dist",
+    // This is a browser component library: AccentSwitcher reads localStorage and
+    // sets data-accent on <html>. Without DOM in lib, `window` does not exist.
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "types": [
       "node",
       "@nx/react/typings/cssmodule.d.ts",

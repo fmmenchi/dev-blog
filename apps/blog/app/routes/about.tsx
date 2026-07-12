@@ -1,6 +1,5 @@
-import { Button, Card, Link } from '@dev-blog/ui';
+import { Avatar, Button, Card, Link } from '@dev-blog/ui';
 
-import { Avatar } from '../components/avatar';
 import { profile, socials } from '../lib/content';
 import { originFromMatches, seoMeta } from '../lib/seo';
 import { SITE_NAME } from '../lib/site';
@@ -41,7 +40,12 @@ export default function About() {
             <span>{profile.location}</span>
             <span>{profile.experience}</span>
           </div>
-          <Button href="mailto:f.menchicchi@gmail.com">Say hi</Button>
+          {/* An action that navigates stays a link; Slot lends it the button's looks. */}
+          <Button asChild>
+            <Link href="mailto:f.menchicchi@gmail.com" variant="plain">
+              Say hi
+            </Link>
+          </Button>
         </Card>
         {/* No mail here: the "Say hi" button above is already the mail link. */}
         <nav
