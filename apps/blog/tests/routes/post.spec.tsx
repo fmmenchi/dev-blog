@@ -12,38 +12,38 @@ function renderPost(slug: string) {
 
 describe('Post', () => {
   it('renders the article with title and numbered sections', async () => {
-    renderPost('rewrote-my-blog-in-200-lines');
+    renderPost('starting-a-notebook');
     expect(
       await screen.findByRole('heading', {
         level: 1,
-        name: 'I rewrote my blog in 200 lines',
+        name: 'Starting a notebook',
       }),
     ).toBeTruthy();
     expect(
-      screen.getByRole('heading', { level: 2, name: /The problem/ }),
+      screen.getByRole('heading', { level: 2, name: /What goes here/ }),
     ).toBeTruthy();
   });
 
   it('exposes a table of contents linking to the sections', async () => {
-    renderPost('rewrote-my-blog-in-200-lines');
+    renderPost('starting-a-notebook');
     const toc = await screen.findByRole('navigation', {
       name: 'On this page',
     });
     expect(toc).toBeTruthy();
-    const first = screen.getByRole('link', { name: /01 · The problem/ });
-    expect(first.getAttribute('href')).toBe('#the-problem');
+    const first = screen.getByRole('link', { name: /01 · What goes here/ });
+    expect(first.getAttribute('href')).toBe('#what-goes-here');
     expect(
       screen
-        .getByRole('heading', { level: 2, name: /The problem/ })
+        .getByRole('heading', { level: 2, name: /What goes here/ })
         .getAttribute('id'),
-    ).toBe('the-problem');
+    ).toBe('what-goes-here');
   });
 
-  it('links the neighbouring articles', async () => {
-    renderPost('rewrote-my-blog-in-200-lines');
-    await screen.findByRole('navigation', { name: 'More articles' });
+  it('hides the siblings nav when a post has no neighbours', async () => {
+    renderPost('starting-a-notebook');
+    await screen.findByRole('heading', { level: 1 });
     expect(
-      screen.getByRole('link', { name: /previous/ }).getAttribute('href'),
-    ).toBe('/blog/why-i-left-microservices');
+      screen.queryByRole('navigation', { name: 'More articles' }),
+    ).toBeNull();
   });
 });
