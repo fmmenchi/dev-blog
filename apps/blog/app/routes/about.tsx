@@ -71,8 +71,8 @@ export default function About() {
         <p className={styles['paragraph']}>
           I care about what keeps a codebase alive over time: conventions the
           whole team follows, types, tests, a release that runs without a
-          person. And I like the research side of the job, trying things that
-          aren't settled yet to see whether they hold up.
+          person. And I like research: getting my hands on something new before
+          anyone has decided whether it works.
         </p>
 
         <div className={styles['now']}>
