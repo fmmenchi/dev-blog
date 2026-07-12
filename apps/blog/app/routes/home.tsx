@@ -3,6 +3,7 @@ import { useLoaderData } from 'react-router';
 
 import { SectionHeading } from '../components/section-heading';
 import { profile } from '../lib/content';
+import { avatarSrc } from '../lib/avatar-image';
 import { getPosts } from '../lib/posts.server';
 
 export function loader() {
@@ -35,7 +36,7 @@ export default function Home() {
           <span className="text-primary">decisions</span> behind the code.
         </h1>
         <p className="max-w-[35rem] text-lg leading-copy text-balance text-muted-foreground">
-          Honest notes on architecture, tooling and developer experience.
+          Notes on architecture, tooling and developer experience.
         </p>
       </div>
 
@@ -44,7 +45,7 @@ export default function Home() {
         {/* Sticky only once there is a column to be sticky in. */}
         <aside className="flex flex-col gap-3.5 md:sticky md:top-6">
           <Card className="flex flex-col items-start gap-3.5">
-            <Avatar name={profile.name} size={60} />
+            <Avatar name={profile.name} src={avatarSrc} size={88} />
             <div>
               <p className="mb-1 text-[19px] font-bold">{profile.name}</p>
               <p className="text-[13.5px] leading-[1.55] text-muted-foreground">

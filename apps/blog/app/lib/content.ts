@@ -54,6 +54,7 @@ export const profile = {
     'Node & Nest',
     'Go & Java',
     'GCP',
+    'Nx',
     'Architecture',
     'DX',
     'AI',
