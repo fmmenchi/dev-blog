@@ -63,8 +63,7 @@ export default function About() {
           built the frontend department from nothing: the standards, the design
           system, the tooling, the people. Now I'm at Wishew, on the product and
           on the machinery under it, the Nx monorepo and the release pipeline.
-          Lately most of my week goes into putting an LLM inside a product that
-          already exists, which turns out to be mostly plumbing, not prompting.
+          Lately, a lot of that work is with AI.
         </p>
         <p className={styles['paragraph']}>
           That tension is the job, for me. My convictions are dull ones: a team
