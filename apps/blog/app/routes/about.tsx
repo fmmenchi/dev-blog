@@ -55,24 +55,23 @@ export default function About() {
           Hi, I'm <span className={styles['accent']}>{profile.name}</span>.
         </h1>
         <p className={styles['paragraph']}>
-          Born in Arezzo, computer engineering in Bologna, now writing code from
-          Cusco, Peru. Thirteen years of software, nearly all of it for the web.
-          Before this I spent a decade on an enterprise supply-chain platform,
-          where I built a frontend department from nothing. These days I work on
-          Wishew: a React Native app, a NestJS backend, a handful of Go services
-          and the cloud they run on. As much of my time goes to the monorepo,
-          the design system and the release pipeline as to the features
-          themselves, and lately a good part of it goes to AI.
+          Born in Arezzo, studied computer engineering in Bologna, and these
+          days I write code from Cusco, in Peru. Thirteen years of it, almost
+          all on the web. Ten of those went into an enterprise supply-chain
+          platform, where I ended up building the frontend team from scratch.
+          Now I'm on Wishew: a React Native app, a NestJS backend, some Go
+          services, Google Cloud underneath. Half my week goes into the monorepo
+          and the release pipeline rather than the product itself. The other
+          half, lately, is AI.
         </p>
         <p className={styles['paragraph']}>
           This blog is my public notebook: I write to understand, not to teach.
           If a post happens to be useful to you, that's a welcome side effect.
         </p>
         <p className={styles['paragraph']}>
-          What I actually care about is the boring half — conventions a team can
-          follow, types that save a comment, tests that catch what I forgot, a
-          release that runs itself. And reviewing other people's code, which is
-          still the fastest way I know to learn something.
+          I care about what keeps a codebase alive over time: conventions the
+          whole team follows, types, tests, and a release that runs without a
+          person. I also do a lot of code review and mentoring.
         </p>
 
         <div className={styles['now']}>
