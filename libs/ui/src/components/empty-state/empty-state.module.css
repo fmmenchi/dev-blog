@@ -4,7 +4,7 @@
   align-items: center;
   text-align: center;
   gap: var(--spacing-stack-s);
-  padding: var(--spacing-stack-xl) var(--spacing-inline-m);
+  padding: var(--spacing-stack-l) var(--spacing-inline-m);
   border: 1px dashed var(--color-border);
   border-radius: var(--radius-lg);
 }
