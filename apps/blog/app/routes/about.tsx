@@ -59,11 +59,12 @@ export default function About() {
           almost all of them on the web.
         </p>
         <p className={styles['paragraph']}>
-          Now I'm at Wishew: the product, and the Nx monorepo and release
-          pipeline it runs on. A lot of that work, lately, is with AI. Before
-          that, ten years on an enterprise supply-chain platform, where I built
-          the frontend department from nothing: standards, design system,
-          tooling, people. That is where I learned what conventions are worth.
+          These days it's a mobile product: the app, the backend, and the Nx
+          monorepo and release pipeline under both. A lot of that work, lately,
+          is with AI. Before it, ten years on an enterprise supply-chain
+          platform, where I built the frontend department from nothing:
+          standards, design system, tooling, people. That is where I learned
+          what conventions are worth.
         </p>
         <p className={styles['paragraph']}>
           My convictions are dull ones: a team moves at the speed of its
