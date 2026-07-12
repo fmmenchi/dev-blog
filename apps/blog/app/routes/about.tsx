@@ -60,9 +60,9 @@ export default function About() {
           all on the web. Ten of those went into an enterprise supply-chain
           platform, where I ended up building the frontend team from scratch.
           Now I'm on Wishew: a React Native app, a NestJS backend, some Go
-          services, Google Cloud underneath. Half my week goes into the monorepo
-          and the release pipeline rather than the product itself. The other
-          half, lately, is AI.
+          services, Google Cloud underneath. I work on the product, and on the
+          monorepo and the release pipeline under it. Lately a good chunk of the
+          week goes into AI.
         </p>
         <p className={styles['paragraph']}>
           This blog is my public notebook: I write to understand, not to teach.
