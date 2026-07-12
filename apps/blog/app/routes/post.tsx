@@ -3,6 +3,7 @@ import { useLoaderData, type LoaderFunctionArgs } from 'react-router';
 
 import { SectionHeading } from '../components/section-heading';
 import { profile } from '../lib/content';
+import { avatarSrc } from '../lib/avatar-image';
 import { renderMarkdown } from '../lib/markdown.server';
 import { getPost, getPosts } from '../lib/posts.server';
 import { originFromMatches, seoMeta } from '../lib/seo';
@@ -97,7 +98,7 @@ export default function Post() {
         />
 
         <Card className="mt-11 flex items-center gap-4">
-          <Avatar name={profile.name} size={52} />
+          <Avatar name={profile.name} src={avatarSrc} size={64} />
           <div className="flex-1">
             <p className="text-base font-bold">{profile.name}</p>
             <p className="text-[13px] leading-normal text-muted-foreground">

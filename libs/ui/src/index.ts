@@ -7,4 +7,5 @@ export * from './components/container/container.component';
 export * from './components/empty-state/empty-state.component';
 export * from './components/error-state/error-state.component';
 export * from './components/link/link.component';
+export * from './components/picture/picture.component';
 export * from './components/prose/prose.component';

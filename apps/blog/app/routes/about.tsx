@@ -1,6 +1,7 @@
 import { Avatar, Button, Card, Link } from '@dev-blog/ui';
 
 import { profile, socials } from '../lib/content';
+import { avatarSrc } from '../lib/avatar-image';
 import { originFromMatches, seoMeta } from '../lib/seo';
 import { SITE_NAME } from '../lib/site';
 
@@ -31,7 +32,7 @@ export default function About() {
       {/* Sticky only once there is a column to be sticky in. */}
       <aside className="flex flex-col gap-3.5 md:sticky md:top-6">
         <Card className="flex flex-col items-start gap-3.5">
-          <Avatar name={profile.name} size={72} />
+          <Avatar name={profile.name} src={avatarSrc} size={112} />
           <div>
             <p className="mb-1 text-[20px] font-bold">{profile.name}</p>
             <p className="font-mono text-xs text-primary">{profile.role}</p>

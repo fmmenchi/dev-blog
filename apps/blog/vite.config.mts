@@ -3,6 +3,7 @@ import { defineConfig } from 'vite';
 import { reactRouter } from '@react-router/dev/vite';
 import { cloudflare } from '@cloudflare/vite-plugin';
 import tailwindcss from '@tailwindcss/vite';
+import { imagetools } from 'vite-imagetools';
 
 export default defineConfig(() => ({
   root: import.meta.dirname,
@@ -17,6 +18,9 @@ export default defineConfig(() => ({
   },
   plugins: [
     tailwindcss(),
+    // Build-time image transforms: sharp runs once, output is hashed and
+    // immutable and first-party. See .agent/assets.md.
+    imagetools(),
     // The Cloudflare plugin must not load while Nx builds its project graph
     // (Nx evaluates this config without the react-router CLI orchestration,
     // which trips the plugin's environment validation).

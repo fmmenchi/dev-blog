@@ -6,14 +6,21 @@
 
 ## Styling — Tailwind over our tokens
 
-Values live in `libs/theme/src/styles/theme.css` (primitives → derived →
-semantic). `libs/theme/src/styles/tailwind.css` is the **bridge**: it wipes
-Tailwind's own palette and scales, then re-adds our semantic roles as utilities.
+`libs/theme/src/styles/theme.css` holds the values: **palette** (the complete
+neutral ramp, plus one base colour per accent) → **derived** (the accent ramps,
+computed from that base) → **semantic** (the roles, which hold no values of their
+own). `tailwind.css` is the **bridge**: it wipes Tailwind's palette and scales and
+re-adds ours.
+
+**Tailwind obeys us, not the other way round.** Colours, type, radii, leading
+_and_ spacing come from our tokens — the bridge points Tailwind's `--spacing` at
+`--space-1`, so `p-4` is four of _our_ steps. Tailwind is the syntax, not the
+source.
 
 - **Only bridged roles have utilities**: `bg-card`, `text-muted-foreground`,
   `border-border`, `text-primary`, `rounded-xl`, `font-mono`, `leading-copy`…
-  **There is no neutral palette** — `bg-neutral-800` does not exist, so the
-  palette cannot leak into a component by accident.
+  **The palette has no utilities** — `bg-neutral-800` does not exist, so it
+  cannot leak into a component by accident. Semantic roles only.
 - **A role missing from the bridge yields a class that does not compile** —
   silently unstyled, the same failure as an undefined `var()` wearing a new hat.
   Utility renders as nothing? Look in `tailwind.css` first.
@@ -26,8 +33,9 @@ Tailwind's own palette and scales, then re-adds our semantic roles as utilities.
 - **Arbitrary values are a last resort**, for things that genuinely have no token
   (`max-w-[42.5rem]`, `[transition:var(--transition-lift)]`). A colour or a font
   size in brackets is a bug.
-- **CSS Modules survive in one place**: styling the descendants of rendered
-  Markdown (`prose`). Utilities cannot reach children they do not render.
+- **CSS Modules survive in two places only** — `prose`, and the article body in
+  `post` — because both style the descendants of Markdown rendered at runtime,
+  which no class in a TSX file can reach.
 - **One theme, and it is dark.** No light theme, no `[data-theme]`. The
   **accent** switches (`<html data-accent="yellow|lime|amber">`, the
   `--color-primary` family only) — the bridge points at the vars, so utilities
@@ -42,16 +50,16 @@ One folder per component under `libs/ui/src/components/<name>/`:
 <name>/<name>.spec.tsx        # Testing Library, query by role + accessible name
 ```
 
-Classes live in the component as a `BASE` string plus a `VARIANT` record, merged
-with the `cn()` helper — see `badge/` for the pattern. A `.module.css` file is
-now the exception, not the rule: `prose/` has one because it styles the
-descendants of rendered Markdown, which utilities cannot reach.
-
+- **Variants are `cva`.** Export the `xxxVariants` function and its
+  `VariantProps` type; merge with `cn()`. `button/` is the reference.
+- **Use Radix.** Anything with behaviour (dialog, popover, tooltip, tabs, an
+  `asChild` slot, an avatar's load states…) comes from `@radix-ui/*`. Do not
+  hand-roll accessible behaviour a primitive already gets right. `Button` renders
+  through Radix's `Slot` when `asChild` is set — that is how a `mailto:` stays an
+  `<a>` while looking like a button.
 - Export from `libs/ui/src/index.ts` (the only public entry).
-- Compose classes with the internal `cn` helper; accept and merge `className`.
 - Prefer a small orthogonal prop API (`variant`, `as`) over boolean sprawl.
-- `libs/ui/src/components/button/` and `link/` are the canonical examples —
-  read one before authoring a new component.
+- A `.module.css` is the exception, not the rule — see the two survivors above.
 
 ## Accessibility (hard requirement)
 

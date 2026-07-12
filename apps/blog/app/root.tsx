@@ -32,8 +32,7 @@ export const meta = ({
     origin: loaderData?.origin ?? SITE_URL,
     path: location.pathname,
     title: `${SITE_NAME} — software, systems and decisions`,
-    description:
-      'Honest notes on architecture, tooling and developer experience.',
+    description: 'Notes on architecture, tooling and developer experience.',
   });
 
 export const links: LinksFunction = () => [
