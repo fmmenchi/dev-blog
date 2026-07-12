@@ -69,13 +69,11 @@ export default function About() {
         <p className={styles['paragraph']}>
           My convictions are dull ones: a team moves at the speed of its
           conventions, types and tests are what let you change your mind a year
-          later, a release should be fast and should not need a person. What I
-          enjoy is the opposite, taking apart something nobody has proven yet.
-          The discipline is what makes the experiments affordable.
+          later, a release should be fast and should not need a person.
         </p>
         <p className={styles['paragraph']}>
-          This blog is where the two meet. I write things down here to find out
-          whether I actually understood them.
+          This blog is my notebook. I write things down here to find out whether
+          I actually understood them.
         </p>
       </main>
     </div>
