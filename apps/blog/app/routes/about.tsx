@@ -61,18 +61,21 @@ export default function About() {
           platform, where I ended up building the frontend team from scratch.
           Now I'm on Wishew: a React Native app, a NestJS backend, some Go
           services, Google Cloud underneath. I work on the product, and on the
-          monorepo and the release pipeline under it. Lately a good chunk of the
-          week goes into AI.
+          Nx monorepo and the release pipeline under it. Lately a good chunk of
+          the week goes into AI.
         </p>
         <p className={styles['paragraph']}>
           This blog is my public notebook: I write to understand, not to teach.
           If a post happens to be useful to you, that's a welcome side effect.
         </p>
         <p className={styles['paragraph']}>
-          I care about what keeps a codebase alive over time: conventions the
-          whole team follows, types, tests, a release that runs without a
-          person. And I like research: getting my hands on something new before
-          anyone has decided whether it works.
+          Most of my convictions are boring ones. A team only moves as fast as
+          its conventions. Types and tests are what let you change things a year
+          later. A release should not need a human.
+        </p>
+        <p className={styles['paragraph']}>
+          What I enjoy is research: new tools, new ideas, before anyone knows if
+          they work.
         </p>
 
         <div className={styles['now']}>
