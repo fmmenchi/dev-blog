@@ -4,22 +4,26 @@
 > exists before writing new markup. The human "why" behind the token system is
 > in [`doc/design-tokens.md`](../doc/design-tokens.md).
 
-## Styling — semantic tokens only (enforced)
+## Styling — tokens only
 
-The token system in `libs/theme/src/styles/theme.css` has 3 levels
-(primitives → derived → **semantic**). Components consume **only the semantic
-layer**. Violations fail the build:
+Tokens live in `libs/theme/src/styles/theme.css`: primitives → derived →
+**semantic**.
 
-- **Only semantic tokens**: `var(--color-…)`, `var(--typography-…)`,
-  `var(--spacing-…)`, `var(--radius-…)`, `var(--transition-…)`.
-- **Never primitives** (`--color-neutral-500`, `--space-4`, `--text-xl`) in
-  component CSS — if a semantic role is missing, add it to the theme instead.
-- **Never hardcode colors or fonts** in `*.module.css` — Stylelint
-  `declaration-strict-value` fails the build (`transparent`, `currentColor`,
-  `inherit` are allowed).
-- The blog is dark-first (`:root` is the dark theme) and the accent is
-  switchable via `<html data-accent="yellow|lime|amber">` — it remaps only
-  the `--color-primary` family. Never write per-accent styles in components.
+- **Colour and typography: semantic roles only** (`--color-…`, `--typography-…`).
+  The palette (`--color-neutral-*`) is off limits in a component. Role missing?
+  Add it. Stylelint fails the build on a hardcoded colour or font.
+- **Shared scales are fair game**: `--space-*`, `--text-*`, `--radius-*`,
+  `--font-weight-*`, `--leading-*`, `--font-sans/mono`, `--duration-*`.
+  Prefer the semantic spacing roles where they fit: `inset` = padding,
+  `stack` = vertical rhythm, `inline` = horizontal gaps.
+- **No bare number where a token exists.** A literal repeated in ten files is a
+  missing token. Stylelint won't catch it.
+- **An undefined `var()` deletes its whole declaration**, silently —
+  `padding: var(--nope) 1rem` renders as _no padding_. Grep the theme before
+  inventing a name.
+- **One theme, and it is dark.** No light theme, no `[data-theme]`. The
+  **accent** is what switches (`<html data-accent="yellow|lime|amber">`,
+  `--color-primary` family only) — never write per-accent styles.
 
 ## Component pattern
 
@@ -47,20 +51,27 @@ Non-negotiable; tests must assert through the accessibility tree
 - **Accessible names always**: icon-only controls require `aria-label`;
   decorative icons get `aria-hidden` (WCAG 4.1.2).
 - **External links** open in a new tab with `rel="noopener noreferrer"` and the
-  `sr-only` "(si apre in una nuova scheda)" hint — `Link` does this for you;
-  never hand-roll `<a target="_blank">` (WCAG 2.4.4 / 3.2.5).
+  `sr-only` "(opens in a new tab)" hint — `Link` does this for you; never
+  hand-roll `<a target="_blank">` (WCAG 2.4.4 / 3.2.5).
+- **Internal links go through the router.** `<Link to="…">`, never a bare
+  `<a href="/…">`, which full-reloads the document and throws away the SSR app's
+  client-side navigation. The only exception is a resource route like
+  `/rss.xml`, which must be a real document request.
 - **Focus stays visible**: the global `:focus-visible` ring comes from the
   theme (WCAG 2.4.7) — never `outline: none` without a replacement.
 - **Reduced motion**: the theme neutralizes animation under
   `prefers-reduced-motion` (WCAG 2.3.3) — never gate meaning behind motion.
 - **Contrast**: semantic pairs (`--color-X` / `--color-X-foreground`) are
-  chosen for WCAG AA (≥ 4.5:1) in both themes — pair them as designed and
+  chosen for WCAG AA (≥ 4.5:1) — pair them as designed and
   contrast follows.
 
 ## Adding a token
 
-Add the primitive (if truly new) and the semantic role to **both** `:root` and
-`[data-theme='dark']` in `libs/theme/src/styles/theme.css`, then run
-`pnpm nx run @dev-blog/theme:lint-css`. Update
-[`doc/design-tokens.md`](../doc/design-tokens.md) when the semantic vocabulary
-changes.
+Add the primitive (if truly new) and the semantic role to `:root` in
+`libs/theme/src/styles/theme.css` — there is only `:root`, there is no second
+theme block to keep in step. Then run `pnpm nx run @dev-blog/theme:lint-css` and
+update [`doc/design-tokens.md`](../doc/design-tokens.md) when the semantic
+vocabulary changes.
+
+A primitive with no semantic role consuming it is dead weight: either give it a
+role or don't add it.

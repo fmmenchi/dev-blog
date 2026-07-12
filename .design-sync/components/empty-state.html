@@ -45,7 +45,7 @@
         align-items: center;
         text-align: center;
         gap: var(--spacing-stack-s);
-        padding: var(--spacing-stack-l) var(--spacing-inline-m);
+        padding: var(--spacing-inset-l) var(--spacing-inset-m);
         border: 1px dashed var(--color-border);
         border-radius: var(--radius-lg);
       }
@@ -59,7 +59,7 @@
 
       .description {
         color: var(--color-muted-foreground);
-        line-height: 1.6;
+        line-height: var(--typography-copy-leading);
         max-width: 28rem;
         margin: 0;
       }
@@ -108,8 +108,12 @@
     <div class="wrap">
       <h1 class="page-title">Empty state</h1>
       <p class="lede">
-        Placeholder for a list that has nothing in it yet. Dashed border,
-        monospace title, muted description, optional actions.
+        A list with nothing in it yet. Dashed border, monospace title, muted
+        description, optional actions. It is
+        <strong>ErrorState's <code>empty</code> variant</strong>, not a second
+        implementation of it — the one thing that really differs is that it
+        renders no <code>&lt;h1&gt;</code>, because the page around it already
+        has one.
       </p>
 
       <p class="label">Title only</p>

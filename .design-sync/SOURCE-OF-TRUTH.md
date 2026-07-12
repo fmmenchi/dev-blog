@@ -1,16 +1,7 @@
-# Brief per il progetto di design
-
-Questo è il testo da incollare nel `CLAUDE.md` del progetto **"Blog design
-chat"** su claude.ai/design (`d5b25e37-cf43-4077-aa16-91ee008d7940`).
-
-Va incollato a mano: `CLAUDE.md` è un percorso riservato e il tool `DesignSync`
-si rifiuta di scriverlo — è il canale con cui si istruisce l'agente di design, e
-non deve essere scrivibile da un processo automatico.
-
-Il file vive qui perché **la fonte di verità è il repo**: se il sito cambia, si
-aggiorna questo, e poi lo si ricopia là.
-
----
+<!-- Pushed to the "Blog design chat" project on claude.ai/design as SOURCE-OF-TRUTH.md.
+     Its CLAUDE.md must point at this file: the tool refuses to write CLAUDE.md,
+     which is the design agent's instruction channel and deliberately not machine-writable.
+     The repo is the source of truth — edit here, then re-sync. -->
 
 # Progetto: blog personale di Fabio
 

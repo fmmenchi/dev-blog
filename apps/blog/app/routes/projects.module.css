@@ -17,7 +17,7 @@
 .intro {
   margin: 0 0 40px;
   font-size: var(--text-base);
-  line-height: 1.6;
+  line-height: var(--typography-copy-leading);
   color: var(--color-muted-foreground);
   max-width: 560px;
 }
@@ -81,7 +81,7 @@
 
 .description {
   font-size: 14.5px;
-  line-height: 1.6;
+  line-height: var(--typography-copy-leading);
   color: var(--color-muted-foreground);
   margin: 0;
   flex: 1;

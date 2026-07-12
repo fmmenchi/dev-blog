@@ -19,7 +19,7 @@
 .intro {
   margin: 0 0 40px;
   font-size: var(--text-base);
-  line-height: 1.6;
+  line-height: var(--typography-copy-leading);
   color: var(--color-muted-foreground);
 }
 
@@ -61,7 +61,7 @@
 .detail {
   margin: 0;
   font-size: var(--typography-small-size);
-  line-height: 1.6;
+  line-height: var(--typography-copy-leading);
   color: var(--color-foreground);
 }
 

@@ -32,22 +32,21 @@ pnpm nx format:check
 pnpm nx run-many -t lint test build typecheck lint-css
 ```
 
+**The e2e suite is not in there.** Run `pnpm nx e2e blog-e2e` yourself whenever
+you touch routes, links, post content or markup — CI runs it, and if you skipped
+it, `main` is where you find out.
+
 Husky enforces two hooks: `pre-commit` runs `nx format:check --uncommitted`,
-`commit-msg` runs commitlint (conventional commits — `nx release` derives
-versions and changelogs from them).
+`commit-msg` runs commitlint.
 
 ## Conventions (essentials)
 
-- **Commits**: conventional commits, enforced. Use `pnpm cz` when unsure.
-  One commit per logical change — never batch unrelated changes together.
-- **Branching**: trunk-based. Every change starts on a short-lived semantic
-  branch off `main` (`feat/x`, `fix/y`, `docs/z`, `ci/w`) and merges fast.
-  Never commit directly to `main`; every merge to `main` releases
-  automatically (`nx release` in CI). Run the Definition-of-done gates
-  before every commit.
-- **Merging**: always a **merge commit** (`gh pr merge --merge`), never
-  squash or rebase — the branch's individual conventional commits must land
-  on `main` because `nx release` derives versions and changelog from them.
+- **Workflow**: trunk-based. Branch from `origin/main` — **never stack a branch
+  on another branch**. Conventional commits (lower-case subject), one per
+  logical change. Merge only on the user's command, only when CI is green, and
+  always with a **merge commit** (`gh pr merge --merge`): `nx release` derives
+  version and changelog from the commits that land on `main`. Full rules in
+  [workflow](./.agent/workflow.md).
 - **Styling**: semantic design tokens only — any color/font value in a CSS
   Module must be a `var(--…)` token (Stylelint `declaration-strict-value`
   fails the build otherwise). See [design-system](./.agent/design-system.md).
@@ -74,8 +73,10 @@ doc/                   # human reference (the "why")
 
 | Spoke                                                  | Read it before…                                                    |
 | ------------------------------------------------------ | ------------------------------------------------------------------ |
+| [`.agent/workflow.md`](./.agent/workflow.md)           | branching, worktrees, committing, verifying, merging               |
 | [`.agent/architecture.md`](./.agent/architecture.md)   | adding routes/libs, changing deps, module boundaries, CI           |
 | [`.agent/design-system.md`](./.agent/design-system.md) | styling, theming, authoring/changing a component, any UI/a11y work |
+| [`.agent/seo.md`](./.agent/seo.md)                     | adding a route or a page, meta tags, sitemap, feeds, canonicals    |
 
 > `.agent/*` is documentation **for agents** (operational rules). `doc/*` is
 > human reference (rationale, onboarding) — read it only for the "why", never

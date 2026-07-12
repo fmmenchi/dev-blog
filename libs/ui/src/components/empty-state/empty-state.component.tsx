@@ -1,36 +1,16 @@
-import type { ReactNode } from 'react';
+import { ErrorState } from '../error-state/error-state.component';
+import type { ErrorStateProps } from '../error-state/error-state.component';
 
-import { cn } from '../../internal/cn';
-import styles from './empty-state.module.css';
-
-export interface EmptyStateProps {
-  title: string;
-  description?: string;
-  /** Actions (buttons/links) rendered under the description. */
-  children?: ReactNode;
-  className?: string;
-}
+export type EmptyStateProps = Omit<ErrorStateProps, 'variant'>;
 
 /**
- * Placeholder for a list that has nothing in it yet.
+ * A list with nothing in it yet.
  *
- * Unlike `ErrorState` it carries no `<h1>`: an empty state sits inside a page
- * that already has its own heading, and a second `<h1>` would break the
- * document outline (WCAG 1.3.1).
+ * It is `ErrorState`'s `empty` variant, not a second implementation of it: same
+ * block, same styles, one job apart. The name exists because "the projects list
+ * is empty" is not an error, and because the variant carries the thing that
+ * actually differs — no `<h1>`, since the page around it already has one.
  */
-export function EmptyState({
-  title,
-  description,
-  children,
-  className,
-}: EmptyStateProps) {
-  return (
-    <div className={cn(styles['state'], className)}>
-      <p className={styles['title']}>{title}</p>
-      {description ? (
-        <p className={styles['description']}>{description}</p>
-      ) : null}
-      {children ? <div className={styles['actions']}>{children}</div> : null}
-    </div>
-  );
+export function EmptyState(props: EmptyStateProps) {
+  return <ErrorState variant="empty" {...props} />;
 }
