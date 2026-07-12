@@ -4,36 +4,48 @@
 > exists before writing new markup. The human "why" behind the token system is
 > in [`doc/design-tokens.md`](../doc/design-tokens.md).
 
-## Styling — tokens only
+## Styling — Tailwind over our tokens
 
-Tokens live in `libs/theme/src/styles/theme.css`: primitives → derived →
-**semantic**.
+Values live in `libs/theme/src/styles/theme.css` (primitives → derived →
+semantic). `libs/theme/src/styles/tailwind.css` is the **bridge**: it wipes
+Tailwind's own palette and scales, then re-adds our semantic roles as utilities.
 
-- **Colour and typography: semantic roles only** (`--color-…`, `--typography-…`).
-  The palette (`--color-neutral-*`) is off limits in a component. Role missing?
-  Add it. Stylelint fails the build on a hardcoded colour or font.
-- **Shared scales are fair game**: `--space-*`, `--text-*`, `--radius-*`,
-  `--font-weight-*`, `--leading-*`, `--font-sans/mono`, `--duration-*`.
-  Prefer the semantic spacing roles where they fit: `inset` = padding,
-  `stack` = vertical rhythm, `inline` = horizontal gaps.
-- **No bare number where a token exists.** A literal repeated in ten files is a
-  missing token. Stylelint won't catch it.
-- **An undefined `var()` deletes its whole declaration**, silently —
-  `padding: var(--nope) 1rem` renders as _no padding_. Grep the theme before
-  inventing a name.
+- **Only bridged roles have utilities**: `bg-card`, `text-muted-foreground`,
+  `border-border`, `text-primary`, `rounded-xl`, `font-mono`, `leading-copy`…
+  **There is no neutral palette** — `bg-neutral-800` does not exist, so the
+  palette cannot leak into a component by accident.
+- **A role missing from the bridge yields a class that does not compile** —
+  silently unstyled, the same failure as an undefined `var()` wearing a new hat.
+  Utility renders as nothing? Look in `tailwind.css` first.
+- **Mobile first, and there is no alternative.** The variants are `min-width`:
+  base = phone, `sm:` = 40rem, `md:` = 56rem. There is no `lg`, no `xl`, and no
+  way to express `max-width`. If you find yourself wanting one, the base rules
+  are wrong.
+- **`text-*` also sets a line-height.** If the design calls for a specific one,
+  say `leading-copy` / `leading-tight` explicitly or the type will drift.
+- **Arbitrary values are a last resort**, for things that genuinely have no token
+  (`max-w-[42.5rem]`, `[transition:var(--transition-lift)]`). A colour or a font
+  size in brackets is a bug.
+- **CSS Modules survive in one place**: styling the descendants of rendered
+  Markdown (`prose`). Utilities cannot reach children they do not render.
 - **One theme, and it is dark.** No light theme, no `[data-theme]`. The
-  **accent** is what switches (`<html data-accent="yellow|lime|amber">`,
-  `--color-primary` family only) — never write per-accent styles.
+  **accent** switches (`<html data-accent="yellow|lime|amber">`, the
+  `--color-primary` family only) — the bridge points at the vars, so utilities
+  follow it for free. Never write a per-accent style.
 
 ## Component pattern
 
 One folder per component under `libs/ui/src/components/<name>/`:
 
 ```
-<name>/<name>.component.tsx   # typed props, native element semantics
-<name>/<name>.module.css      # co-located, tokens only
+<name>/<name>.component.tsx   # typed props, native element semantics, Tailwind classes
 <name>/<name>.spec.tsx        # Testing Library, query by role + accessible name
 ```
+
+Classes live in the component as a `BASE` string plus a `VARIANT` record, merged
+with the `cn()` helper — see `badge/` for the pattern. A `.module.css` file is
+now the exception, not the rule: `prose/` has one because it styles the
+descendants of rendered Markdown, which utilities cannot reach.
 
 - Export from `libs/ui/src/index.ts` (the only public entry).
 - Compose classes with the internal `cn` helper; accept and merge `className`.
@@ -73,5 +85,13 @@ theme block to keep in step. Then run `pnpm nx run @dev-blog/theme:lint-css` and
 update [`doc/design-tokens.md`](../doc/design-tokens.md) when the semantic
 vocabulary changes.
 
-A primitive with no semantic role consuming it is dead weight: either give it a
-role or don't add it.
+**The palette is a scale, and a scale must be whole.** An unused step of the
+neutral ramp is not dead weight — it is what makes `850` legible instead of
+arbitrary. (This is the exception. A one-off `--typography-copy-leading` that
+nothing consumes _is_ dead weight; a `--color-neutral-300` nobody has needed yet
+is the scale.)
+
+**Semantic roles hold no values.** They point at the palette:
+`--color-card: var(--color-neutral-850)`. That indirection is what makes a theme
+switch possible at all — re-point the roles, keep the palette. The accent switch
+already works exactly this way.

@@ -2,6 +2,7 @@
 import { defineConfig } from 'vite';
 import { reactRouter } from '@react-router/dev/vite';
 import { cloudflare } from '@cloudflare/vite-plugin';
+import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig(() => ({
   root: import.meta.dirname,
@@ -15,6 +16,7 @@ export default defineConfig(() => ({
     host: 'localhost',
   },
   plugins: [
+    tailwindcss(),
     // The Cloudflare plugin must not load while Nx builds its project graph
     // (Nx evaluates this config without the react-router CLI orchestration,
     // which trips the plugin's environment validation).

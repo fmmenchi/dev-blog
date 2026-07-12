@@ -12,8 +12,12 @@ libraries (design tokens + UI components).
 - **Stack**: Nx monorepo (TS preset), pnpm, React 19, React Router **v8**
   (framework mode, SSR), Vite, Vitest + Testing Library, ESLint, Stylelint,
   Prettier.
-- **No Tailwind**: styling is CSS Modules + design tokens (CSS custom
-  properties) from `@dev-blog/theme`.
+- **Styling**: **Tailwind v4** over the design tokens of `@dev-blog/theme`. The
+  tokens are still the source of truth; a `@theme inline` bridge in
+  `libs/theme/src/styles/tailwind.css` is what turns them into utilities
+  (`bg-card`, `text-muted-foreground`). Tailwind's own palette and scales are
+  **wiped** — only our roles exist. Mobile-first is not a convention here, it is
+  the only thing you can write: the variants are `min-width`.
 
 ## Setup & commands
 
@@ -47,9 +51,10 @@ Husky enforces two hooks: `pre-commit` runs `nx format:check --uncommitted`,
   always with a **merge commit** (`gh pr merge --merge`): `nx release` derives
   version and changelog from the commits that land on `main`. Full rules in
   [workflow](./.agent/workflow.md).
-- **Styling**: semantic design tokens only — any color/font value in a CSS
-  Module must be a `var(--…)` token (Stylelint `declaration-strict-value`
-  fails the build otherwise). See [design-system](./.agent/design-system.md).
+- **Styling**: Tailwind utilities, and only the ones the bridge generates from
+  our semantic roles. There is no neutral palette and no `max-width`
+  breakpoint — both were removed on purpose. See
+  [design-system](./.agent/design-system.md).
 - **Components**: reuse `@dev-blog/ui` before writing new markup; new
   components follow the one-folder-per-component pattern described in the
   design-system spoke.

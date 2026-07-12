@@ -29,11 +29,16 @@ build time. The feed is hand-built at `/rss.xml`.
 
 ## How it is built
 
-**No Tailwind, no CSS-in-JS.** Styling is CSS Modules over a token system:
-OKLCH primitives → derived → semantic roles. Components may only touch the
-semantic layer, and Stylelint (`declaration-strict-value`) fails the build on a
-hardcoded colour or font. The theme is dark-first and the accent is switchable
-at runtime; components never know which accent is on.
+**Tailwind, but over my own tokens.** The token system comes first — OKLCH
+primitives → derived → semantic roles — and a `@theme inline` bridge is what
+turns those roles into utilities. Tailwind's own palette and scales are wiped,
+so `bg-card` exists and `bg-neutral-800` does not: the design system cannot leak.
+The theme is dark, the accent is switchable at runtime, and components never
+know which accent is on.
+
+Mobile-first is not a convention here. Tailwind's variants are `min-width`, and
+the two breakpoints are the only ones defined, so a desktop-first layout is not
+something you have to be disciplined about — it is something you cannot write.
 
 **Accessibility is a build gate, not a review comment.** Semantic HTML, an
 accessible name on every control, visible focus, reduced-motion support. Unit

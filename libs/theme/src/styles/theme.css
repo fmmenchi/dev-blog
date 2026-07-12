@@ -23,22 +23,40 @@
   /* LEVEL 1 — primitives                                                */
   /* ------------------------------------------------------------------ */
 
-  /* Neutral ramp — cool dark slate (hue 256). Every step below is consumed by a
-     semantic role; if you add one, give it a role or don't add it. */
+  /* Neutral ramp — cool dark slate (hue 256). The SAME ramp as andes-routes, and
+     complete on purpose: a scale with nine of its fifteen steps missing is not a
+     scale, it is six colours wearing numbers. Unused steps are not dead weight
+     here — they are what makes 850 legible instead of arbitrary.
+     1000 is ours: andes stops at 950, and the code surface needs to go darker
+     than the page. */
+  --color-neutral-0: oklch(100% 0 0);
+  --color-neutral-25: oklch(98.5% 0.004 256);
+  --color-neutral-50: oklch(96.5% 0.006 256);
   --color-neutral-100: oklch(95% 0.007 256);
+  --color-neutral-200: oklch(91% 0.008 256);
+  --color-neutral-300: oklch(82% 0.012 256);
   --color-neutral-400: oklch(74% 0.014 256);
+  --color-neutral-500: oklch(60% 0.016 256);
+  --color-neutral-600: oklch(46% 0.02 256);
+  --color-neutral-700: oklch(38% 0.02 256);
+  --color-neutral-750: oklch(34% 0.02 256);
   --color-neutral-800: oklch(31% 0.02 256);
   --color-neutral-850: oklch(26% 0.02 256);
+  --color-neutral-900: oklch(24% 0.02 256);
   --color-neutral-950: oklch(21% 0.02 256);
   --color-neutral-1000: oklch(17% 0.015 256);
 
-  /* Spacing scale */
+  /* Spacing scale. OURS is the ruler: the bridge points Tailwind's --spacing at
+     --space-1, so `p-4` is four of OUR steps, not four of theirs. Change this
+     and every utility on the site follows. Tailwind is the syntax; the scale is
+     not its business. */
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 0.75rem;
   --space-4: 1rem;
   --space-6: 1.5rem;
   --space-8: 2rem;
+  --space-12: 3rem;
   --space-16: 4rem;
 
   /* Type scale */
@@ -77,21 +95,45 @@
   --ease-standard: ease;
 
   /* ------------------------------------------------------------------ */
-  /* LEVEL 2 — derived (accent palettes; see data-accent overrides)      */
+  /* LEVEL 2 — derived (accent ramps; see the data-accent overrides)      */
   /* ------------------------------------------------------------------ */
 
-  --accent-yellow: oklch(86% 0.16 95);
-  --accent-yellow-hover: oklch(90% 0.14 95);
-  --accent-yellow-active: oklch(93% 0.12 95);
-  --accent-yellow-foreground: oklch(24% 0.04 95);
-  --accent-lime: oklch(86% 0.19 130);
-  --accent-lime-hover: oklch(90% 0.17 130);
-  --accent-lime-active: oklch(93% 0.15 130);
-  --accent-lime-foreground: oklch(23% 0.05 130);
-  --accent-amber: oklch(80% 0.15 70);
-  --accent-amber-hover: oklch(85% 0.13 70);
-  --accent-amber-active: oklch(89% 0.11 70);
-  --accent-amber-foreground: oklch(24% 0.05 70);
+  /* One authored colour per accent — the ONLY accent values written by hand. */
+  --accent-yellow-base: oklch(86% 0.16 95);
+  --accent-lime-base: oklch(86% 0.19 130);
+  --accent-amber-base: oklch(80% 0.15 70);
+
+  /* The rest is computed from the base with OKLCH relative colours: lighter and
+     less saturated on hover, more so on active, and a dark foreground that keeps
+     the hue. Twelve hand-tuned numbers became three, and a fourth accent is now
+     one line, not four.
+     Same formula for all three, so they cannot drift apart — which twelve
+     literals eventually do. */
+  --accent-yellow-hover: oklch(
+    from var(--accent-yellow-base) calc(l + 0.04) calc(c - 0.02) h
+  );
+  --accent-yellow-active: oklch(
+    from var(--accent-yellow-base) calc(l + 0.07) calc(c - 0.04) h
+  );
+  --accent-yellow-foreground: oklch(
+    from var(--accent-yellow-base) 0.24 0.045 h
+  );
+
+  --accent-lime-hover: oklch(
+    from var(--accent-lime-base) calc(l + 0.04) calc(c - 0.02) h
+  );
+  --accent-lime-active: oklch(
+    from var(--accent-lime-base) calc(l + 0.07) calc(c - 0.04) h
+  );
+  --accent-lime-foreground: oklch(from var(--accent-lime-base) 0.24 0.045 h);
+
+  --accent-amber-hover: oklch(
+    from var(--accent-amber-base) calc(l + 0.04) calc(c - 0.02) h
+  );
+  --accent-amber-active: oklch(
+    from var(--accent-amber-base) calc(l + 0.07) calc(c - 0.04) h
+  );
+  --accent-amber-foreground: oklch(from var(--accent-amber-base) 0.24 0.045 h);
 
   /* ------------------------------------------------------------------ */
   /* LEVEL 3 — semantic (the only tokens components may consume)         */
@@ -115,7 +157,7 @@
   --color-ring-offset: var(--color-background);
 
   /* Brand roles — default accent: yellow */
-  --color-primary: var(--accent-yellow);
+  --color-primary: var(--accent-yellow-base);
   --color-primary-foreground: var(--accent-yellow-foreground);
   --color-primary-hover: var(--accent-yellow-hover);
   --color-primary-active: var(--accent-yellow-active);
@@ -133,18 +175,11 @@
   --typography-heading-tracking: -0.03em;
   --typography-body-size: var(--text-base);
   --typography-body-leading: var(--leading-relaxed);
-  /* Excerpts, descriptions, blurbs — tighter than an article body. */
-  --typography-copy-leading: var(--leading-copy);
   --typography-small-size: var(--text-sm);
-  --typography-mono-size: var(--text-xs);
 
   /* Semantic spacing */
-  --spacing-stack-s: var(--space-2);
   --spacing-stack-m: var(--space-4);
   --spacing-stack-l: var(--space-8);
-  --spacing-inline-s: var(--space-2);
-  --spacing-inline-m: var(--space-4);
-  --spacing-inset-s: var(--space-3);
   --spacing-inset-m: var(--space-4);
   --spacing-inset-l: var(--space-6);
 
@@ -164,14 +199,14 @@
 
 /* Switchable accent — primary family only */
 [data-accent='lime'] {
-  --color-primary: var(--accent-lime);
+  --color-primary: var(--accent-lime-base);
   --color-primary-foreground: var(--accent-lime-foreground);
   --color-primary-hover: var(--accent-lime-hover);
   --color-primary-active: var(--accent-lime-active);
 }
 
 [data-accent='amber'] {
-  --color-primary: var(--accent-amber);
+  --color-primary: var(--accent-amber-base);
   --color-primary-foreground: var(--accent-amber-foreground);
   --color-primary-hover: var(--accent-amber-hover);
   --color-primary-active: var(--accent-amber-active);
