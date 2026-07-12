@@ -1,0 +1,147 @@
+<!-- @dsCard group="Components" -->
+<!doctype html>
+<html lang="en" data-accent="yellow">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Link</title>
+    <link rel="stylesheet" href="../tokens.css" />
+    <style>
+      /* --- page scaffolding (not part of the component) --- */
+      .wrap {
+        padding: var(--space-8);
+        max-width: 48rem;
+        margin-inline: auto;
+      }
+      .page-title {
+        font-size: var(--text-3xl);
+        font-weight: var(--font-weight-bold);
+        line-height: var(--leading-tight);
+        letter-spacing: -0.03em;
+        margin: 0 0 var(--space-2);
+      }
+      .lede {
+        color: var(--color-muted-foreground);
+        margin: 0 0 var(--space-8);
+      }
+      .label {
+        font-family: var(--font-mono);
+        font-size: var(--text-xs);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--color-muted-foreground);
+        margin: var(--space-8) 0 var(--space-3);
+      }
+      .note {
+        color: var(--color-muted-foreground);
+        font-size: var(--text-sm);
+        margin: var(--space-2) 0 0;
+      }
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-6);
+        align-items: center;
+      }
+      .nav {
+        display: flex;
+        gap: var(--space-6);
+        padding: var(--space-4) 0;
+        border-block: 1px solid var(--color-border);
+      }
+      .plain-demo {
+        display: inline-flex;
+        padding: var(--space-2) var(--space-4);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-md);
+      }
+
+      /* --- link.module.css --- */
+      .link {
+        border-radius: var(--radius-sm);
+        font-weight: var(--font-weight-medium);
+        text-underline-offset: 0.25em;
+        transition: var(--transition-color);
+      }
+
+      .default {
+        color: var(--color-primary);
+        text-decoration: underline;
+      }
+
+      .default:hover {
+        color: var(--color-primary-hover);
+      }
+
+      .subtle {
+        color: var(--color-muted-foreground);
+        text-decoration: none;
+      }
+
+      .subtle:hover {
+        color: var(--color-foreground);
+        text-decoration: underline;
+      }
+      /* variant="plain" carries NO class at all — behavior only. */
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1 class="page-title">Link</h1>
+      <p class="lede">
+        The one way to link things. <code>to</code> is a router navigation,
+        <code>href</code> is a plain anchor — and an internal-path
+        <code>href</code> is promoted to a router navigation so an internal link
+        can never full-reload by mistake.
+      </p>
+
+      <p class="label">variant="default" — primary colour, underlined</p>
+      <p>
+        Read more about
+        <a class="link default" href="#">why I still write plain CSS Modules</a
+        >, or jump straight to the <a class="link default" href="#">archive</a>.
+      </p>
+
+      <p class="label">variant="subtle" — muted; underlines on hover</p>
+      <nav class="nav" aria-label="Example navigation">
+        <a class="link subtle" href="#">Posts</a>
+        <a class="link subtle" href="#">About</a>
+        <a class="link subtle" href="#">Uses</a>
+        <a class="link subtle" href="#">RSS</a>
+      </nav>
+      <p class="note">
+        Used for navigation and metadata, where a full underline would be noise.
+      </p>
+
+      <p class="label">variant="plain" — no visual styling, behavior only</p>
+      <div class="row">
+        <a class="plain-demo" href="#">
+          A plain link, styled entirely by whatever wraps it — this is how
+          Button borrows Link's protocol handling.
+        </a>
+      </div>
+
+      <p class="label">External — new tab + screen-reader hint</p>
+      <p>
+        The source lives on
+        <a
+          class="link default"
+          href="https://github.com/fmmenchi"
+          target="_blank"
+          rel="noopener noreferrer"
+          >GitHub<span class="sr-only"> (opens in a new tab)</span></a
+        >, and you can also email me at
+        <a class="link default" href="mailto:f.menchicchi@gmail.com"
+          >f.menchicchi@gmail.com</a
+        >.
+      </p>
+      <p class="note">
+        An <code>http(s)</code> href gets <code>target="_blank"</code>,
+        <code>rel="noopener noreferrer"</code> and a visually hidden
+        <code>(opens in a new tab)</code> span — the new window is announced,
+        not just implied (WCAG 3.2.5). A <code>mailto:</code> or a
+        <code>#hash</code> renders as a normal anchor, in the same tab.
+      </p>
+    </div>
+  </body>
+</html>

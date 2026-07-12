@@ -1,0 +1,184 @@
+<!-- @dsCard group="Components" -->
+<!doctype html>
+<html lang="en" data-accent="yellow">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Prose</title>
+    <link rel="stylesheet" href="../tokens.css" />
+    <style>
+      /* --- page scaffolding (not part of the component) --- */
+      .wrap {
+        padding: var(--space-8) var(--space-4) var(--space-16);
+        max-width: var(--layout-prose-width);
+        margin-inline: auto;
+      }
+      .label {
+        font-family: var(--font-mono);
+        font-size: var(--text-xs);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--color-muted-foreground);
+        margin: 0 0 var(--space-8);
+      }
+
+      /* --- prose.module.css --- */
+      .prose {
+        font-size: var(--typography-body-size);
+        line-height: var(--typography-body-leading);
+        color: var(--color-foreground);
+      }
+
+      .prose h1,
+      .prose h2,
+      .prose h3 {
+        font-weight: var(--typography-heading-weight);
+        line-height: var(--typography-heading-leading);
+        letter-spacing: var(--typography-heading-tracking);
+        margin-block: var(--spacing-stack-l) var(--spacing-stack-m);
+      }
+
+      .prose h1 {
+        font-size: var(--typography-h1-size);
+      }
+
+      .prose h2 {
+        font-size: var(--typography-h2-size);
+      }
+
+      .prose h3 {
+        font-size: var(--typography-h3-size);
+      }
+
+      .prose p,
+      .prose ul,
+      .prose ol {
+        margin-block: var(--spacing-stack-m);
+      }
+
+      .prose a {
+        color: var(--color-primary);
+        text-underline-offset: 0.25em;
+      }
+
+      .prose a:hover {
+        color: var(--color-primary-hover);
+      }
+
+      .prose code {
+        font-family: var(--font-mono);
+        font-size: var(--typography-small-size);
+        background-color: var(--color-muted);
+        border: 1px solid var(--color-border);
+        padding: calc(var(--space-1) / 2) var(--space-1);
+        border-radius: var(--radius-sm);
+      }
+
+      .prose pre {
+        background-color: var(--color-code-background);
+        color: var(--color-code-foreground);
+        border: 1px solid var(--color-border);
+        padding: var(--spacing-inset-m) var(--spacing-inset-l);
+        border-radius: var(--radius-lg);
+        overflow-x: auto;
+      }
+
+      .prose pre code {
+        padding: 0;
+        border: none;
+        background-color: transparent;
+      }
+
+      .prose blockquote {
+        margin-inline: 0;
+        padding-inline-start: var(--spacing-inset-m);
+        border-inline-start: 3px solid var(--color-border);
+        color: var(--color-muted-foreground);
+      }
+
+      .prose img {
+        max-width: 100%;
+        height: auto;
+        border-radius: var(--radius-md);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <p class="label">Prose — the post body wrapper</p>
+
+      <div class="prose">
+        <h1>Why I still write plain CSS Modules</h1>
+
+        <p>
+          Every few years the front end agrees on a new way to write styles, and
+          every few years the old way turns out to still work. This blog has no
+          utility framework in it. It has design tokens, CSS Modules, and about
+          two hundred lines of CSS that I can read end to end.
+        </p>
+
+        <h2>Tokens are the actual contract</h2>
+
+        <p>
+          A component never picks a colour. It asks for a
+          <em>role</em> — <code>--color-muted-foreground</code>,
+          <code>--color-primary</code> — and the theme decides what that means
+          today. Swap the accent and nothing in the component changes:
+        </p>
+
+        <pre><code>.tag {
+  color: var(--color-primary);
+  font-family: var(--font-mono);
+  font-size: var(--typography-mono-size);
+}</code></pre>
+
+        <p>
+          That is the whole trick. The linter enforces it — a raw hex value in a
+          CSS Module fails the build — so the rule cannot quietly rot.
+        </p>
+
+        <h3>What the levels mean</h3>
+
+        <ul>
+          <li>
+            <strong>Primitives</strong> — the raw ramp. An implementation
+            detail; components never touch it.
+          </li>
+          <li>
+            <strong>Derived</strong> — the accent families, one per
+            <code>data-accent</code>.
+          </li>
+          <li>
+            <strong>Semantic</strong> — the roles. The only level anything else
+            is allowed to read.
+          </li>
+        </ul>
+
+        <blockquote>
+          <p>
+            A design system is not a component library. It is the set of
+            decisions you have agreed to stop making.
+          </p>
+        </blockquote>
+
+        <h2>The parts that took the longest</h2>
+
+        <ol>
+          <li>Getting the dark surfaces to sit apart without a drop shadow.</li>
+          <li>
+            Making the focus ring visible on every accent — see
+            <a href="#">the notes on contrast</a>.
+          </li>
+          <li>
+            Deciding that the empty state must never own an <code>h1</code>.
+          </li>
+        </ol>
+
+        <p>
+          None of that is framework work. It is just deciding, once, and then
+          writing it down where the next person — usually me — will find it.
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

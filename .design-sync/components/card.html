@@ -1,0 +1,132 @@
+<!-- @dsCard group="Components" -->
+<!doctype html>
+<html lang="en" data-accent="yellow">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Card</title>
+    <link rel="stylesheet" href="../tokens.css" />
+    <style>
+      /* --- page scaffolding (not part of the component) --- */
+      .wrap {
+        padding: var(--space-8);
+        max-width: 48rem;
+        margin-inline: auto;
+      }
+      .page-title {
+        font-size: var(--text-3xl);
+        font-weight: var(--font-weight-bold);
+        line-height: var(--leading-tight);
+        letter-spacing: -0.03em;
+        margin: 0 0 var(--space-2);
+      }
+      .lede {
+        color: var(--color-muted-foreground);
+        margin: 0 0 var(--space-8);
+      }
+      .label {
+        font-family: var(--font-mono);
+        font-size: var(--text-xs);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--color-muted-foreground);
+        margin: var(--space-8) 0 var(--space-3);
+      }
+      .note {
+        color: var(--color-muted-foreground);
+        font-size: var(--text-sm);
+        margin: var(--space-3) 0 0;
+      }
+
+      /* --- card.module.css --- */
+      .card {
+        background-color: var(--color-card);
+        color: var(--color-card-foreground);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-xl);
+        padding: var(--spacing-inset-l);
+      }
+
+      /* Interactive cards lift and highlight on hover (design mock behavior) */
+      .interactive {
+        transition: var(--transition-lift);
+      }
+
+      .interactive:hover {
+        border-color: var(--color-primary);
+        transform: translateY(-2px);
+      }
+
+      /* --- card content (composed from other components) --- */
+      .card h2,
+      .card h3 {
+        font-size: var(--typography-h2-size);
+        font-weight: var(--typography-heading-weight);
+        line-height: var(--typography-heading-leading);
+        letter-spacing: var(--typography-heading-tracking);
+        margin: 0 0 var(--spacing-stack-s);
+      }
+      .card p {
+        color: var(--color-muted-foreground);
+        margin: 0;
+      }
+      .meta {
+        display: flex;
+        gap: var(--spacing-inline-s);
+        align-items: center;
+        font-family: var(--font-mono);
+        font-size: var(--typography-mono-size);
+        color: var(--color-muted-foreground);
+        margin-bottom: var(--spacing-stack-s);
+      }
+      .card-link {
+        color: inherit;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1 class="page-title">Card</h1>
+      <p class="lede">
+        A raised surface: card background, 1px border, extra-large radius,
+        inset-l padding. Renders as <code>div</code> (default),
+        <code>article</code> or <code>section</code>.
+      </p>
+
+      <p class="label">Static — as="div"</p>
+      <div class="card">
+        <h2>About this blog</h2>
+        <p>
+          Notes on the web, written while building it. No newsletter, no
+          tracking, no cookie banner.
+        </p>
+      </div>
+
+      <p class="label">
+        Interactive — as="article" interactive. Hover: lifts 2px, border turns
+        primary
+      </p>
+      <article class="card interactive">
+        <p class="meta">
+          <span>2026-07-12</span>
+          <span aria-hidden="true">&middot;</span>
+          <span>6 min read</span>
+        </p>
+        <h3>
+          <a class="card-link" href="#">Why I still write plain CSS Modules</a>
+        </h3>
+        <p>
+          Utility classes solved a real problem. Design tokens solve it too, and
+          they survive the next framework.
+        </p>
+      </article>
+
+      <p class="note">
+        <code>interactive</code> is for cards that are links: the whole card is
+        the affordance, but the accessible name still comes from the real
+        <code>&lt;a&gt;</code> in the heading.
+      </p>
+    </div>
+  </body>
+</html>

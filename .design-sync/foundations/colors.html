@@ -1,0 +1,269 @@
+<!-- @dsCard group="Foundations" -->
+<!doctype html>
+<html lang="en" data-accent="yellow">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Colors</title>
+    <link rel="stylesheet" href="../tokens.css" />
+    <style>
+      /* Page scaffolding (may use primitives — it is not a component). */
+      .wrap {
+        padding: var(--space-8);
+        max-width: 64rem;
+        margin-inline: auto;
+      }
+      h1 {
+        font-size: var(--text-3xl);
+        font-weight: var(--font-weight-bold);
+        line-height: var(--leading-tight);
+        letter-spacing: -0.03em;
+        margin: 0 0 var(--space-2);
+      }
+      .lede {
+        color: var(--color-muted-foreground);
+        margin: 0 0 var(--space-8);
+        max-width: 42rem;
+      }
+      .rule {
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-md);
+        padding: var(--space-4);
+        margin-bottom: var(--space-12);
+        font-family: var(--font-mono);
+        font-size: var(--text-sm);
+        color: var(--color-primary);
+      }
+      h2 {
+        font-size: var(--text-xl);
+        font-weight: var(--font-weight-bold);
+        letter-spacing: -0.03em;
+        margin: var(--space-12) 0 var(--space-4);
+      }
+      h3 {
+        font-family: var(--font-mono);
+        font-size: var(--text-xs);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--color-muted-foreground);
+        font-weight: var(--font-weight-medium);
+        margin: var(--space-8) 0 var(--space-3);
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: var(--space-3);
+      }
+      .chip {
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+      }
+      .chip .top {
+        height: 72px;
+      }
+      .chip .label {
+        padding: var(--space-2) var(--space-3);
+        background-color: var(--color-card);
+        border-top: 1px solid var(--color-border);
+        font-family: var(--font-mono);
+        font-size: var(--text-2xs);
+        color: var(--color-muted-foreground);
+        word-break: break-all;
+      }
+      /* A pair chip shows a background with its paired foreground on top. */
+      .pair {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: var(--text-sm);
+        font-weight: var(--font-weight-medium);
+      }
+      .accents {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--space-4);
+      }
+      .accent-col {
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-lg);
+        padding: var(--space-4);
+        background-color: var(--color-card);
+      }
+      .accent-name {
+        font-family: var(--font-mono);
+        font-size: var(--text-xs);
+        color: var(--color-muted-foreground);
+        margin-bottom: var(--space-3);
+      }
+      .accent-row {
+        display: flex;
+        gap: var(--space-2);
+      }
+      .accent-row span {
+        flex: 1;
+        height: 48px;
+        border-radius: var(--radius-md);
+      }
+      .accent-cta {
+        margin-top: var(--space-3);
+        display: inline-flex;
+        padding: var(--space-2) var(--space-4);
+        border-radius: var(--radius-md);
+        background-color: var(--color-primary);
+        color: var(--color-primary-foreground);
+        font-size: var(--text-base);
+        font-weight: var(--font-weight-medium);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Colors</h1>
+      <p class="lede">
+        The token architecture has three levels — primitives, derived accent
+        ramps, semantic roles. Only the semantic level is shown here.
+      </p>
+
+      <p class="rule">
+        Components may consume ONLY semantic tokens. Never
+        <code>--color-neutral-800</code>, never <code>--accent-lime</code>.
+      </p>
+
+      <h2>Semantic roles</h2>
+
+      <h3>Surfaces</h3>
+      <div class="grid">
+        <div class="chip">
+          <div
+            class="top pair"
+            style="
+              background-color: var(--color-background);
+              color: var(--color-foreground);
+            "
+          >
+            Aa
+          </div>
+          <div class="label">--color-background / --color-foreground</div>
+        </div>
+        <div class="chip">
+          <div
+            class="top pair"
+            style="
+              background-color: var(--color-card);
+              color: var(--color-card-foreground);
+            "
+          >
+            Aa
+          </div>
+          <div class="label">--color-card / --color-card-foreground</div>
+        </div>
+        <div class="chip">
+          <div
+            class="top pair"
+            style="
+              background-color: var(--color-muted);
+              color: var(--color-muted-foreground);
+            "
+          >
+            Aa
+          </div>
+          <div class="label">--color-muted / --color-muted-foreground</div>
+        </div>
+        <div class="chip">
+          <div class="top" style="background-color: var(--color-border)"></div>
+          <div class="label">--color-border</div>
+        </div>
+      </div>
+
+      <h3>Brand — primary</h3>
+      <div class="grid">
+        <div class="chip">
+          <div
+            class="top pair"
+            style="
+              background-color: var(--color-primary);
+              color: var(--color-primary-foreground);
+            "
+          >
+            Aa
+          </div>
+          <div class="label">--color-primary / --color-primary-foreground</div>
+        </div>
+        <div class="chip">
+          <div
+            class="top"
+            style="background-color: var(--color-primary-hover)"
+          ></div>
+          <div class="label">--color-primary-hover</div>
+        </div>
+        <div class="chip">
+          <div
+            class="top"
+            style="background-color: var(--color-primary-active)"
+          ></div>
+          <div class="label">--color-primary-active</div>
+        </div>
+        <div class="chip">
+          <div class="top" style="background-color: var(--color-ring)"></div>
+          <div class="label">--color-ring (focus ring = primary)</div>
+        </div>
+      </div>
+
+      <h3>Code</h3>
+      <div class="grid">
+        <div class="chip">
+          <div
+            class="top pair"
+            style="
+              background-color: var(--color-code-background);
+              color: var(--color-code-foreground);
+              font-family: var(--font-mono);
+            "
+          >
+            const a = 1;
+          </div>
+          <div class="label">
+            --color-code-background / --color-code-foreground
+          </div>
+        </div>
+      </div>
+
+      <h2>Accents</h2>
+      <p class="lede">
+        Switchable via <code>&lt;html data-accent="yellow|lime|amber"&gt;</code>
+        (default: yellow). Only the primary family changes — surfaces, borders
+        and text stay identical.
+      </p>
+      <div class="accents">
+        <div class="accent-col" data-accent="yellow">
+          <p class="accent-name">data-accent="yellow" (default)</p>
+          <div class="accent-row">
+            <span style="background-color: var(--color-primary)"></span>
+            <span style="background-color: var(--color-primary-hover)"></span>
+            <span style="background-color: var(--color-primary-active)"></span>
+          </div>
+          <p class="accent-cta">Read the post</p>
+        </div>
+        <div class="accent-col" data-accent="lime">
+          <p class="accent-name">data-accent="lime"</p>
+          <div class="accent-row">
+            <span style="background-color: var(--color-primary)"></span>
+            <span style="background-color: var(--color-primary-hover)"></span>
+            <span style="background-color: var(--color-primary-active)"></span>
+          </div>
+          <p class="accent-cta">Read the post</p>
+        </div>
+        <div class="accent-col" data-accent="amber">
+          <p class="accent-name">data-accent="amber"</p>
+          <div class="accent-row">
+            <span style="background-color: var(--color-primary)"></span>
+            <span style="background-color: var(--color-primary-hover)"></span>
+            <span style="background-color: var(--color-primary-active)"></span>
+          </div>
+          <p class="accent-cta">Read the post</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

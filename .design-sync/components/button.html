@@ -1,0 +1,160 @@
+<!-- @dsCard group="Components" -->
+<!doctype html>
+<html lang="en" data-accent="yellow">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Button</title>
+    <link rel="stylesheet" href="../tokens.css" />
+    <style>
+      /* --- page scaffolding (not part of the component) --- */
+      .wrap {
+        padding: var(--space-8);
+        max-width: 48rem;
+        margin-inline: auto;
+      }
+      .page-title {
+        font-size: var(--text-3xl);
+        font-weight: var(--font-weight-bold);
+        line-height: var(--leading-tight);
+        letter-spacing: -0.03em;
+        margin: 0 0 var(--space-2);
+      }
+      .lede {
+        color: var(--color-muted-foreground);
+        margin: 0 0 var(--space-8);
+      }
+      .label {
+        font-family: var(--font-mono);
+        font-size: var(--text-xs);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--color-muted-foreground);
+        margin: var(--space-8) 0 var(--space-3);
+      }
+      .note {
+        color: var(--color-muted-foreground);
+        font-size: var(--text-sm);
+        margin: var(--space-2) 0 0;
+      }
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-4);
+        align-items: center;
+      }
+
+      /* --- button.module.css --- */
+      .button {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--spacing-inline-s);
+        padding: var(--space-2) var(--space-4);
+        border: 1px solid transparent;
+        border-radius: var(--radius-md);
+        font-family: var(--font-sans);
+        font-size: var(--typography-body-size);
+        font-weight: var(--font-weight-medium);
+        line-height: var(--leading-normal);
+        /* An href renders an <a>, which would otherwise underline itself. */
+        text-decoration: none;
+        cursor: pointer;
+        transition: var(--transition-color);
+      }
+
+      .button:disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
+      }
+
+      .primary {
+        background-color: var(--color-primary);
+        color: var(--color-primary-foreground);
+      }
+
+      .primary:hover:not(:disabled) {
+        background-color: var(--color-primary-hover);
+      }
+
+      .primary:active:not(:disabled) {
+        background-color: var(--color-primary-active);
+      }
+
+      .ghost {
+        background-color: transparent;
+        color: var(--color-foreground);
+        border-color: var(--color-border);
+      }
+
+      .ghost:hover:not(:disabled) {
+        background-color: var(--color-muted);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1 class="page-title">Button</h1>
+      <p class="lede">
+        Two variants — <code>primary</code> (default) and <code>ghost</code>.
+        Given an <code>href</code> it renders a real <code>&lt;a&gt;</code> that
+        looks like a button.
+      </p>
+
+      <p class="label">variant="primary" — default</p>
+      <div class="row">
+        <button type="button" class="button primary">Read the post</button>
+        <button type="button" class="button primary">
+          <span aria-hidden="true">&#8594;</span>
+          Continue reading
+        </button>
+      </div>
+
+      <p class="label">variant="ghost"</p>
+      <div class="row">
+        <button type="button" class="button ghost">Back to posts</button>
+        <button
+          type="button"
+          class="button ghost"
+          aria-label="Switch accent colour"
+        >
+          <span aria-hidden="true">&#9788;</span>
+        </button>
+      </div>
+      <p class="note">
+        An icon-only button carries an <code>aria-label</code> — it must always
+        have an accessible name.
+      </p>
+
+      <p class="label">disabled — 50% opacity, not-allowed cursor</p>
+      <div class="row">
+        <button type="button" class="button primary" disabled>
+          Read the post
+        </button>
+        <button type="button" class="button ghost" disabled>
+          Back to posts
+        </button>
+      </div>
+
+      <p class="label">href — renders an anchor styled as a button</p>
+      <div class="row">
+        <a class="button primary" href="mailto:f.menchicchi@gmail.com"
+          >Get in touch</a
+        >
+        <a
+          class="button ghost"
+          href="https://github.com/fmmenchi"
+          target="_blank"
+          rel="noopener noreferrer"
+          >GitHub<span class="sr-only"> (opens in a new tab)</span></a
+        >
+      </div>
+      <p class="note">
+        An action that navigates (a <code>mailto:</code>, an external URL) must
+        be a link, not a <code>&lt;button&gt;</code>, or it loses middle-click,
+        "open in a new tab" and the right role. The href is handed to
+        <code>Link</code> with <code>variant="plain"</code>, so protocol
+        handling — including the new-tab hint above — stays in one place.
+      </p>
+    </div>
+  </body>
+</html>
