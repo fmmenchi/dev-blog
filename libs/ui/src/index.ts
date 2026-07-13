@@ -1,6 +1,7 @@
 export * from './components/accent-switcher/accent-switcher.component';
 export * from './components/avatar/avatar.component';
 export * from './components/badge/badge.component';
+export * from './components/badge-list/badge-list.component';
 export * from './components/button/button.component';
 export * from './components/card/card.component';
 export * from './components/container/container.component';

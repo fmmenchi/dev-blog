@@ -42,8 +42,6 @@ describe('Post', () => {
   it('hides the siblings nav when a post has no neighbours', async () => {
     renderPost('starting-a-notebook');
     await screen.findByRole('heading', { level: 1 });
-    expect(
-      screen.queryByRole('navigation', { name: 'More articles' }),
-    ).toBeNull();
+    expect(screen.queryByRole('navigation', { name: 'More posts' })).toBeNull();
   });
 });

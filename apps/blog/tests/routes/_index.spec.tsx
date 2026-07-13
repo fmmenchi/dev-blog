@@ -46,7 +46,7 @@ describe('Home', () => {
   it('only offers the archive link when there is more to see', async () => {
     renderHome();
     await screen.findByRole('main');
-    const archiveLink = screen.queryByRole('link', { name: /all articles/ });
+    const archiveLink = screen.queryByRole('link', { name: /all posts/ });
     if (getPosts().length > 5) {
       expect(archiveLink).toBeTruthy();
     } else {
