@@ -9,6 +9,13 @@
     "tags": [
       "scope:blog",
       "type:e2e"
-    ]
+    ],
+    "targets": {
+      "e2e": {
+        "dependsOn": [
+          "blog:build"
+        ]
+      }
+    }
   }
 }
