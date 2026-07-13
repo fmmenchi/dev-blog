@@ -31,8 +31,18 @@ export default [
               onlyDependOnLibsWithTags: ['*'],
             },
             {
+              // The design system may reach for an icon — an icon is a
+              // presentational primitive, not content. What it must NOT know is
+              // WHICH links this blog has, which is why `IconLinks` still takes
+              // its items as props. (andes-routes allows the same edge, by
+              // tagging its icon lib `type:ui`.)
               sourceTag: 'type:ui',
-              onlyDependOnLibsWithTags: ['type:ui', 'type:theme'],
+              onlyDependOnLibsWithTags: ['type:ui', 'type:theme', 'type:icons'],
+            },
+            {
+              // Icons depend on nothing. They are leaves.
+              sourceTag: 'type:icons',
+              onlyDependOnLibsWithTags: [],
             },
             {
               sourceTag: 'type:theme',

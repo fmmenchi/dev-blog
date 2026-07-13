@@ -13,4 +13,5 @@ export * from './components/picture/picture.component';
 export * from './components/prose/prose.component';
 export * from './components/route-error-boundary/route-error-boundary.component';
 export * from './components/select/select.component';
+export * from './components/share-bar/share-bar.component';
 export * from './components/toggle-group/toggle-group.component';

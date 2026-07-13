@@ -2,8 +2,11 @@ import { useEffect, useState } from 'react';
 
 import { cn } from '../../internal/cn';
 
-const ACCENTS = ['yellow', 'lime', 'amber'] as const;
-type Accent = (typeof ACCENTS)[number];
+/* Exported so the no-flash script in the document head can use the SAME key and the
+   SAME names. A second copy of 'fabio-accent' somewhere else is a bug waiting for the
+   day one of them is renamed. */
+export const ACCENTS = ['yellow', 'lime', 'amber'] as const;
+export type Accent = (typeof ACCENTS)[number];
 
 /*
  * `-base`, not the old bare name: when the accents became derived, the authored
@@ -17,7 +20,7 @@ const SWATCH: Record<Accent, string> = {
   amber: 'var(--accent-amber-base)',
 };
 
-const STORAGE_KEY = 'fabio-accent';
+export const ACCENT_STORAGE_KEY = 'fabio-accent';
 
 function isAccent(value: string | null): value is Accent {
   return ACCENTS.includes(value as Accent);
@@ -68,7 +71,7 @@ export function AccentSwitcher({ className }: { className?: string }) {
   const [announcement, setAnnouncement] = useState('');
 
   useEffect(() => {
-    const saved = window.localStorage.getItem(STORAGE_KEY);
+    const saved = window.localStorage.getItem(ACCENT_STORAGE_KEY);
     if (isAccent(saved)) setAccent(saved);
   }, []);
 
@@ -81,7 +84,7 @@ export function AccentSwitcher({ className }: { className?: string }) {
 
   const cycle = () => {
     try {
-      window.localStorage.setItem(STORAGE_KEY, next);
+      window.localStorage.setItem(ACCENT_STORAGE_KEY, next);
     } catch {
       // persistence is best-effort
     }
@@ -94,9 +97,19 @@ export function AccentSwitcher({ className }: { className?: string }) {
       <button
         type="button"
         className={cn(
-          'inline-flex cursor-pointer items-center gap-2 rounded-md border border-border bg-transparent px-2.75 py-1.5 font-mono text-2xs text-muted-foreground [transition:var(--transition-color)] hover:border-primary hover:text-foreground',
+          'inline-flex cursor-pointer items-center gap-2 rounded-md border bg-transparent px-2.75 py-1.5 font-mono text-2xs text-muted-foreground [transition:var(--transition-color)] hover:text-foreground',
           className,
         )}
+        /*
+         * The border is the colour the button is OFFERING, the same one as the swatch
+         * and the word beside it. It used to be `border-border` — the separator grey,
+         * 1.18:1 against the background — so the control had no visible edge at all,
+         * and only found one on hover, which a phone does not have.
+         *
+         * Inline, because the value depends on state; a class list cannot hold three
+         * accents. It is the same token the swatch reads, so the two can never drift.
+         */
+        style={{ borderColor: SWATCH[next] }}
         onClick={cycle}
         title="switch accent"
         aria-label={`Change accent color to ${next}`}
