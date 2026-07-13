@@ -43,18 +43,6 @@ export function SiteFooter() {
             </span>
             <span className="sr-only">love</span>
           </span>
-          <span aria-hidden="true">·</span>
-          {/*
-           * Which build you are reading: the tag `nx release` cut, and the commit it
-           * was cut from. Quieter than the copyright, because it is a footnote to the
-           * page and not a peer of it — and `nowrap`, so the narrowest phone either
-           * fits the whole thing or moves the whole thing, but can never strand
-           * "(a1b2c3d)" alone on a line.
-           */}
-          <span className="whitespace-nowrap text-2xs">
-            v{version}
-            {commit ? ` (${commit})` : ''}
-          </span>
         </span>
 
         {/*
@@ -91,6 +79,26 @@ export function SiteFooter() {
           <IconLinks label="Social" links={socialLinks} />
         </div>
       </Container>
+
+      {/*
+       * Which build you are reading: the tag `nx release` cut, and the commit it was
+       * cut from.
+       *
+       * A band of its own, under a rule, in the quietest type on the page — a version
+       * is not a peer of a copyright, it is a footnote to the whole document, and the
+       * status bar is where software has always put it. On the copyright line it was
+       * wrapping to a second row on a phone anyway; this makes that second row
+       * deliberate instead of accidental.
+       */}
+      <div className="border-t border-border">
+        <Container
+          padding="bar"
+          className="py-3 font-mono text-2xs text-muted-foreground"
+        >
+          v{version}
+          {commit ? ` (${commit})` : ''}
+        </Container>
+      </div>
     </footer>
   );
 }
