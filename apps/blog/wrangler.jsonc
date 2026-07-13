@@ -8,7 +8,10 @@
     "enabled": true,
   },
   "upload_source_maps": true,
-  "workers_dev": true,
+  // false: with it on, the Worker also answers on *.workers.dev — a second, fully
+  // indexable origin serving the same pages behind the same `Allow: /` robots.txt.
+  // The apex is the only hostname this site has.
+  "workers_dev": false,
   // No public URLs for not-yet-promoted versions.
   "preview_urls": false,
   // Maintenance flag lives in KV so deploys can never flip it. Toggle with

@@ -83,6 +83,7 @@ doc/                   # human reference (the "why")
 | [`.agent/architecture.md`](./.agent/architecture.md)   | adding routes/libs, changing deps, module boundaries, CI           |
 | [`.agent/design-system.md`](./.agent/design-system.md) | styling, theming, authoring/changing a component, any UI/a11y work |
 | [`.agent/seo.md`](./.agent/seo.md)                     | adding a route or a page, meta tags, sitemap, feeds, canonicals    |
+| [`.agent/security.md`](./.agent/security.md)           | CSP, response headers, the Worker, anything loaded off-origin      |
 | [`.agent/assets.md`](./.agent/assets.md)               | images, icons (svgr codegen), fonts                                |
 | [`.agent/testing.md`](./.agent/testing.md)             | writing a test, where it belongs, the axe sweep, e2e               |
 | [`.agent/performance.md`](./.agent/performance.md)     | fonts, `root.tsx` links, bundle size, the critical path            |

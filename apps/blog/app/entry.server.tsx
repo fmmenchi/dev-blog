@@ -8,6 +8,8 @@ import { ServerRouter } from 'react-router';
 import { isbot } from 'isbot';
 import { renderToReadableStream } from 'react-dom/server';
 
+import { makeNonce, securityHeaders } from './lib/security';
+
 export default async function handleRequest(
   ...[
     request,
@@ -19,8 +21,16 @@ export default async function handleRequest(
   let shellRendered = false;
   const userAgent = request.headers.get('user-agent');
 
+  /*
+   * One nonce, used twice: React Router stamps it on the inline scripts it renders
+   * (and forwards it to <Links>/<Scripts> through context, so root.tsx needs no
+   * change), and the CSP below allows exactly that nonce. Any other inline script —
+   * an injected one — is refused.
+   */
+  const nonce = makeNonce();
+
   const body = await renderToReadableStream(
-    <ServerRouter context={routerContext} url={request.url} />,
+    <ServerRouter context={routerContext} url={request.url} nonce={nonce} />,
     {
       onError(error: unknown) {
         responseStatusCode = 500;
@@ -40,6 +50,10 @@ export default async function handleRequest(
   }
 
   responseHeaders.set('Content-Type', 'text/html');
+  for (const [header, value] of Object.entries(securityHeaders(nonce))) {
+    responseHeaders.set(header, value);
+  }
+
   return new Response(body, {
     headers: responseHeaders,
     status: responseStatusCode,

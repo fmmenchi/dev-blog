@@ -21,7 +21,23 @@ describe('seoMeta', () => {
       property: 'og:url',
       content: 'https://fabiomenchicchi.com/about',
     });
-    expect(tags).toContainEqual({ name: 'twitter:card', content: 'summary' });
+    /* `summary_large_image`, and an image to go with it. The site used to declare
+       `summary` with NO image, which produces no card at all: every link shared to
+       LinkedIn or Slack arrived as a grey line of text. */
+    expect(tags).toContainEqual({
+      name: 'twitter:card',
+      content: 'summary_large_image',
+    });
+    expect(tags).toContainEqual({
+      property: 'og:image',
+      content: 'https://fabiomenchicchi.com/og.png',
+    });
+    /* Absolute: a crawler reads the tag out of context and resolves no relative path. */
+    for (const tag of tags) {
+      if ('property' in tag && tag.property === 'og:image') {
+        expect(tag.content.startsWith('https://')).toBe(true);
+      }
+    }
   });
 
   it('reads the origin from the root match', () => {

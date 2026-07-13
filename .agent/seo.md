@@ -42,3 +42,14 @@ feed read the post list.
 social platform and in every chat app. Fixing it means an image (static or
 generated per post) plus `og:image` + `twitter:card: summary_large_image` in
 `seoMeta`.
+
+## The social card
+
+`seoMeta` emits `og:image` (absolute — a crawler resolves no relative path) and
+`twitter:card: summary_large_image`. The site once declared `summary` with **no image**,
+which produces no card at all: every link shared to LinkedIn, Slack or WhatsApp arrived
+as a grey line of text.
+
+The PNG is `apps/blog/public/og.png`, generated from the site's own tokens and fonts by
+`node tools/og-image.mjs`. Regenerate and commit it when the palette, the name or the
+tagline change — a card that drifts from the site it advertises is worse than no card.
