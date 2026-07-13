@@ -8,3 +8,5 @@ allowBuilds:
   '@parcel/watcher': false
   sharp: false
   workerd: true
+  puppeteer: true # unlighthouse drives Chrome through it
+  vue-demi: true # unlighthouse's report UI

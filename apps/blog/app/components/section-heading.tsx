@@ -5,7 +5,7 @@ export interface SectionHeadingProps {
   aside?: ReactNode;
 }
 
-/** Monospace section label in the mock style: `// articles ——— 5 posts`. */
+/** Monospace section label in the mock style: `// posts ——— 5 posts`. */
 export function SectionHeading({ children, aside }: SectionHeadingProps) {
   return (
     <div className="flex items-center gap-4 font-mono text-xs text-muted-foreground">

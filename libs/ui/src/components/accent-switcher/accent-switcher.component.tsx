@@ -5,16 +5,53 @@ import { cn } from '../../internal/cn';
 const ACCENTS = ['yellow', 'lime', 'amber'] as const;
 type Accent = (typeof ACCENTS)[number];
 
+/*
+ * `-base`, not the old bare name: when the accents became derived, the authored
+ * colour was renamed and this swatch kept reading a token that no longer exists.
+ * An undefined var() in `background` invalidates the declaration, so the square
+ * simply went colourless — and no test could see it, because it is inline style.
+ */
 const SWATCH: Record<Accent, string> = {
-  yellow: 'var(--accent-yellow)',
-  lime: 'var(--accent-lime)',
-  amber: 'var(--accent-amber)',
+  yellow: 'var(--accent-yellow-base)',
+  lime: 'var(--accent-lime-base)',
+  amber: 'var(--accent-amber-base)',
 };
 
 const STORAGE_KEY = 'fabio-accent';
 
 function isAccent(value: string | null): value is Accent {
   return ACCENTS.includes(value as Accent);
+}
+
+/**
+ * Repaint the favicon in the current accent.
+ *
+ * A favicon cannot do this itself. The browser renders it in an isolated image
+ * context: it never sees the page's DOM, so `data-accent` and our custom
+ * properties are invisible to it, and scripts inside a favicon SVG are disabled.
+ * An SVG favicon CAN follow `prefers-color-scheme` — the OS theme — but not a
+ * site-level accent. So the only way is from the outside: rebuild the icon and
+ * swap the <link>.
+ *
+ * The colours are read from the live computed styles rather than hardcoded, so
+ * this cannot drift from the theme — the fourth rule of this codebase, learned
+ * expensively.
+ */
+function paintFavicon() {
+  const styles = getComputedStyle(document.documentElement);
+  const fill = styles.getPropertyValue('--color-primary').trim();
+  const background = styles.getPropertyValue('--color-background').trim();
+  if (!fill || !background) return;
+
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="${background}"/><text x="32" y="46" font-family="'JetBrains Mono', ui-monospace, monospace" font-weight="700" font-size="42" text-anchor="middle" fill="${fill}">F</text></svg>`;
+
+  const link =
+    document.querySelector<HTMLLinkElement>('link[rel="icon"]') ??
+    document.head.appendChild(
+      Object.assign(document.createElement('link'), { rel: 'icon' }),
+    );
+  link.type = 'image/svg+xml';
+  link.href = `data:image/svg+xml,${encodeURIComponent(svg)}`;
 }
 
 /**
@@ -37,6 +74,7 @@ export function AccentSwitcher({ className }: { className?: string }) {
 
   useEffect(() => {
     document.documentElement.dataset['accent'] = accent;
+    paintFavicon();
   }, [accent]);
 
   const next = ACCENTS[(ACCENTS.indexOf(accent) + 1) % ACCENTS.length];

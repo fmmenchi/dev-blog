@@ -54,3 +54,6 @@ test-output
 
 # wrangler local artifacts
 .wrangler
+
+# unlighthouse reports (generated)
+.unlighthouse/

@@ -24,7 +24,7 @@ export function SiteHeader() {
       {/* Wraps on a phone. The logo plus five mono nav items do not fit in
           375px on one line — and never did: the row simply ran off-screen, and
           every page scrolled sideways. */}
-      <div className="mx-auto flex max-w-[var(--layout-content-width)] flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-4 md:flex-nowrap md:px-8 md:py-5.5">
+      <div className="mx-auto flex max-w-content flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-4 md:flex-nowrap md:px-8 md:py-5.5">
         <Link
           to="/"
           variant="plain"

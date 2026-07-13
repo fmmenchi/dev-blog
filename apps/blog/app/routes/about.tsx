@@ -1,13 +1,11 @@
-import { Avatar, Button, Card, Link } from '@dev-blog/ui';
+import { Avatar, BadgeList, Card, IconLinks } from '@dev-blog/ui';
 
-import { profile, socials } from '../lib/content';
+import { profile } from '../lib/content';
+import { socialLinks } from '../lib/social-links';
 import { avatarSrc } from '../lib/avatar-image';
+
 import { originFromMatches, seoMeta } from '../lib/seo';
 import { SITE_NAME } from '../lib/site';
-
-/** The `plain` Link variant carries no styling: the nav gives it its own. */
-const SOCIAL_LINK =
-  'text-muted-foreground no-underline [transition:var(--transition-color)] hover:text-primary';
 
 const PARAGRAPH = 'mb-4.5 text-[16.5px] leading-relaxed';
 
@@ -28,7 +26,7 @@ export const meta = ({
 export default function About() {
   return (
     // Phone: one column. From `md` the profile sidebar sits beside the prose.
-    <div className="mx-auto grid w-full max-w-[var(--layout-content-width)] grid-cols-1 items-start gap-12 px-8 pt-14 pb-18 md:grid-cols-[300px_1fr]">
+    <div className="mx-auto grid w-full max-w-content grid-cols-1 items-start gap-12 px-8 pt-14 pb-18 md:grid-cols-[300px_1fr]">
       {/* Sticky only once there is a column to be sticky in. */}
       <aside className="flex flex-col gap-3.5 md:sticky md:top-6">
         <Card className="flex flex-col items-start gap-3.5">
@@ -41,31 +39,15 @@ export default function About() {
             <span>{profile.location}</span>
             <span>{profile.experience}</span>
           </div>
-          {/* An action that navigates stays a link; Slot lends it the button's looks. */}
-          <Button asChild>
-            <Link href="mailto:f.menchicchi@gmail.com" variant="plain">
-              Say hi
-            </Link>
-          </Button>
+          {/* The three ways to reach me, mail included: one row of icons, each a
+              distinct destination. A worded "Say hi" button beside them only
+              repeated the mail link under a second name. */}
+          {/* The page where someone decides who I am was the one page that never
+              said what I work with. */}
+          <BadgeList label="Skills" items={profile.skills} />
+
+          <IconLinks label="Social" links={socialLinks} />
         </Card>
-        {/* No mail here: the "Say hi" button above is already the mail link. */}
-        <nav
-          aria-label="Social"
-          className="flex gap-4.5 px-1.5 py-0.5 font-mono text-xs"
-        >
-          {socials
-            .filter(({ href }) => !href.startsWith('mailto:'))
-            .map(({ label, href }) => (
-              <Link
-                key={label}
-                href={href}
-                variant="plain"
-                className={SOCIAL_LINK}
-              >
-                {label}
-              </Link>
-            ))}
-        </nav>
       </aside>
 
       <main className="min-w-0 max-w-[40rem]">

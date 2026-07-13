@@ -21,14 +21,22 @@
     ],
     "targets": {
       "lint-css": {
-        "command": "stylelint \"src/**/*.css\"",
+        "executor": "nx:run-commands",
         "options": {
-          "cwd": "{projectRoot}"
+          "commands": [
+            "stylelint \"src/**/*.css\"",
+            "node ../../tools/check-tokens.mjs"
+          ],
+          "cwd": "{projectRoot}",
+          "parallel": false
         },
         "cache": true,
         "inputs": [
           "{projectRoot}/src/**/*.css",
-          "{workspaceRoot}/.stylelintrc.json"
+          "{workspaceRoot}/.stylelintrc.json",
+          "{workspaceRoot}/tools/check-tokens.mjs",
+          "{workspaceRoot}/libs/ui/src/**/*",
+          "{workspaceRoot}/apps/blog/app/**/*"
         ]
       }
     }

@@ -42,10 +42,22 @@
         },
         "defaultConfiguration": "off",
         "cache": false
+      },
+      "assess": {
+        "executor": "nx:run-commands",
+        "cache": false,
+        "dependsOn": [
+          "build"
+        ],
+        "options": {
+          "cwd": "{workspaceRoot}",
+          "command": "node tools/assess.mjs"
+        }
       }
     }
   },
   "dependencies": {
+    "@dev-blog/icons": "workspace:*",
     "@dev-blog/theme": "workspace:*",
     "@dev-blog/ui": "workspace:*",
     "isbot": "^4.4.0",

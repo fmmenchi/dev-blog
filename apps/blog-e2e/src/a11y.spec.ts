@@ -4,6 +4,8 @@ import { expect, test } from '@playwright/test';
 const PAGES = [
   '/',
   '/blog',
+  /* A filtered list is a different DOM: the toolbar, the combobox, the status. */
+  '/blog?tag=meta',
   '/blog/starting-a-notebook',
   '/projects',
   '/about',

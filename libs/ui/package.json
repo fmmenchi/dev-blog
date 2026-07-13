@@ -12,6 +12,7 @@
     "./package.json": "./package.json"
   },
   "dependencies": {
+    "@dev-blog/icons": "workspace:*",
     "@dev-blog/theme": "workspace:*",
     "react": "^19.0.0",
     "react-router": "^8.1.0"
@@ -34,5 +35,8 @@
         ]
       }
     }
-  }
+  },
+  "sideEffects": [
+    "*.css"
+  ]
 }

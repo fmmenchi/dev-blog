@@ -60,15 +60,13 @@ test.describe('navigation', () => {
   });
 
   // The home shows the featured post plus four; the archive link appears only when
-  // there is a sixth one to go and see. With a single post, promising "all articles"
+  // there is a sixth one to go and see. With a single post, promising "all posts"
   // would lead to the same list the reader is already looking at.
   test('the home offers no archive link while it already shows everything', async ({
     page,
   }) => {
     await page.goto('/');
-    await expect(page.getByRole('link', { name: /all articles/ })).toHaveCount(
-      0,
-    );
+    await expect(page.getByRole('link', { name: /all posts/ })).toHaveCount(0);
   });
 
   test('cycles and persists the accent', async ({ page }) => {

@@ -31,8 +31,16 @@ source.
 - **`text-*` also sets a line-height.** If the design calls for a specific one,
   say `leading-copy` / `leading-tight` explicitly or the type will drift.
 - **Arbitrary values are a last resort**, for things that genuinely have no token
-  (`max-w-[42.5rem]`, `[transition:var(--transition-lift)]`). A colour or a font
-  size in brackets is a bug.
+  (`[transition:var(--transition-lift)]`). A colour or a font size in brackets is
+  a bug.
+- **An arbitrary value that only wraps a token is a token missing from the
+  bridge.** `max-w-[var(--layout-content-width)]` was copy-pasted into six files;
+  it is now `max-w-content` (with `max-w-measure` for the reading column). If you
+  are about to write `[var(--…)]`, bridge it instead.
+- **Check the name is ours before you claim it.** Tailwind ships `max-w-prose`
+  (65ch), so a `--container-prose` would not have overridden it — it would have
+  collided, and the reading pages would silently have used Tailwind's width. Hence
+  `measure`. Same story as the `neutral-*` palette we had to wipe.
 - **CSS Modules survive in two places only** — `prose`, and the article body in
   `post` — because both style the descendants of Markdown rendered at runtime,
   which no class in a TSX file can reach.
@@ -40,6 +48,45 @@ source.
   **accent** switches (`<html data-accent="yellow|lime|amber">`, the
   `--color-primary` family only) — the bridge points at the vars, so utilities
   follow it for free. Never write a per-accent style.
+
+## Contrast is a number, not a taste
+
+Check it before you ship a surface. `--color-border` measures **1.18:1** against a
+card: correct for a rule between rows (felt, not seen), and useless as the edge of a
+component — badges had an invisible outline and read as loose grey words.
+
+- **`--color-border`** — separators. Not visible on its own, and that is the point.
+- **`--color-border-strong`** — the edge of a component. Clears 3:1 (WCAG 1.4.11).
+
+A chip is a SHAPE: give it a surface (`bg-muted`) and a `border-border-strong`. Text
+on it still has to clear 4.5:1 (`text-muted-foreground` on `bg-muted` is 5.71:1).
+
+## Radix, and making it free
+
+Radix is the default for anything interactive: `Slot` (`asChild`), `Avatar`,
+`ToggleGroup`, `Select`. Never hand-roll the roles, focus management or typeahead it
+gives you — a hand-made dropdown is the commonest way a site becomes unusable by
+keyboard.
+
+**The cost is real, and it is a bundling problem, not a reason to avoid Radix.**
+`libs/ui` is imported by `root.tsx`, so its chunk is SHARED and loads on every page.
+Radix's Select alone (portal + focus scope + floating positioning) put ~69 KiB on the
+home page, which has no dropdown. React Router's route splitting cannot help: the cost
+sits in a chunk shared BETWEEN routes, not in a route.
+
+Two things make it free, and **both are needed** — either alone does nothing:
+
+1. **`"sideEffects"` in the lib's package.json.** Without it, a bundler must assume
+   that importing a module might _do something_, so a barrel that re-exports everything
+   keeps everything alive: `root.tsx` importing `Button` dragged `Select` in. It is set
+   to `["*.css"]`, not `false`, because a CSS import genuinely IS a side effect —
+   declaring `false` would let the bundler drop `import './prose.module.css'` and the
+   styles would vanish silently.
+2. **A dynamic import for the heavy component** (`filter-bar.lazy.tsx`), so it gets a
+   chunk of its own and only the routes that show it pay.
+
+Check the guard BEFORE the import: fetching a chunk to be told it renders nothing is
+worse than not splitting at all.
 
 ## Component pattern
 
@@ -98,6 +145,11 @@ neutral ramp is not dead weight — it is what makes `850` legible instead of
 arbitrary. (This is the exception. A one-off `--typography-copy-leading` that
 nothing consumes _is_ dead weight; a `--color-neutral-300` nobody has needed yet
 is the scale.)
+
+**Accents are derived, not authored.** One base colour each
+(`--accent-yellow-base`); hover, active and foreground are computed from it with
+OKLCH relative colours. Never hand-write an accent value — twelve literals is how
+amber silently drifted away from the other two. A fourth accent is one line.
 
 **Semantic roles hold no values.** They point at the palette:
 `--color-card: var(--color-neutral-850)`. That indirection is what makes a theme

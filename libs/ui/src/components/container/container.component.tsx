@@ -8,12 +8,12 @@ import { cn } from '../../internal/cn';
  * library, so a Container class list is read (and extended) the same way as
  * every other component's.
  *
- * `--layout-content-width` is a token, but a layout one: the bridge in
- * `tailwind.css` exposes colours, type and radii — not widths. Read it directly
- * rather than re-typing 70rem here.
+ * The width comes from `max-w-content`, which the bridge generates from
+ * `--layout-content-width`. It used to be an arbitrary value here, which is a
+ * token missing from the bridge wearing a disguise.
  */
 export const containerVariants = cva(
-  'w-full max-w-[var(--layout-content-width)] mx-auto px-4 box-border',
+  'w-full max-w-content mx-auto px-4 box-border',
 );
 
 export type ContainerVariants = VariantProps<typeof containerVariants>;
