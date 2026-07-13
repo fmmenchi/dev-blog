@@ -55,8 +55,8 @@
       "default": true
     },
     "project": {
-      "type": "string",
-      "description": "Scan what THIS app ships instead of the workspace. Nx's project graph is asked for the app's production dependencies, and a package.json + pruned lockfile are written for exactly those. Without it the scan reads the workspace lockfile \u2014 which is the toolbox (Playwright, Vitest, ESLint), not the app."
+      "type": ["string", "null"],
+      "description": "Which app's shipped tree to scan. Defaults to the project the task runs on, so `nx run blog:vuln` needs no options at all. Pass null to scan the REAL workspace tree instead \u2014 which is what the secrets scan does, because a secret is a secret wherever it sits."
     }
   },
   "required": []
