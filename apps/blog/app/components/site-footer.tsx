@@ -1,11 +1,16 @@
 import { Container, IconLinks, Link } from '@dev-blog/ui';
 
+import { getBuildInfo } from '../lib/build-info';
 import { socialLinks } from '../lib/social-links';
 
 const LINK =
   'text-muted-foreground no-underline [transition:var(--transition-color)] hover:text-primary';
 
 export function SiteFooter() {
+  /* A compile-time constant, not state: the same string on the server and after
+     hydration, so it can be read during render. See app/lib/build-info.ts. */
+  const { version, commit } = getBuildInfo();
+
   return (
     <footer className="border-t border-border">
       {/* Everything wraps on a phone rather than running off it. */}
@@ -13,7 +18,17 @@ export function SiteFooter() {
         padding="bar"
         className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3 py-6 font-mono text-xs text-muted-foreground md:flex-nowrap"
       >
-        <span>© 2026 fabiomenchicchi.com</span>
+        {/*
+         * Which build you are reading. The version is the git tag `nx release` cut for
+         * this deploy; the hash is the commit it was cut from — together they turn
+         * "the site is behaving oddly" into a thing that can be looked up. It stays a
+         * plain string on purpose: a link would promise a page (a GitHub release) that
+         * this footer does not own.
+         */}
+        <span>
+          © 2026 fabiomenchicchi.com · v{version}
+          {commit ? ` (${commit})` : ''}
+        </span>
 
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 md:gap-4.5">
           {/*

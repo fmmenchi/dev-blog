@@ -1,4 +1,5 @@
 /// <reference types='vitest' />
+import { execFileSync } from 'node:child_process';
 import { defineConfig, type Plugin, type ViteDevServer } from 'vite';
 import { reactRouter } from '@react-router/dev/vite';
 import { cloudflare } from '@cloudflare/vite-plugin';
@@ -52,9 +53,55 @@ function reapWorkerdOnSignals(): Plugin {
   };
 }
 
+/**
+ * Build identity, resolved once and inlined by `define` below.
+ *
+ * The version is the git TAG, never `package.json`: `nx release` here tags but does
+ * not commit the bump (`nx.json` → `release.git.commit: false`), so every
+ * `package.json` in the workspace sits at 0.0.0 forever while the tags are at
+ * v0.20.x. Reading the file would print a version that has never existed.
+ *
+ * CI passes both values as env vars — the deploy job is the only place that knows
+ * WHICH tag was just cut — and `nx.json` lists them under `sharedGlobals`, so a build
+ * made without them is not a cache hit for a build made with them. Without that, the
+ * deploy would restore the artifact the CI build had already cached, with the previous
+ * release baked into it.
+ *
+ * Outside CI we ask git, which is why the dev server shows a real version too. `dev`
+ * is only for the case where there is no git at all (a tarball, a container).
+ */
+function git(...args: string[]): string {
+  try {
+    return execFileSync('git', args, {
+      cwd: import.meta.dirname,
+      stdio: ['ignore', 'pipe', 'ignore'],
+    })
+      .toString()
+      .trim();
+  } catch {
+    /* No repo, no tags, no git binary. Not an error: the build carries on. */
+    return '';
+  }
+}
+
+const VERSION =
+  process.env['APP_VERSION'] ||
+  git('describe', '--tags', '--abbrev=0', '--match', 'v*').replace(/^v/, '') ||
+  'dev';
+
+const COMMIT = process.env['GIT_HASH'] || git('rev-parse', '--short', 'HEAD');
+
 export default defineConfig(() => ({
   root: import.meta.dirname,
   cacheDir: '../../node_modules/.vite/apps/blog',
+  /*
+   * Textual substitution, so `getBuildInfo()` is the same constant on the server and in
+   * the browser: no loader, no `window.ENV`, nothing to hydrate.
+   */
+  define: {
+    'import.meta.env.VITE_APP_VERSION': JSON.stringify(VERSION),
+    'import.meta.env.VITE_GIT_HASH': JSON.stringify(COMMIT),
+  },
   server: {
     port: 4200,
     host: 'localhost',
