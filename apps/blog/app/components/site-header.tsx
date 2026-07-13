@@ -1,4 +1,4 @@
-import { AccentSwitcher, Link } from '@dev-blog/ui';
+import { AccentSwitcher, Container, Link } from '@dev-blog/ui';
 // NavLink stays a router primitive: the design-system Link has no notion of
 // the aria-current active state the main nav needs.
 import { NavLink } from 'react-router';
@@ -24,7 +24,10 @@ export function SiteHeader() {
       {/* Wraps on a phone. The logo plus five mono nav items do not fit in
           375px on one line — and never did: the row simply ran off-screen, and
           every page scrolled sideways. */}
-      <div className="mx-auto flex max-w-content flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-4 md:flex-nowrap md:px-8 md:py-5.5">
+      <Container
+        padding="bar"
+        className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 py-4 md:flex-nowrap md:py-5.5"
+      >
         <Link
           to="/"
           variant="plain"
@@ -58,7 +61,7 @@ export function SiteHeader() {
           </a>
           <AccentSwitcher />
         </nav>
-      </div>
+      </Container>
     </header>
   );
 }

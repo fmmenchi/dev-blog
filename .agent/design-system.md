@@ -108,6 +108,24 @@ One folder per component under `libs/ui/src/components/<name>/`:
 - Prefer a small orthogonal prop API (`variant`, `as`) over boolean sprawl.
 - A `.module.css` is the exception, not the rule — see the two survivors above.
 
+### The page shell is `Container`
+
+Never hand-roll `mx-auto max-w-… px-…` in a route — that is how the app ended up
+with the same shell written eight different ways, and `Container` unused beside
+them. Two variants, because the app has two of each and no more:
+
+|         | `width`                                                                    | `padding`                                         |
+| ------- | -------------------------------------------------------------------------- | ------------------------------------------------- |
+| default | `content` — the page shell                                                 | `page` — `px-8`                                   |
+| other   | `measure` — the narrower column for long-form prose (`/uses`, `/colophon`) | `bar` — `px-4 md:px-8`, for the header and footer |
+
+Vertical spacing is **not** a variant: it changes per page, so it stays in the
+caller's `className` (`<Container as="main" className="pt-14 pb-18">`). Do not
+pass a `px-*` or a `max-w-*` from a caller — `cn()` is a plain join, not
+tailwind-merge, so it would not override the variant's class, it would sit next
+to it and let stylesheet order decide. Pick the variant instead; add one if the
+design genuinely grows a third width.
+
 ## Accessibility (hard requirement)
 
 Non-negotiable; tests must assert through the accessibility tree
