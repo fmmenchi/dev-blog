@@ -1,4 +1,4 @@
-import { Avatar, BadgeList, Card, IconLinks } from '@dev-blog/ui';
+import { Avatar, BadgeList, Card, Container, IconLinks } from '@dev-blog/ui';
 
 import { profile } from '../lib/content';
 import { socialLinks } from '../lib/social-links';
@@ -26,7 +26,7 @@ export const meta = ({
 export default function About() {
   return (
     // Phone: one column. From `md` the profile sidebar sits beside the prose.
-    <div className="mx-auto grid w-full max-w-content grid-cols-1 items-start gap-12 px-8 pt-14 pb-18 md:grid-cols-[300px_1fr]">
+    <Container className="grid grid-cols-1 items-start gap-12 pt-14 pb-18 md:grid-cols-[300px_1fr]">
       {/* Sticky only once there is a column to be sticky in. */}
       <aside className="flex flex-col gap-3.5 md:sticky md:top-6">
         <Card className="flex flex-col items-start gap-3.5">
@@ -79,6 +79,6 @@ export default function About() {
           too, that makes me happy. I hope it does.
         </p>
       </main>
-    </div>
+    </Container>
   );
 }

@@ -46,8 +46,8 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      # The job runs on the plain ubuntu runner (node, pnpm, docker are all there). Nx
-      # and the executor run on the runner; the executor then starts the pinned trivy
+      # The job runs on the plain ubuntu runner (node, pnpm and docker are all there).
+      # Nx and the executor run on the runner; the executor then starts the pinned trivy
       # CONTAINER for the scan itself. The `ci` configuration is what forces that, so a
       # result never depends on whichever trivy a runner happens to ship.
       #
@@ -55,38 +55,70 @@ jobs:
       # would run inside that image, which has no node and no pnpm, and nx could not
       # start at all.
       #
-      # The DB is NOT cached, and the reason is the DB's SHELF LIFE, not its size.
-      #
-      # Size was the obvious objection and it is wrong: 1.1 GB on disk, but 70 MB packed
-      # with zstd — which is what actions/cache stores. Caching it is perfectly feasible.
-      #
-      # It expires in 21 hours (metadata.json: DownloadedAt -> NextUpdate). Our runs are
-      # a WEEK apart. So a restored cache would always hold a stale DB, trivy would throw
-      # it away and pull the fresh 100 MB layer anyway, and then we would upload another
-      # 70 MB for next time: +140 MB of transfer and three extra steps, for nothing.
-      #
-      # It is also not incremental, and cannot be: the DB is a single blob shipped as one
-      # OCI layer. There is no delta protocol to exploit.
-      #
-      # A cache would pay off only with several runs inside the same day — which these
-      # triggers, by design, do not produce.
+      # The DB is NOT cached, and the reason is its SHELF LIFE, not its size. Size was
+      # the obvious objection and it is wrong: 1.1 GB on disk, but 70 MB packed with
+      # zstd, which is what actions/cache stores. It expires in 21 hours, and these runs
+      # are a WEEK apart — so a restored cache would always be stale, trivy would throw
+      # it away and pull the fresh 100 MB layer anyway, and we would upload another
+      # 70 MB for next time. It is not incremental either, and cannot be: the DB is a
+      # single blob shipped as one OCI layer. Verified, not assumed.
       - name: Scan
         run: pnpm nx run @dev-blog/security:scan:ci
 
-      # Only on the schedule, and only when it broke: a PR already shows a red check,
-      # and a message that arrives every week regardless is a message nobody opens.
+      # Only on the schedule, and only when it broke: a PR already shows a red check, and
+      # a message that arrives every week regardless is a message nobody opens.
+      #
+      # chat.postMessage, not an incoming webhook: a webhook is welded to one channel for
+      # good, while a bot token can be pointed anywhere by changing a variable. And a
+      # plain curl rather than a Slack action — one less third party inside a job whose
+      # entire purpose is to police third parties.
       - name: Tell Slack
         if: failure() && github.event_name == 'schedule'
         env:
-          WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          CHANNEL: ${{ secrets.SLACK_CHANNEL_ID }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
-          if [ -z "$WEBHOOK" ]; then
-            echo "No SLACK_WEBHOOK_URL secret — skipping the notification."
+          if [ -z "$TOKEN" ] || [ -z "$CHANNEL" ]; then
+            echo "SLACK_BOT_TOKEN or SLACK_CHANNEL_ID is not set — skipping."
             exit 0
           fi
-          RUN="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
-          curl -sS -X POST -H 'Content-type: application/json' --data @- "$WEBHOOK" <<EOF
-          {
-            "text": ":rotating_light: dev-blog — the weekly security scan went red.\nNothing was committed: a CVE was published against a dependency that was already there.\n<$RUN|See the run>"
-          }
-          EOF
+
+          PAYLOAD=$(jq -n --arg channel "$CHANNEL" --arg url "$RUN_URL" '{
+            channel: $channel,
+            text: "The weekly security scan went red",
+            blocks: [
+              {
+                type: "section",
+                text: {
+                  type: "mrkdwn",
+                  text: ":rotating_light: *The weekly security scan went red.*\n\nNothing was committed. A CVE was published against a dependency that was already there — which is the one thing only this scan can catch."
+                }
+              },
+              {
+                type: "actions",
+                elements: [
+                  {
+                    type: "button",
+                    text: { type: "plain_text", text: "See the run" },
+                    url: $url
+                  }
+                ]
+              }
+            ]
+          }')
+
+          RESPONSE=$(curl -sS -X POST https://slack.com/api/chat.postMessage \
+            -H "Authorization: Bearer $TOKEN" \
+            -H 'Content-type: application/json; charset=utf-8' \
+            --data "$PAYLOAD")
+
+          # Slack answers 200 even when it refuses — the truth is in `ok`. A curl that
+          # "succeeded" while the message went nowhere is exactly the silent failure this
+          # repository keeps finding.
+          if [ "$(printf '%s' "$RESPONSE" | jq -r '.ok')" != "true" ]; then
+            echo "Slack refused it: $(printf '%s' "$RESPONSE" | jq -r '.error')"
+            exit 1
+          fi
+
+          echo "Posted to Slack."

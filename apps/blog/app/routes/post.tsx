@@ -1,4 +1,4 @@
-import { Avatar, Card, Link, Prose, ShareBar } from '@dev-blog/ui';
+import { Avatar, Card, Container, Link, Prose, ShareBar } from '@dev-blog/ui';
 import { useLoaderData, type LoaderFunctionArgs } from 'react-router';
 
 import { SectionHeading } from '../components/section-heading';
@@ -74,7 +74,7 @@ export default function Post() {
 
   return (
     // Phone: one column. From `md` the table of contents becomes a right rail.
-    <div className="mx-auto grid w-full max-w-content grid-cols-1 items-start gap-12 px-8 pt-10 pb-18 md:grid-cols-[1fr_260px]">
+    <Container className="grid grid-cols-1 items-start gap-12 pt-10 pb-18 md:grid-cols-[1fr_260px]">
       <article className="min-w-0 max-w-measure">
         <Link
           to="/blog"
@@ -175,6 +175,6 @@ export default function Post() {
           ))}
         </nav>
       </aside>
-    </div>
+    </Container>
   );
 }

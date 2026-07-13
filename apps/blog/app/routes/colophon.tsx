@@ -1,4 +1,4 @@
-import { Link } from '@dev-blog/ui';
+import { Container, Link } from '@dev-blog/ui';
 
 import { SectionHeading } from '../components/section-heading';
 import { originFromMatches, seoMeta } from '../lib/seo';
@@ -45,7 +45,7 @@ function Rows({ rows }: { rows: Row[] }) {
 
 export default function Colophon() {
   return (
-    <main className="mx-auto w-full max-w-measure px-8 pt-14 pb-18">
+    <Container as="main" width="measure" className="pt-14 pb-18">
       <h1 className="mb-3.5 text-[clamp(1.875rem,4vw,2.75rem)] leading-tight font-bold tracking-[-0.03em]">
         Colophon
       </h1>
@@ -154,6 +154,6 @@ export default function Colophon() {
       <p className="rounded-e-lg border-s-[3px] border-primary bg-card px-6 py-4 text-sm text-muted-foreground">
         No analytics, no cookies, no tracking.
       </p>
-    </main>
+    </Container>
   );
 }
