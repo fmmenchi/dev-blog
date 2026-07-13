@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/schema",
+  "version": 2,
+  "title": "Slack notification",
+  "description": "Tells Slack that something went red. Secrets come from the environment (SLACK_BOT_TOKEN, SLACK_CHANNEL_ID), never from options — an option ends up in the project graph, and a token must not.",
+  "type": "object",
+  "properties": {
+    "message": {
+      "type": "string",
+      "description": "What went wrong, in plain language. Doubles as the notification's fallback text, which is what a phone actually shows."
+    }
+  },
+  "required": ["message"]
+}

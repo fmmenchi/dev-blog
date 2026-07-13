@@ -68,57 +68,14 @@ jobs:
       # Only on the schedule, and only when it broke: a PR already shows a red check, and
       # a message that arrives every week regardless is a message nobody opens.
       #
-      # chat.postMessage, not an incoming webhook: a webhook is welded to one channel for
-      # good, while a bot token can be pointed anywhere by changing a variable. And a
-      # plain curl rather than a Slack action — one less third party inside a job whose
-      # entire purpose is to police third parties.
+      # The message is built and sent in TypeScript (@dev-blog/notify, called through the
+      # plugin's `notify` executor), not in curl and jq here. The failure that actually
+      # happens — Slack answering 200 while REFUSING the message — is testable, and a
+      # shell script is not. Missing secrets skip the step rather than failing it.
       - name: Tell Slack
         if: failure() && github.event_name == 'schedule'
         env:
-          TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-          CHANNEL: ${{ secrets.SLACK_CHANNEL_ID }}
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          SLACK_CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        run: |
-          if [ -z "$TOKEN" ] || [ -z "$CHANNEL" ]; then
-            echo "SLACK_BOT_TOKEN or SLACK_CHANNEL_ID is not set — skipping."
-            exit 0
-          fi
-
-          PAYLOAD=$(jq -n --arg channel "$CHANNEL" --arg url "$RUN_URL" '{
-            channel: $channel,
-            text: "The weekly security scan went red",
-            blocks: [
-              {
-                type: "section",
-                text: {
-                  type: "mrkdwn",
-                  text: ":rotating_light: *The weekly security scan went red.*\n\nNothing was committed. A CVE was published against a dependency that was already there — which is the one thing only this scan can catch."
-                }
-              },
-              {
-                type: "actions",
-                elements: [
-                  {
-                    type: "button",
-                    text: { type: "plain_text", text: "See the run" },
-                    url: $url
-                  }
-                ]
-              }
-            ]
-          }')
-
-          RESPONSE=$(curl -sS -X POST https://slack.com/api/chat.postMessage \
-            -H "Authorization: Bearer $TOKEN" \
-            -H 'Content-type: application/json; charset=utf-8' \
-            --data "$PAYLOAD")
-
-          # Slack answers 200 even when it refuses — the truth is in `ok`. A curl that
-          # "succeeded" while the message went nowhere is exactly the silent failure this
-          # repository keeps finding.
-          if [ "$(printf '%s' "$RESPONSE" | jq -r '.ok')" != "true" ]; then
-            echo "Slack refused it: $(printf '%s' "$RESPONSE" | jq -r '.error')"
-            exit 1
-          fi
-
-          echo "Posted to Slack."
+        run: pnpm nx run @dev-blog/security:notify

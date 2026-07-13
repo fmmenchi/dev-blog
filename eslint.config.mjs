@@ -45,6 +45,18 @@ export default [
               onlyDependOnLibsWithTags: [],
             },
             {
+              // Build/CI tooling (the Nx plugins) may use the shared utilities, and
+              // nothing of the app: a plugin that imported a component would mean the
+              // build depended on the thing it builds.
+              sourceTag: 'type:tooling',
+              onlyDependOnLibsWithTags: ['type:util', 'type:tooling'],
+            },
+            {
+              // Utilities are leaves too — that is what makes them shareable.
+              sourceTag: 'type:util',
+              onlyDependOnLibsWithTags: ['type:util'],
+            },
+            {
               sourceTag: 'type:theme',
               onlyDependOnLibsWithTags: ['type:theme'],
             },

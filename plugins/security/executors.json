@@ -4,6 +4,11 @@
       "implementation": "./src/executors/trivy/executor",
       "schema": "./src/executors/trivy/schema.json",
       "description": "Scan the workspace for known vulnerabilities and committed secrets."
+    },
+    "notify": {
+      "implementation": "./src/executors/notify/executor",
+      "schema": "./src/executors/notify/schema.json",
+      "description": "Tell Slack that a scheduled scan went red."
     }
   }
 }
