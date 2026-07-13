@@ -2,8 +2,14 @@ import type { ExecutorContext, PromiseExecutor } from '@nx/devkit';
 import { createProjectGraphAsync } from '@nx/devkit';
 import { createLockFile, createPackageJson, getLockFileName } from '@nx/js';
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import {
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs';
+import { homedir, tmpdir } from 'node:os';
 import { join } from 'node:path';
 
 import type { TrivyExecutorSchema } from './schema';
@@ -11,8 +17,17 @@ import type { TrivyExecutorSchema } from './schema';
 /** Pinned: a scan whose tool changes underneath you is not a baseline. */
 const IMAGE = 'aquasec/trivy:0.72.0';
 
-/** Trivy's vulnerability DB. Without a cache, every run re-downloads it. */
-const CACHE_VOLUME = 'dev-blog-trivy-cache';
+/**
+ * Where Trivy keeps its vulnerability database (~40 MB, re-downloaded without it).
+ *
+ * A HOST directory, not a Docker named volume, and the choice matters twice. It is
+ * trivy's own default cache path, so a locally installed binary and the container share
+ * one database. And CI can persist it with actions/cache — a named volume lives inside
+ * Docker (/var/lib/docker/volumes/…), where actions/cache cannot see it: the cache step
+ * would have run green and saved nothing, and the DB would have been re-downloaded on
+ * every run forever.
+ */
+const CACHE_DIR = join(homedir(), '.cache', 'trivy');
 
 const has = (command: string) =>
   spawnSync('command', ['-v', command], { shell: true, stdio: 'ignore' })
@@ -151,16 +166,15 @@ const runExecutor: PromiseExecutor<TrivyExecutorSchema> = async (
      * commit would pass today and fail next month for no reason of ours.
      */
     console.log(`Running ${IMAGE} through Docker.\n`);
+    mkdirSync(CACHE_DIR, { recursive: true });
     command = 'docker';
     commandArgs = [
       'run',
       '--rm',
       '-v',
       `${target}:/repo`,
-      /* A named volume, not a bind mount: the DB survives between runs and belongs to
-         Docker rather than to the repository. */
       '-v',
-      `${CACHE_VOLUME}:/root/.cache/trivy`,
+      `${CACHE_DIR}:/root/.cache/trivy`,
       '-w',
       '/repo',
       IMAGE,

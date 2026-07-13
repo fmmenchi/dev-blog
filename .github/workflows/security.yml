@@ -46,21 +46,19 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      # Trivy's DB is ~40 MB and it is re-downloaded on every cold runner. Keeping it
-      # takes the scan from ~12s to ~2s.
-      - name: Cache the vulnerability database
-        uses: actions/cache@v6
-        with:
-          path: ~/.cache/trivy
-          key: trivy-db-${{ github.run_id }}
-          restore-keys: trivy-db-
-
-      # The `ci` configuration forces the pinned Docker image, so the result never
-      # depends on whichever trivy a runner happens to ship. The image, the severities
-      # and what gets scanned all live in the executor — not duplicated here, where they
-      # would drift.
+      # The job runs on the plain ubuntu runner (node, pnpm, docker are all there). Nx
+      # and the executor run on the runner; the executor then starts the pinned trivy
+      # CONTAINER for the scan itself. The `ci` configuration is what forces that, so a
+      # result never depends on whichever trivy a runner happens to ship.
+      #
+      # `container: aquasec/trivy` at job level would be the wrong shape: every step
+      # would run inside that image, which has no node and no pnpm, and nx could not
+      # start at all.
+      #
+      # The DB is NOT cached, deliberately. It is a single 1.1 GB file: saving and
+      # restoring it through actions/cache costs more than the ~12s trivy takes to
+      # download it compressed. A cache step that makes CI slower is worse than none.
       - name: Scan
-        id: scan
         run: pnpm nx run @dev-blog/security:scan:ci
 
       # Only on the schedule, and only when it broke: a PR already shows a red check,
