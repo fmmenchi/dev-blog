@@ -8,6 +8,7 @@ import { ServerRouter } from 'react-router';
 import { isbot } from 'isbot';
 import { renderToReadableStream } from 'react-dom/server';
 
+import { NonceContext } from './lib/nonce';
 import { makeNonce, securityHeaders } from './lib/security';
 
 export default async function handleRequest(
@@ -30,7 +31,11 @@ export default async function handleRequest(
   const nonce = makeNonce();
 
   const body = await renderToReadableStream(
-    <ServerRouter context={routerContext} url={request.url} nonce={nonce} />,
+    /* The prop covers React Router's own inline scripts; the context lets root.tsx
+       stamp the same nonce on the one it writes itself. */
+    <NonceContext.Provider value={nonce}>
+      <ServerRouter context={routerContext} url={request.url} nonce={nonce} />
+    </NonceContext.Provider>,
     {
       onError(error: unknown) {
         responseStatusCode = 500;

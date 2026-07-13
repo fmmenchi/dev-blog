@@ -20,10 +20,17 @@ import {
  * visitor's IP went to Google twice just to render the text saying so.
  */
 import themeStylesheetUrl from '@dev-blog/theme/styles/tailwind.css?url';
-import { Button, Link, RouteErrorBoundary } from '@dev-blog/ui';
+import {
+  ACCENT_STORAGE_KEY,
+  ACCENTS,
+  Button,
+  Link,
+  RouteErrorBoundary,
+} from '@dev-blog/ui';
 
 import { SiteFooter } from './components/site-footer';
 import { SiteHeader } from './components/site-header';
+import { useNonce } from './lib/nonce';
 import { seoMeta } from './lib/seo';
 import { SITE_NAME, SITE_URL } from './lib/site';
 
@@ -80,7 +87,30 @@ export const links: LinksFunction = () => [
   },
 ];
 
+/*
+ * Applies the visitor's saved accent BEFORE the first paint.
+ *
+ * The server cannot know it. It is in localStorage — not a cookie, because /colophon
+ * promises there are none, and a promise the site quietly breaks is worse than a
+ * feature it does not have. So the HTML always leaves the server saying `yellow`, and
+ * without this script the page painted yellow and only became lime once React had
+ * hydrated: a visible flash, on every page, for anyone who ever changed the accent.
+ *
+ * It is inline and synchronous on purpose — that is what makes it run before the body
+ * is painted. A deferred or external script is too late by definition.
+ *
+ * The key and the names come from the design system, not from a copy: two spellings of
+ * 'fabio-accent' would be one rename away from a silent bug.
+ */
+const APPLY_SAVED_ACCENT = `try{var a=localStorage.getItem(${JSON.stringify(
+  ACCENT_STORAGE_KEY,
+)});if(${JSON.stringify([
+  ...ACCENTS,
+])}.indexOf(a)>0)document.documentElement.dataset.accent=a}catch(e){}`;
+
 export function Layout({ children }: { children: React.ReactNode }) {
+  const nonce = useNonce();
+
   return (
     <html lang="en" data-accent="yellow">
       <head>
@@ -93,6 +123,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
         */}
         <meta name="theme-color" content="#121921" />
         <meta name="color-scheme" content="dark" />
+        {/* Carries the response's nonce: the CSP allows no other inline script. */}
+        <script
+          nonce={nonce}
+          dangerouslySetInnerHTML={{ __html: APPLY_SAVED_ACCENT }}
+        />
         <Meta />
         <Links />
       </head>
