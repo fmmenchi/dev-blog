@@ -1,0 +1,34 @@
+# Cache policy for the static assets, read by Cloudflare Workers Assets.
+#
+# This file is copied verbatim into build/client, which IS the assets directory
+# ("assets": { "directory": "../client" } in the wrangler config the build emits).
+# Without it every asset is served with the Workers Assets default —
+# `public, max-age=0, must-revalidate` — so the browser revalidates every script,
+# stylesheet and font on every single visit. The edge answers HIT, so it costs no
+# origin, but it costs the visitor a round trip per file, on the critical path.
+
+# Content-hashed by Vite: the name changes whenever the bytes do, so the bytes
+# behind a given name can never change. A year, immutable, no revalidation.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# NOT content-hashed, on purpose: .agent/performance.md keeps the fonts under
+# public/ precisely so their URLs stay stable across builds. Stable + immutable is
+# what makes a returning visitor pay nothing for them — but it also means that
+# CHANGING A FONT REQUIRES A NEW FILENAME. Regenerate the subset, rename the file,
+# update fonts.css. Overwriting in place leaves returning visitors on the old one
+# for a year.
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Stable names too, but these are content, not code — an OG image gets redrawn and
+# must not be frozen for a year. A day is plenty: crawlers refetch, and a stale
+# preview card is the whole cost of being wrong.
+/og/*
+  Cache-Control: public, max-age=86400
+/og.png
+  Cache-Control: public, max-age=86400
+/favicon.svg
+  Cache-Control: public, max-age=86400
+/apple-touch-icon.png
+  Cache-Control: public, max-age=86400

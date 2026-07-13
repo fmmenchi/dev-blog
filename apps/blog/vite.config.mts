@@ -156,13 +156,35 @@ export default defineConfig(() => ({
       }),
     !process.env.VITEST && reactRouter(),
   ],
-  // Uncomment this if you are using workers.
-  // worker: {
-  //  plugins: [],
-  // },
+  /*
+   * Source maps for the WORKER ONLY — never for the client.
+   *
+   * `wrangler.jsonc` has had `upload_source_maps: true` and `observability` on from the
+   * start, but nothing ever emitted a map, so the flag uploaded nothing. Note what this
+   * does and does not buy: vite does NOT minify an SSR build, so the worker was never
+   * unreadable — a stack trace just pointed INTO THE BUNDLE, `server-build-<hash>.js`
+   * at line 10924 of 572 kB. The map is what turns that back into `app/routes/about.tsx`
+   * at line 36.
+   *
+   * It has to be scoped to the `ssr` environment (the one the Cloudflare plugin bundles
+   * into the Worker). A plain top-level `build.sourcemap` would also emit maps for the
+   * client — and THAT bundle is minified, and its maps land in `build/client/assets/`,
+   * i.e. they ship as public static assets. Wrangler instead uploads the server map
+   * privately, to Cloudflare, where only observability reads it.
+   *
+   * Turning this on makes rolldown warn SOURCEMAP_BROKEN for `vite:css-post`, which
+   * rewrites the three CSS imports into JS stubs without emitting a map of its own. It
+   * is confined to those stubs: every app source in the map resolves to the exact
+   * original file, line and column. Nothing throws from inside a CSS stub.
+   */
+  environments: {
+    ssr: {
+      build: {
+        sourcemap: true,
+      },
+    },
+  },
   build: {
-    outDir: './dist',
-    emptyOutDir: true,
     reportCompressedSize: true,
     commonjsOptions: {
       transformMixedEsModules: true,
