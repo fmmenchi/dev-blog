@@ -39,9 +39,13 @@ describe('Colophon', () => {
    * not about this component, and it is answered by looking at what a real browser is
    * left holding after a real visit.
    */
-  it('states the privacy promise and names who collects the data', () => {
+  it('names everything the site keeps, and who collects it', () => {
     renderPage();
-    expect(screen.getByText(/No cookies, no consent banner/)).toBeTruthy();
-    expect(screen.getByText(/Cloudflare\s+Web\s+Analytics/)).toBeTruthy();
+    const promise = screen.getByText(/No cookies, and no consent banner/);
+
+    /* The accent lives in localStorage. A privacy note that does not mention the one
+       thing the site writes to your device is the note we already shipped twice. */
+    expect(promise.textContent).toMatch(/the accent you picked/);
+    expect(promise.textContent).toMatch(/Cloudflare Web Analytics/);
   });
 });

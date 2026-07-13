@@ -91,11 +91,18 @@ export const links: LinksFunction = () => [
 /*
  * Applies the visitor's saved accent BEFORE the first paint.
  *
- * The server cannot know it. It is in localStorage — not a cookie, because /colophon
- * promises there are none, and a promise the site quietly breaks is worse than a
- * feature it does not have. So the HTML always leaves the server saying `yellow`, and
- * without this script the page painted yellow and only became lime once React had
- * hydrated: a visible flash, on every page, for anyone who ever changed the accent.
+ * The server cannot know it. It is in localStorage, which /colophon now says out loud:
+ * the accent is the one thing this site puts on your device.
+ *
+ * This comment used to justify the choice differently — localStorage "because /colophon
+ * promises there are no cookies". That was picking the storage that let the sentence
+ * stay technically true, which is lawyering, and the sentence has since been rewritten
+ * to say what is actually stored. localStorage is still right here, for the ordinary
+ * reason: a preference the server never needs does not belong on every request.
+ *
+ * So the HTML always leaves the server saying `yellow`, and without this script the page
+ * painted yellow and only became lime once React had hydrated: a visible flash, on every
+ * page, for anyone who ever changed the accent.
  *
  * It is inline and synchronous on purpose — that is what makes it run before the body
  * is painted. A deferred or external script is too late by definition.
