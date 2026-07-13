@@ -100,7 +100,14 @@ export default function Post() {
 
   return (
     // Phone: one column. From `md` the table of contents becomes a right rail.
-    <Container className="grid grid-cols-1 items-start gap-12 pt-10 pb-18 md:grid-cols-[1fr_260px]">
+    /* `main`, like every other route. The post was the ONE page without the landmark,
+       so a screen-reader user navigating by landmarks had no way into the article — and
+       the axe sweep never said a word, because `landmark-one-main` is a best-practice
+       rule and the sweep only asked for WCAG A/AA. It asks for both now. */
+    <Container
+      as="main"
+      className="grid grid-cols-1 items-start gap-12 pt-10 pb-18 md:grid-cols-[1fr_260px]"
+    >
       <article className="min-w-0 max-w-measure">
         <Link
           to="/blog"
