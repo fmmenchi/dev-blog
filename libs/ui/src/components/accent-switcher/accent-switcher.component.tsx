@@ -24,6 +24,37 @@ function isAccent(value: string | null): value is Accent {
 }
 
 /**
+ * Repaint the favicon in the current accent.
+ *
+ * A favicon cannot do this itself. The browser renders it in an isolated image
+ * context: it never sees the page's DOM, so `data-accent` and our custom
+ * properties are invisible to it, and scripts inside a favicon SVG are disabled.
+ * An SVG favicon CAN follow `prefers-color-scheme` — the OS theme — but not a
+ * site-level accent. So the only way is from the outside: rebuild the icon and
+ * swap the <link>.
+ *
+ * The colours are read from the live computed styles rather than hardcoded, so
+ * this cannot drift from the theme — the fourth rule of this codebase, learned
+ * expensively.
+ */
+function paintFavicon() {
+  const styles = getComputedStyle(document.documentElement);
+  const fill = styles.getPropertyValue('--color-primary').trim();
+  const background = styles.getPropertyValue('--color-background').trim();
+  if (!fill || !background) return;
+
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="${background}"/><text x="32" y="46" font-family="'JetBrains Mono', ui-monospace, monospace" font-weight="700" font-size="42" text-anchor="middle" fill="${fill}">F</text></svg>`;
+
+  const link =
+    document.querySelector<HTMLLinkElement>('link[rel="icon"]') ??
+    document.head.appendChild(
+      Object.assign(document.createElement('link'), { rel: 'icon' }),
+    );
+  link.type = 'image/svg+xml';
+  link.href = `data:image/svg+xml,${encodeURIComponent(svg)}`;
+}
+
+/**
  * Cycles the site accent (yellow → lime → amber), persisted per visitor.
  *
  * Deliberately NOT a Radix ToggleGroup: the design calls for a single chip that
@@ -43,6 +74,7 @@ export function AccentSwitcher({ className }: { className?: string }) {
 
   useEffect(() => {
     document.documentElement.dataset['accent'] = accent;
+    paintFavicon();
   }, [accent]);
 
   const next = ACCENTS[(ACCENTS.indexOf(accent) + 1) % ACCENTS.length];

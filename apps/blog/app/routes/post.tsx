@@ -72,8 +72,8 @@ export default function Post() {
 
   return (
     // Phone: one column. From `md` the table of contents becomes a right rail.
-    <div className="mx-auto grid w-full max-w-[var(--layout-content-width)] grid-cols-1 items-start gap-12 px-8 pt-10 pb-18 md:grid-cols-[1fr_260px]">
-      <article className="min-w-0 max-w-[var(--layout-prose-width)]">
+    <div className="mx-auto grid w-full max-w-content grid-cols-1 items-start gap-12 px-8 pt-10 pb-18 md:grid-cols-[1fr_260px]">
+      <article className="min-w-0 max-w-measure">
         <Link
           to="/blog"
           variant="plain"
@@ -110,7 +110,7 @@ export default function Post() {
         {/* The first post has no siblings: an empty nav landmark helps nobody. */}
         {prev || next ? (
           <nav
-            aria-label="More articles"
+            aria-label="More posts"
             className="mt-4 grid grid-cols-2 gap-3.5"
           >
             {prev ? (

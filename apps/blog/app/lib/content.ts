@@ -30,13 +30,16 @@ export interface Social {
 }
 
 /** The one list of places to find Fabio: the footer and both profile cards read it. */
+/** Written once. Anything that needs a mailto builds it from here. */
+export const email = 'f.menchicchi@gmail.com';
+
 export const socials: Social[] = [
   { label: 'github', href: 'https://github.com/fmmenchi' },
   {
     label: 'linkedin',
     href: 'https://www.linkedin.com/in/fabio-menchicchi-055a36176/',
   },
-  { label: 'mail', href: 'mailto:f.menchicchi@gmail.com' },
+  { label: 'mail', href: `mailto:${email}` },
 ];
 
 export const profile = {

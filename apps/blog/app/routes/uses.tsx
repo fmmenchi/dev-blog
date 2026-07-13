@@ -45,7 +45,7 @@ function Rows({ rows }: { rows: Row[] }) {
 
 export default function Uses() {
   return (
-    <main className="mx-auto w-full max-w-[var(--layout-prose-width)] px-8 pt-14 pb-18">
+    <main className="mx-auto w-full max-w-measure px-8 pt-14 pb-18">
       <h1 className="mb-3.5 text-[clamp(1.875rem,4vw,2.75rem)] leading-tight font-bold tracking-[-0.03em]">
         Uses
       </h1>
