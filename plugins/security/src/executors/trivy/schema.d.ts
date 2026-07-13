@@ -5,6 +5,10 @@ export interface TrivyExecutorSchema {
   includeDevDeps?: boolean;
   skipDirs?: string[];
   runner?: 'auto' | 'docker' | 'binary';
-  /** Scan what this app ships, rather than the workspace toolbox. */
-  project?: string;
+  /**
+   * Which app's shipped tree to scan. Defaults to the project the task runs on, so
+   * `nx run blog:vuln` needs no options. Pass `null` to scan the real workspace tree
+   * instead — a secret is a secret wherever it sits.
+   */
+  project?: string | null;
 }

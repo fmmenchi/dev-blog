@@ -42,25 +42,6 @@
           ]
         }
       },
-      "vuln": {
-        "executor": "@dev-blog/security:trivy",
-        "cache": true,
-        "inputs": [
-          "{workspaceRoot}/pnpm-lock.yaml",
-          "{workspaceRoot}/apps/blog/package.json"
-        ],
-        "options": {
-          "project": "blog",
-          "scanners": [
-            "vuln"
-          ]
-        },
-        "configurations": {
-          "ci": {
-            "runner": "docker"
-          }
-        }
-      },
       "secrets": {
         "executor": "@dev-blog/security:trivy",
         "cache": true,
@@ -71,7 +52,8 @@
         "options": {
           "scanners": [
             "secret"
-          ]
+          ],
+          "project": null
         },
         "configurations": {
           "ci": {
@@ -82,7 +64,12 @@
       "scan": {
         "executor": "nx:noop",
         "dependsOn": [
-          "vuln",
+          {
+            "projects": [
+              "blog"
+            ],
+            "target": "vuln"
+          },
           "secrets"
         ],
         "configurations": {

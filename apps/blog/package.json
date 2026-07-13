@@ -72,6 +72,24 @@
         "dependsOn": [
           "check-og"
         ]
+      },
+      "vuln": {
+        "executor": "@dev-blog/security:trivy",
+        "cache": true,
+        "inputs": [
+          "{workspaceRoot}/pnpm-lock.yaml",
+          "{projectRoot}/package.json"
+        ],
+        "options": {
+          "scanners": [
+            "vuln"
+          ]
+        },
+        "configurations": {
+          "ci": {
+            "runner": "docker"
+          }
+        }
       }
     }
   },

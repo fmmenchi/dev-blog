@@ -118,12 +118,18 @@ const runExecutor: PromiseExecutor<TrivyExecutorSchema> = async (
 
   const root = context.root;
 
-  /* When an app is named, the vulnerability scan looks at what that app SHIPS. */
-  const target = project ? await pruneToApp(project, root) : root;
+  /*
+   * The target defaults to the project the task runs on — `nx run blog:vuln` scans what
+   * the blog ships, with nothing to configure. Pass `project` only to scan one app from
+   * somewhere else; leave it null (the `secrets` target does) to scan the real tree.
+   */
+  const scope = project === null ? undefined : (project ?? context.projectName);
 
-  if (project) {
+  const target = scope ? await pruneToApp(scope, root) : root;
+
+  if (scope) {
     console.log(
-      `Scanning what "${project}" ships — its production dependency tree, not the workspace toolbox.\n`,
+      `Scanning what "${scope}" ships — its production dependency tree, not the workspace toolbox.\n`,
     );
   }
 
@@ -202,7 +208,7 @@ const runExecutor: PromiseExecutor<TrivyExecutorSchema> = async (
     const { status } = spawnSync(command, commandArgs, { stdio: 'inherit' });
     return { success: status === 0 };
   } finally {
-    if (project) rmSync(target, { force: true, recursive: true });
+    if (scope) rmSync(target, { force: true, recursive: true });
   }
 };
 
