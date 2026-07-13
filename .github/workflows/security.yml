@@ -25,6 +25,11 @@ on:
     # Monday 06:00 UTC. Early enough that a bad Monday is still a Monday.
     - cron: '0 6 * * 1'
   workflow_dispatch:
+    inputs:
+      test_notification:
+        description: 'Post a test message to Slack instead of scanning'
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -46,6 +51,20 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
+      # A notification you cannot test is a notification you do not have. Without this,
+      # the first time the Slack path runs for real is the Monday it matters — which is
+      # also the first time anyone discovers the bot was never invited to the channel.
+      #
+      # The message lives in the target's `test` configuration, not here: a Slack emoji
+      # is full of colons, and colons in a YAML `run:` are a mapping.
+      - name: Test the Slack wiring
+        if: inputs.test_notification
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          SLACK_CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: pnpm nx run @dev-blog/security:notify:test
+
       # The job runs on the plain ubuntu runner (node, pnpm and docker are all there).
       # Nx and the executor run on the runner; the executor then starts the pinned trivy
       # CONTAINER for the scan itself. The `ci` configuration is what forces that, so a
@@ -63,6 +82,7 @@ jobs:
       # 70 MB for next time. It is not incremental either, and cannot be: the DB is a
       # single blob shipped as one OCI layer. Verified, not assumed.
       - name: Scan
+        if: ${{ !inputs.test_notification }}
         run: pnpm nx run @dev-blog/security:scan:ci
 
       # Only on the schedule, and only when it broke: a PR already shows a red check, and

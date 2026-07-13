@@ -94,6 +94,11 @@
         "cache": false,
         "options": {
           "message": ":rotating_light: *The weekly security scan went red.*\n\nNothing was committed. A CVE was published against a dependency that was already there \u2014 which is the one thing only this scan can catch."
+        },
+        "configurations": {
+          "test": {
+            "message": ":white_check_mark: *Test message.* The security scan can reach this channel \u2014 so the day it goes red, this is where you will hear about it."
+          }
         }
       }
     },
