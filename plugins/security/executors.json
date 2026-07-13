@@ -1,0 +1,9 @@
+{
+  "executors": {
+    "trivy": {
+      "implementation": "./src/executors/trivy/executor",
+      "schema": "./src/executors/trivy/schema.json",
+      "description": "Scan the workspace for known vulnerabilities and committed secrets."
+    }
+  }
+}

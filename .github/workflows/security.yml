@@ -1,0 +1,82 @@
+name: Security
+
+# A vulnerability scan is not like a test. A test goes red because the CODE changed; a
+# scan goes red because the WORLD changed — a CVE was published against a dependency
+# nobody touched. So it runs on two triggers, and it needs both:
+#
+#   - when the dependencies change, because that is when WE introduce something;
+#   - every Monday, because that is when the world does.
+#
+# Running it on every push would tell us the same thing forty times a week and teach us
+# to stop reading it.
+on:
+  pull_request:
+    paths:
+      - 'pnpm-lock.yaml'
+      - '**/package.json'
+      - 'plugins/security/**'
+  push:
+    branches: [main]
+    paths:
+      - 'pnpm-lock.yaml'
+      - '**/package.json'
+      - 'plugins/security/**'
+  schedule:
+    # Monday 06:00 UTC. Early enough that a bad Monday is still a Monday.
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    name: Vulnerabilities & secrets
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: 'pnpm'
+
+      - run: pnpm install --frozen-lockfile
+
+      # Trivy's DB is ~40 MB and it is re-downloaded on every cold runner. Keeping it
+      # takes the scan from ~12s to ~2s.
+      - name: Cache the vulnerability database
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/trivy
+          key: trivy-db-${{ github.run_id }}
+          restore-keys: trivy-db-
+
+      # The `ci` configuration forces the pinned Docker image, so the result never
+      # depends on whichever trivy a runner happens to ship. The image, the severities
+      # and what gets scanned all live in the executor — not duplicated here, where they
+      # would drift.
+      - name: Scan
+        id: scan
+        run: pnpm nx run @dev-blog/security:scan:ci
+
+      # Only on the schedule, and only when it broke: a PR already shows a red check,
+      # and a message that arrives every week regardless is a message nobody opens.
+      - name: Tell Slack
+        if: failure() && github.event_name == 'schedule'
+        env:
+          WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          if [ -z "$WEBHOOK" ]; then
+            echo "No SLACK_WEBHOOK_URL secret — skipping the notification."
+            exit 0
+          fi
+          RUN="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          curl -sS -X POST -H 'Content-type: application/json' --data @- "$WEBHOOK" <<EOF
+          {
+            "text": ":rotating_light: dev-blog — the weekly security scan went red.\nNothing was committed: a CVE was published against a dependency that was already there.\n<$RUN|See the run>"
+          }
+          EOF

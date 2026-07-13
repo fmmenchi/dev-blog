@@ -1,0 +1,104 @@
+{
+  "name": "@dev-blog/security",
+  "version": "0.0.1",
+  "private": true,
+  "type": "commonjs",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "@dev-blog/source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "nx": {
+    "targets": {
+      "build": {
+        "executor": "@nx/js:tsc",
+        "outputs": [
+          "{options.outputPath}"
+        ],
+        "options": {
+          "outputPath": "plugins/security/dist",
+          "main": "plugins/security/src/index.ts",
+          "tsConfig": "plugins/security/tsconfig.lib.json",
+          "rootDir": "plugins/security/src",
+          "generatePackageJson": false,
+          "assets": [
+            {
+              "input": "./plugins/security/src",
+              "glob": "**/!(*.ts)",
+              "output": "."
+            },
+            {
+              "input": "./plugins/security/src",
+              "glob": "**/*.d.ts",
+              "output": "."
+            }
+          ]
+        }
+      },
+      "vuln": {
+        "executor": "@dev-blog/security:trivy",
+        "cache": true,
+        "inputs": [
+          "{workspaceRoot}/pnpm-lock.yaml",
+          "{workspaceRoot}/apps/blog/package.json"
+        ],
+        "options": {
+          "project": "blog",
+          "scanners": [
+            "vuln"
+          ]
+        },
+        "configurations": {
+          "ci": {
+            "runner": "docker"
+          }
+        }
+      },
+      "secrets": {
+        "executor": "@dev-blog/security:trivy",
+        "cache": true,
+        "inputs": [
+          "{workspaceRoot}/**/*",
+          "!{workspaceRoot}/node_modules/**/*"
+        ],
+        "options": {
+          "scanners": [
+            "secret"
+          ]
+        },
+        "configurations": {
+          "ci": {
+            "runner": "docker"
+          }
+        }
+      },
+      "scan": {
+        "executor": "nx:noop",
+        "dependsOn": [
+          "vuln",
+          "secrets"
+        ],
+        "configurations": {
+          "ci": {}
+        }
+      }
+    }
+  },
+  "dependencies": {
+    "@nx/devkit": "23.0.1",
+    "tslib": "^2.3.0"
+  },
+  "executors": "./executors.json",
+  "files": [
+    "dist",
+    "!**/*.tsbuildinfo",
+    "executors.json"
+  ]
+}
