@@ -1,0 +1,22 @@
+version: 2
+
+# Actions rot quietly. GitHub deprecated the Node 20 runtime, and the only reason we
+# noticed was a warning in a log — then, having just fixed it, a new workflow reached
+# for actions/cache@v4 (node20) and reintroduced it. A human reading a diff is not a
+# defence against a version number.
+#
+# Dependabot is. It would have raised both bumps on its own, and it is the only thing
+# here that keeps working when nobody is looking.
+updates:
+  - package-ecosystem: github-actions
+    directory: '/'
+    schedule:
+      interval: weekly
+      day: monday
+    # One PR that bumps everything, rather than four that each bump one line.
+    groups:
+      actions:
+        patterns: ['*']
+    commit-message:
+      prefix: ci
+    labels: ['dependencies']
