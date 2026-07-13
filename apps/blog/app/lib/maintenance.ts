@@ -6,6 +6,8 @@
  * or the "Maintenance" GitHub Actions workflow.
  */
 
+import { securityHeaders } from './security';
+
 interface MaintenanceKV {
   get(key: string): Promise<string | null>;
 }
@@ -57,6 +59,9 @@ export function maintenanceResponse(): Response {
       'Content-Type': 'text/html; charset=utf-8',
       'Retry-After': '600',
       'Cache-Control': 'no-store',
+      /* No nonce: this page runs no script, so it gets script-src 'none' — the
+         strongest policy there is, and the honest one for a page like this. */
+      ...securityHeaders(),
     },
   });
 }
