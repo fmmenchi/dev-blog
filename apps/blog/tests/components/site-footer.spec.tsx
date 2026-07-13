@@ -24,6 +24,20 @@ describe('SiteFooter', () => {
     expect(build.textContent).toContain(`v${version}`);
   });
 
+  it('says "built with love" out loud, and paints the heart with the accent', () => {
+    renderFooter();
+
+    /* A ♥ announces nothing on its own, so the word is spelled for screen readers
+       and hidden from everyone else. */
+    expect(screen.getByText('love').className).toContain('sr-only');
+
+    /* `text-primary`, not a colour: the heart follows whichever accent the reader
+       picked. An ❤️ emoji could not — a colour font is red and stays red. */
+    const heart = screen.getByText('♥');
+    expect(heart.className).toContain('text-primary');
+    expect(heart.getAttribute('aria-hidden')).toBe('true');
+  });
+
   it('links the secondary pages, and asks for the feed as a document', () => {
     renderFooter();
 

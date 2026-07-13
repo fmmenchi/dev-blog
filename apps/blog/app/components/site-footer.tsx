@@ -24,9 +24,25 @@ export function SiteFooter() {
         padding="bar"
         className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3 py-6 font-mono text-xs text-muted-foreground md:flex-nowrap"
       >
-        <span className="flex items-center gap-x-2">
+        <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
           © 2026 fabiomenchicchi.com
           {/* Decorative: a screen reader announcing "middle dot" helps nobody. */}
+          <span aria-hidden="true">·</span>
+          {/*
+           * `♥` the CHARACTER, not the ❤️ emoji: an emoji is a colour font, it is red
+           * and stays red. This one is `text-primary`, so it follows the accent the
+           * reader picked (yellow / lime / amber) without knowing the accent exists.
+           *
+           * A heart says nothing out loud, so the word is spelled for screen readers
+           * and hidden from everyone else: the line is announced "built with love".
+           */}
+          <span className="whitespace-nowrap">
+            built with{' '}
+            <span aria-hidden="true" className="text-primary">
+              ♥
+            </span>
+            <span className="sr-only">love</span>
+          </span>
           <span aria-hidden="true">·</span>
           {/*
            * Which build you are reading: the tag `nx release` cut, and the commit it
@@ -41,7 +57,13 @@ export function SiteFooter() {
           </span>
         </span>
 
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 md:gap-4.5">
+        {/*
+         * On a phone this group takes the whole row and pushes the icons to the far
+         * edge, so the words sit left and the icons right instead of trailing them in
+         * one loose left-aligned run. From `md` up the footer is a single line again
+         * and the group is just the right-hand end of it.
+         */}
+        <div className="flex w-full flex-wrap items-center justify-between gap-x-4 gap-y-2 md:w-auto md:justify-end md:gap-4.5">
           {/*
            * Two groups, because they are two different things: pages of this site,
            * and places I am elsewhere. They used to sit in one row of text links,
