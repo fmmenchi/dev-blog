@@ -9,23 +9,33 @@ function renderFooter() {
   return render(<Stub initialEntries={['/']} />);
 }
 
+/* `Footer` itself is covered in libs/ui. What is asserted here is the wiring: the
+   routes THIS site has, and the build IT was compiled from. */
 describe('SiteFooter', () => {
   it('shows the build it was compiled from', () => {
     renderFooter();
 
-    /* Not a hard-coded string: the version is whatever `define` inlined for THIS
-       build, and asserting a literal would just re-state the fixture. What has to
-       hold is that the footer prints it, and prints it as a version. */
+    /* Not a hard-coded string: the version is whatever `define` inlined for this
+       build, and asserting a literal would just re-state the fixture. */
     const { version } = getBuildInfo();
     expect(version).toBeTruthy();
 
-    const line = screen.getByText(/^© 2026 fabiomenchicchi\.com ·/);
-    expect(line.textContent).toContain(`v${version}`);
+    const build = screen.getByText(/^v\d/);
+    expect(build.textContent).toContain(`v${version}`);
   });
 
-  it('keeps the two link groups apart', () => {
+  it('links the secondary pages, and asks for the feed as a document', () => {
     renderFooter();
-    expect(screen.getByRole('navigation', { name: 'Secondary' })).toBeTruthy();
-    expect(screen.getByRole('navigation', { name: 'Social' })).toBeTruthy();
+
+    const nav = screen.getByRole('navigation', { name: 'Secondary' });
+    for (const label of ['rss', 'colophon', 'uses']) {
+      expect(screen.getByRole('link', { name: label })).toBeTruthy();
+    }
+    expect(nav.querySelectorAll('a')).toHaveLength(3);
+
+    /* A resource route: a document request, not a client navigation. */
+    expect(screen.getByRole('link', { name: 'rss' }).getAttribute('href')).toBe(
+      '/rss.xml',
+    );
   });
 });
