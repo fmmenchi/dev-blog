@@ -1,4 +1,4 @@
-import { Avatar, Card, Link, Prose } from '@dev-blog/ui';
+import { Avatar, Card, Link, Prose, ShareBar } from '@dev-blog/ui';
 import { useLoaderData, type LoaderFunctionArgs } from 'react-router';
 
 import { SectionHeading } from '../components/section-heading';
@@ -7,7 +7,7 @@ import { avatarSrc } from '../lib/avatar-image';
 import { renderMarkdown } from '../lib/markdown.server';
 import { getPost, getPosts } from '../lib/posts.server';
 import { originFromMatches, seoMeta } from '../lib/seo';
-import { SITE_NAME } from '../lib/site';
+import { SITE_NAME, SITE_URL } from '../lib/site';
 import styles from './post.module.css';
 
 export function loader({ params }: LoaderFunctionArgs) {
@@ -99,7 +99,16 @@ export default function Post() {
           dangerouslySetInnerHTML={{ __html: html }}
         />
 
-        <Card className="mt-11 flex items-center gap-4">
+        {/* At the END: the moment sharing becomes a thing anyone wants to do is the
+            moment they have finished reading. The url is the CANONICAL one, never the
+            host the page happens to be served from — nobody wants a localhost link. */}
+        <ShareBar
+          url={`${SITE_URL}/blog/${post.slug}`}
+          title={post.title}
+          className="mt-10"
+        />
+
+        <Card className="mt-7 flex items-center gap-4">
           <Avatar name={profile.name} src={avatarSrc} size={64} />
           <div className="flex-1">
             <p className="text-base font-bold">{profile.name}</p>
