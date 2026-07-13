@@ -26,6 +26,7 @@ pnpm install                 # install (workspace: apps/* + libs/*)
 pnpm nx dev blog             # dev server → http://localhost:4200
                              # (falls back to 4201 if 4200 is taken, e.g. by andes-routes)
 pnpm nx run-many -t lint test build typecheck lint-css   # full verification
+pnpm nx assess blog          # unlighthouse sweep of the production build (reports, no gate)
 pnpm cz                      # guided conventional commit (commitizen)
 ```
 
@@ -82,6 +83,9 @@ doc/                   # human reference (the "why")
 | [`.agent/architecture.md`](./.agent/architecture.md)   | adding routes/libs, changing deps, module boundaries, CI           |
 | [`.agent/design-system.md`](./.agent/design-system.md) | styling, theming, authoring/changing a component, any UI/a11y work |
 | [`.agent/seo.md`](./.agent/seo.md)                     | adding a route or a page, meta tags, sitemap, feeds, canonicals    |
+| [`.agent/assets.md`](./.agent/assets.md)               | images, icons (svgr codegen), fonts                                |
+| [`.agent/testing.md`](./.agent/testing.md)             | writing a test, where it belongs, the axe sweep, e2e               |
+| [`.agent/performance.md`](./.agent/performance.md)     | fonts, `root.tsx` links, bundle size, the critical path            |
 
 > `.agent/*` is documentation **for agents** (operational rules). `doc/*` is
 > human reference (rationale, onboarding) — read it only for the "why", never
