@@ -9,6 +9,7 @@
  * which of them Tailwind is allowed to generate classes for.
  */
 
+@import './fonts.css';
 @import './theme.css';
 @import 'tailwindcss';
 

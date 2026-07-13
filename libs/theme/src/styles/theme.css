@@ -79,9 +79,14 @@
   --leading-copy: 1.6;
   --leading-relaxed: 1.75;
 
+  /* The `… Variable` families are the self-hosted (Fontsource) ones; the plain
+     names stay behind them so a locally installed copy is still used. */
   --font-sans:
-    'Space Grotesk', ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    'Space Grotesk Variable', 'Space Grotesk Variable Fallback', ui-sans-serif,
+    system-ui, -apple-system, sans-serif;
+  --font-mono:
+    'JetBrains Mono Variable', 'JetBrains Mono Variable Fallback', ui-monospace,
+    SFMono-Regular, Menlo, monospace;
 
   /* Radius, motion */
   --radius-sm: 0.375rem;

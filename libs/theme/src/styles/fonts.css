@@ -1,0 +1,60 @@
+/*
+ * The fonts. Self-hosted, and deliberately NOT render-blocking.
+ *
+ * They used to come from Google. That cost two round trips against two new origins
+ * before the first pixel: a render-blocking stylesheet on fonts.googleapis.com,
+ * which the browser had to parse before it even learned the woff2 lived on
+ * fonts.gstatic.com. On a throttled phone the site took 4.6s to paint with zero
+ * blocking JavaScript — it was not slow, it was waiting for Google. It also made
+ * /colophon's "no tracking" promise untrue: every visitor's IP went to Google twice.
+ *
+ * `font-display: swap` means text paints IMMEDIATELY in a fallback and the real face
+ * swaps in when it arrives — nothing is ever invisible. The catch is that a naive
+ * fallback has different metrics, so the swap shifts the layout under the reader.
+ * Hence the `… Fallback` faces below: Arial, told to lie about its own ascent,
+ * descent and width so it occupies exactly the space the real font will. Text at
+ * once, and nothing moves.
+ *
+ * The override numbers are computed from the actual font files — regenerate with
+ * `node tools/font-metrics.mjs` if a font ever changes. Do not hand-tune them.
+ *
+ * The woff2 themselves are the latin subsets of the Fontsource variable builds
+ * (@fontsource-variable/space-grotesk, @fontsource-variable/jetbrains-mono),
+ * committed under apps/blog/public/fonts so their URLs are stable and cacheable
+ * rather than content-hashed on every build.
+ */
+
+@font-face {
+  font-family: 'Space Grotesk Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 300 700;
+  src: url('/fonts/space-grotesk-latin-wght-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 800;
+  src: url('/fonts/jetbrains-mono-latin-wght-normal.woff2') format('woff2');
+}
+
+/* Metric-adjusted fallbacks — see tools/font-metrics.mjs. CLS stays ~0. */
+@font-face {
+  font-family: 'Space Grotesk Variable Fallback';
+  src: local('Arial');
+  size-adjust: 126.6407%;
+  ascent-override: 77.7001%;
+  descent-override: 23.0574%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono Variable Fallback';
+  src: local('Arial');
+  size-adjust: 136.3823%;
+  ascent-override: 74.7898%;
+  descent-override: 21.997%;
+  line-gap-override: 0%;
+}

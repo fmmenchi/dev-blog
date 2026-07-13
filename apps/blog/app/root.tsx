@@ -7,6 +7,18 @@ import {
   type LinksFunction,
 } from 'react-router';
 
+/*
+ * The fonts are SELF-HOSTED, and that is a performance decision before it is a
+ * privacy one. They used to come from Google: a render-blocking stylesheet on
+ * fonts.googleapis.com, which the browser had to fetch (DNS + TLS + request) before
+ * it even learned that the actual woff2 lived on a SECOND origin, fonts.gstatic.com.
+ * Two full round trips against two new origins, all of it standing between the
+ * visitor and the first pixel — 4.6s to first paint on a throttled phone, with zero
+ * blocking JavaScript. The site was not slow; it was waiting for Google.
+ *
+ * It also settles a contradiction: /colophon promises no tracking, while every
+ * visitor's IP went to Google twice just to render the text saying so.
+ */
 import themeStylesheetUrl from '@dev-blog/theme/styles/tailwind.css?url';
 import { Button, Link, RouteErrorBoundary } from '@dev-blog/ui';
 
@@ -35,15 +47,22 @@ export const meta = ({
 
 export const links: LinksFunction = () => [
   { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
-  { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+  /*
+   * Only the SANS is preloaded, and only because it paints the headings. The mono
+   * face is deliberately NOT: it dresses small labels, and a preload is a
+   * high-priority fetch that would compete for bandwidth with the stylesheet standing
+   * between the visitor and the first pixel. Preloading everything preloads nothing —
+   * measured: preloading both cost ~0.3s of LCP against preloading just this one.
+   *
+   * crossOrigin is required on a font preload even same-origin, or the file is
+   * fetched twice. The @font-face lives in libs/theme/src/styles/fonts.css.
+   */
   {
-    rel: 'preconnect',
-    href: 'https://fonts.gstatic.com',
+    rel: 'preload',
+    as: 'font',
+    type: 'font/woff2',
+    href: '/fonts/space-grotesk-latin-wght-normal.woff2',
     crossOrigin: 'anonymous',
-  },
-  {
-    rel: 'stylesheet',
-    href: 'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap',
   },
   { rel: 'stylesheet', href: themeStylesheetUrl },
   {
