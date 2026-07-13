@@ -1,7 +1,11 @@
 import { Select, ToggleGroup, ToggleGroupItem } from '@dev-blog/ui';
 import { useSearchParams } from 'react-router';
 
-import { SORT_OPTIONS, type SortOrder } from '../lib/filters';
+import {
+  hasAnythingToFilter,
+  SORT_OPTIONS,
+  type SortOrder,
+} from '../lib/filters';
 
 export interface FilterBarProps {
   /** The query-string key the facets live under, e.g. `tag`. */
@@ -62,15 +66,8 @@ export function FilterBar({
     update(next);
   };
 
-  /*
-   * A control that cannot change anything is worse than no control: it advertises
-   * a capacity the page does not have, and a reader who clicks it and sees nothing
-   * happen concludes the site is broken.
-   *
-   * With one facet there is nothing to choose between, and with one item there is
-   * nothing to sort. The bar appears when it starts doing work.
-   */
-  if (facets.length < 2 || itemCount < 2) return null;
+  /* Also checked by the caller before it loads this chunk — see filter-bar.lazy. */
+  if (!hasAnythingToFilter(facets, itemCount)) return null;
 
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">

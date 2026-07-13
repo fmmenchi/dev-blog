@@ -1,7 +1,7 @@
 import { Card, EmptyState, Link } from '@dev-blog/ui';
 import { useLoaderData, type LoaderFunctionArgs } from 'react-router';
 
-import { FilterBar } from '../components/filter-bar';
+import { FilterBar } from '../components/filter-bar.lazy';
 import { byPeriod, facetsOf, matchesAny, readFilters } from '../lib/filters';
 
 import { projects } from '../lib/content';

@@ -1,7 +1,7 @@
 import { Badge, Card, EmptyState, Link } from '@dev-blog/ui';
 import { useLoaderData, type LoaderFunctionArgs } from 'react-router';
 
-import { FilterBar } from '../components/filter-bar';
+import { FilterBar } from '../components/filter-bar.lazy';
 import { byDate, facetsOf, matchesAny, readFilters } from '../lib/filters';
 import { getPosts } from '../lib/posts.server';
 import { originFromMatches, seoMeta } from '../lib/seo';

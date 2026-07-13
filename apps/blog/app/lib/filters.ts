@@ -66,3 +66,22 @@ export const SORT_OPTIONS = [
   { value: 'newest', label: 'newest first' },
   { value: 'oldest', label: 'oldest first' },
 ];
+
+/**
+ * Is there anything here worth a filter bar?
+ *
+ * Below two facets there is nothing to choose between, and below two items nothing to
+ * sort. A control that cannot change anything is worse than no control: it advertises
+ * a capacity the page does not have, and a reader who clicks it and sees nothing
+ * happen concludes the site is broken.
+ *
+ * It lives here, and not only inside the component, so the caller can answer the
+ * question WITHOUT loading it — the bar is code-split, and there is no sense fetching
+ * a chunk to be told it renders nothing.
+ */
+export function hasAnythingToFilter(
+  facets: string[],
+  itemCount: number,
+): boolean {
+  return facets.length >= 2 && itemCount >= 2;
+}
