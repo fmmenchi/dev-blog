@@ -14,11 +14,9 @@ import sharedChunk from '../../app/images/shared-chunk.png?w=760;1520&format=avi
 
 I rebuilt this site over the last few weeks, in the open. Four things were broken while I did it, and **none of them ever failed**. No error, no red test, no warning in the console. All four shipped through a green build.
 
-That is the only thing they have in common, and it is the reason I am writing this down.
+That is what they have in common, and it is why I am writing this down.
 
 ## What the site is
-
-The short version, because the stack is not the point.
 
 An Nx monorepo: one React Router app, server-rendered, running on Cloudflare Workers, plus two small libraries for the design tokens and the components. Tailwind is there, but on top of my own tokens. Its palette and its scales are wiped, so `bg-neutral-800` does not exist and cannot end up in a component by accident. Only semantic roles survive. Radix does anything that needs a keyboard.
 
