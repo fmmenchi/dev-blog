@@ -18,8 +18,11 @@ describe('buildRssFeed', () => {
       expect(feed).toContain(
         `<link>https://fabiomenchicchi.com/blog/${post.slug}</link>`,
       );
+      /* RFC-822, derived from the post's own date — not a date typed in here, which
+         would have to be retyped every time anything is published. */
+      const pubDate = new Date(`${post.date}T00:00:00Z`).toUTCString();
+      expect(feed).toContain(`<pubDate>${pubDate}</pubDate>`);
     }
-    expect(feed).toContain('<pubDate>Sun, 12 Jul 2026 00:00:00 GMT</pubDate>');
   });
 
   it('escapes XML entities in text content', () => {

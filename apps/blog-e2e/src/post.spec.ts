@@ -1,35 +1,41 @@
 import { expect, test } from '@playwright/test';
 
+import { firstPost, posts } from './support/content';
+
+const post = firstPost();
+
 test.describe('article', () => {
   test('shows the table of contents and jumps to sections', async ({
     page,
   }) => {
-    await page.goto('/blog/starting-a-notebook');
+    await page.goto(`/blog/${post.slug}`);
     const toc = page.getByRole('navigation', { name: 'On this page' });
     await expect(toc).toBeVisible();
-    await toc.getByRole('link', { name: /01 · What goes here/ }).click();
-    await expect(page).toHaveURL(/#what-goes-here$/);
-    await expect(
-      page.getByRole('heading', { level: 2, name: /What goes here/ }),
-    ).toBeInViewport();
+
+    /* Whatever the first section is called: click its entry, land on its heading. */
+    const first = toc.getByRole('link').first();
+    const href = await first.getAttribute('href');
+    await first.click();
+    await expect(page).toHaveURL(new RegExp(`${href}$`));
+    await expect(page.locator(String(href))).toBeInViewport();
   });
 
-  // With a single post there are no neighbours, and an empty nav landmark helps nobody.
-  test('hides the siblings nav when a post has no neighbours', async ({
+  // An empty nav landmark helps nobody, so it appears only when there is a neighbour.
+  test('shows the siblings nav only when the post has neighbours', async ({
     page,
   }) => {
-    await page.goto('/blog/starting-a-notebook');
+    await page.goto(`/blog/${post.slug}`);
     await expect(
-      page.getByRole('heading', { level: 1, name: 'Starting a notebook' }),
+      page.getByRole('heading', { level: 1, name: post.title }),
     ).toBeVisible();
     await expect(
       page.getByRole('navigation', { name: 'More posts' }),
-    ).toHaveCount(0);
+    ).toHaveCount(posts.length > 1 ? 1 : 0);
   });
 
   // The link is labelled "← /blog"; it used to go to "/".
   test('the back link goes to the archive it names', async ({ page }) => {
-    await page.goto('/blog/starting-a-notebook');
+    await page.goto(`/blog/${post.slug}`);
     await page.getByRole('link', { name: '← /blog' }).click();
     await expect(page).toHaveURL(/\/blog$/);
     await expect(

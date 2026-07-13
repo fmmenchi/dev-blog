@@ -1,5 +1,7 @@
 import { expect, test } from '@playwright/test';
 
+import { firstPost } from './support/content';
+
 test.describe('home', () => {
   test('renders the hero and the post list', async ({ page }) => {
     await page.goto('/');
@@ -10,17 +12,18 @@ test.describe('home', () => {
       }),
     ).toBeVisible();
     await expect(
-      page.getByRole('heading', { name: 'Starting a notebook' }),
+      page.getByRole('heading', { name: firstPost().title }),
     ).toBeVisible();
     await expect(page.getByText('★ latest')).toBeVisible();
   });
 
   test('navigates from a post card to the article', async ({ page }) => {
     await page.goto('/');
-    await page.getByRole('heading', { name: 'Starting a notebook' }).click();
-    await expect(page).toHaveURL(/\/blog\/starting-a-notebook/);
+    const post = firstPost();
+    await page.getByRole('heading', { name: post.title }).click();
+    await expect(page).toHaveURL(new RegExp(`/blog/${post.slug}`));
     await expect(
-      page.getByRole('heading', { level: 1, name: /Starting a notebook/ }),
+      page.getByRole('heading', { level: 1, name: post.title }),
     ).toBeVisible();
   });
 

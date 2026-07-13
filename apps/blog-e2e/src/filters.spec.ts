@@ -1,5 +1,9 @@
 import { expect, test } from '@playwright/test';
 
+import { firstPost } from './support/content';
+
+const post = firstPost();
+
 /*
  * Only the URL-driven half of the feature is exercised here, and that is not a
  * gap: the blog currently holds one post and one project, so the filter bar
@@ -14,15 +18,16 @@ test.describe('filters', () => {
   test('a URL alone filters the list — no JavaScript required', async ({
     page,
   }) => {
-    await page.goto('/blog?tag=meta');
+    /* Filter by a tag the post really carries, whatever it happens to be. */
+    await page.goto(`/blog?tag=${post.tags[0]}`);
     await expect(
-      page.getByRole('heading', { level: 2, name: 'Starting a notebook' }),
+      page.getByRole('heading', { level: 2, name: post.title }),
     ).toBeVisible();
 
     await page.goto('/blog?tag=does-not-exist');
     await expect(page.getByText('Nothing with those tags')).toBeVisible();
     await expect(
-      page.getByRole('heading', { level: 2, name: 'Starting a notebook' }),
+      page.getByRole('heading', { level: 2, name: post.title }),
     ).toHaveCount(0);
   });
 

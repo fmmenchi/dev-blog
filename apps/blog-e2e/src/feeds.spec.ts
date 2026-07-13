@@ -1,5 +1,7 @@
 import { expect, test } from '@playwright/test';
 
+import { firstPost } from './support/content';
+
 test.describe('feeds and crawlers', () => {
   test('rss.xml serves a real feed', async ({ request }) => {
     const res = await request.get('/rss.xml');
@@ -8,7 +10,7 @@ test.describe('feeds and crawlers', () => {
     const body = await res.text();
     expect(body).toContain('<rss version="2.0"');
     expect(body).toContain(
-      'https://fabiomenchicchi.com/blog/starting-a-notebook',
+      `https://fabiomenchicchi.com/blog/${firstPost().slug}`,
     );
   });
 

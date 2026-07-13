@@ -1,12 +1,14 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 
+import { firstPost } from './support/content';
+
 const PAGES = [
   '/',
   '/blog',
   /* A filtered list is a different DOM: the toolbar, the combobox, the status. */
   '/blog?tag=meta',
-  '/blog/starting-a-notebook',
+  `/blog/${firstPost().slug}`,
   '/projects',
   '/about',
   '/colophon',
