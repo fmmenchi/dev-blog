@@ -44,6 +44,21 @@
         "dependsOn": [
           "generate"
         ]
+      },
+      "lint": {
+        "executor": "nx:run-commands",
+        "cache": true,
+        "dependsOn": [
+          "generate"
+        ],
+        "inputs": [
+          "{projectRoot}/src/**/*.tsx",
+          "{workspaceRoot}/tools/check-icons.mjs"
+        ],
+        "options": {
+          "cwd": "{workspaceRoot}",
+          "command": "node tools/check-icons.mjs"
+        }
       }
     }
   }
