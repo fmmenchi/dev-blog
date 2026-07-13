@@ -8,6 +8,9 @@ featured: true
 ---
 
 import invisibleIcons from '../../app/images/invisible-icons.png?w=760;1520&format=avif;webp&as=picture';
+import invisibleBorder from '../../app/images/invisible-border.png?w=760;1520&format=avif;webp&as=picture';
+import waitingForGoogle from '../../app/images/waiting-for-google.png?w=760;1520&format=avif;webp&as=picture';
+import sharedChunk from '../../app/images/shared-chunk.png?w=760;1520&format=avif;webp&as=picture';
 
 I rebuilt this site in the open over the last few weeks. Four things were broken while I did it. What they have in common is more interesting than any of them: **none of them failed**. No error, no red test, no warning in the console. Every one of them shipped through a green build.
 
@@ -49,6 +52,12 @@ The chips — the little skill labels — had gone strange. Not obviously wrong.
 
 The text was fine: 6.74:1 against the card, comfortably past AA. The **border** was 1.18:1.
 
+<Image
+  image={invisibleBorder}
+  alt="Two panels. On the left, skill badges whose 1px border measures 1.18:1 against the card: the outline is not there, only grey words float. On the right, the same badges with a border at 3.94:1 and a muted fill: they read as chips."
+  sizes="(min-width: 56rem) 42.5rem, 100vw"
+/>
+
 That number is not a near miss. It's nothing. The chip had no shape; there was only text, and the outline I thought I was drawing was a colour indistinguishable from the surface behind it. I'd been looking straight at it for days.
 
 Contrast is a number. When something looks off, measure it before you start moving things around.
@@ -58,6 +67,12 @@ Contrast is a number. When something looks off, measure it before you start movi
 I added Lighthouse to the repo, mostly to have a baseline. It said 71. First paint: 4.6 seconds. Total blocking time: **0 ms**.
 
 Read those two together, because they're the whole story. Zero blocking time means the browser was doing nothing. No script to run, no work to do. It sat there for four and a half seconds — **waiting**.
+
+<Image
+  image={waitingForGoogle}
+  alt="A request waterfall. Before: the HTML, then a serial chain — fonts.googleapis.com (DNS, TLS, request) for a stylesheet, and only once that has arrived can fonts.gstatic.com begin, for the font itself. First paint at 4.6 seconds, with nothing executing. After: the HTML and a same-origin woff2, first paint at 3.5 seconds."
+  sizes="(min-width: 56rem) 42.5rem, 100vw"
+/>
 
 Waiting for Google. The fonts came from Google Fonts, which is one line in the head and two round trips in reality: a render-blocking stylesheet from `fonts.googleapis.com`, which the browser has to fetch and parse before it even discovers that the actual font file lives on a _second_ origin, `fonts.gstatic.com`. Two DNS lookups, two TLS handshakes, two requests — all of it standing between the visitor and the first pixel.
 
@@ -79,19 +94,33 @@ Except every page was paying for it. The component library is imported by the ro
 
 React Router already code-splits by route. It could not help here: the cost was not in a route, it was in a chunk shared _between_ routes.
 
-So I lazy-loaded the filter bar. It changed nothing. Same 102 KiB chunk, same Radix, same home page.
+So I lazy-loaded the filter bar — a dynamic import, which is supposed to give it a chunk of its own.
 
-The reason took me an embarrassing amount of time. The library never declared `sideEffects` in its `package.json`. Without that declaration, a bundler has to assume that importing a module might _do something_ — register something, patch something, inject a stylesheet. So when the root route imports `Button` from the library's barrel file, and that barrel re-exports `Select`, the bundler cannot prove that dropping `Select` is safe. It keeps it. The lazy import was real, and completely pointless, because the module was already alive through the front door.
+**It changed nothing.** Same 102 KiB chunk, same Radix, same home page. And that is the interesting part.
 
-Declaring it is the whole fix — with one caveat that matters:
+Put yourself where the bundler is. The root route imports `Button` from the library's barrel — the `index.ts` that re-exports every component, including `Select`. You would like to drop `Select`, since nobody on this page uses it. But to drop it you must first delete the import, and deleting an import is only safe if importing that file **does nothing on its own**. Modules are allowed to do things merely by being loaded: register a global, patch a prototype, inject a stylesheet.
+
+You cannot prove it doesn't. So you keep it.
+
+The lazy import was real, and entirely pointless: `Select` was already alive through the front door.
+
+The fix is one line, and it is a **promise**:
 
 ```json
 "sideEffects": ["*.css"]
 ```
 
-Not `false`. A CSS import genuinely **is** a side effect: importing it injects styles, and its exports are never used. Declaring `false` would have given the bundler permission to delete a stylesheet import as dead code, and the styles would have vanished — silently, which by now is the theme of this post.
+It tells the bundler: _importing any of my modules does nothing by itself — if you don't use its exports, throw it away._ Now `Select` is reachable only from the dynamic import, and only then does the split actually happen.
 
-Shared chunk: 102 KiB → 12 KiB. Radix stays exactly where it was.
+Not `false`, though, and the difference is not pedantry. A CSS import genuinely **is** a side effect: importing it injects styles, and its exports are never used by anyone. `false` would have given the bundler permission to delete `import './prose.module.css'` as dead code, and the styles would have vanished — silently, which by now is the theme of this post.
+
+<Image
+  image={sharedChunk}
+  alt="Before: a single shared chunk of 102 KiB, loaded on every page, containing Radix Select. After: a shared chunk of 12 KiB, plus a 78 KiB filter-bar chunk fetched only by the two pages that show it."
+  sizes="(min-width: 56rem) 42.5rem, 100vw"
+/>
+
+Two things, and **neither works alone**. The dynamic import without the declaration is theatre. Shared chunk: 102 KiB → 12 KiB. Radix stays exactly where it was.
 
 ## The thing they have in common
 
