@@ -12,10 +12,28 @@ import { join } from 'node:path';
 const POSTS_DIR = 'apps/blog/content/posts';
 const CARDS_DIR = 'apps/blog/public/og';
 
-const missing = readdirSync(POSTS_DIR)
-  .filter((file) => file.endsWith('.md'))
-  .map((file) => file.replace(/\.md$/, ''))
-  .filter((slug) => !existsSync(join(CARDS_DIR, `${slug}.png`)));
+const slugs = readdirSync(POSTS_DIR)
+  .filter((file) => file.endsWith('.mdx'))
+  .map((file) => file.replace(/\.mdx$/, ''));
+
+/*
+ * A gate that finds nothing to check must SCREAM, not pass.
+ *
+ * This one filtered for `.md` and the posts became `.mdx`. It went on printing "every post
+ * has a card" while looking at an empty list — a green check that meant nothing, which is
+ * worse than no check, because you believe it. Exactly the failure the article this gate
+ * protects is about.
+ */
+if (slugs.length === 0) {
+  console.error(
+    `check-og: found NO posts in ${POSTS_DIR}. A gate with nothing to check is not passing, it is blind.`,
+  );
+  process.exit(1);
+}
+
+const missing = slugs.filter(
+  (slug) => !existsSync(join(CARDS_DIR, `${slug}.png`)),
+);
 
 if (!existsSync('apps/blog/public/og.png')) {
   console.error('check-og: the site card (public/og.png) is missing.');
