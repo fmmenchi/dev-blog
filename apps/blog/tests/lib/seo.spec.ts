@@ -28,6 +28,7 @@ describe('seoMeta', () => {
       name: 'twitter:card',
       content: 'summary_large_image',
     });
+    /* Defaults to the site's card when a page does not bring its own. */
     expect(tags).toContainEqual({
       property: 'og:image',
       content: 'https://fabiomenchicchi.com/og.png',
@@ -76,5 +77,28 @@ describe('robots.txt', () => {
     const body = await res.text();
     expect(body).toContain('Allow: /');
     expect(body).toContain('Sitemap: https://fabiomenchicchi.com/sitemap.xml');
+  });
+});
+
+describe('the social card', () => {
+  it('lets a page bring its own, so a shared post shows ITS title', () => {
+    const posted = seoMeta({
+      origin: 'https://fabiomenchicchi.com',
+      path: '/blog/a-post',
+      title: 'A post',
+      description: 'About something.',
+      type: 'article',
+      image: '/og/a-post.png',
+    });
+
+    expect(posted).toContainEqual({
+      property: 'og:image',
+      content: 'https://fabiomenchicchi.com/og/a-post.png',
+    });
+    /* The card carries the title, so the title is the alt text. */
+    expect(posted).toContainEqual({
+      property: 'og:image:alt',
+      content: 'A post',
+    });
   });
 });

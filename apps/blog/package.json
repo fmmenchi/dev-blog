@@ -53,6 +53,25 @@
           "cwd": "{workspaceRoot}",
           "command": "node tools/assess.mjs"
         }
+      },
+      "check-og": {
+        "executor": "nx:run-commands",
+        "cache": true,
+        "inputs": [
+          "{projectRoot}/content/posts/**/*.md",
+          "{projectRoot}/public/og/**/*.png",
+          "{projectRoot}/public/og.png",
+          "{workspaceRoot}/tools/check-og.mjs"
+        ],
+        "options": {
+          "cwd": "{workspaceRoot}",
+          "command": "node tools/check-og.mjs"
+        }
+      },
+      "lint": {
+        "dependsOn": [
+          "check-og"
+        ]
       }
     }
   },

@@ -45,6 +45,8 @@ export const meta = ({
       title: `${post.title} — ${SITE_NAME}`,
       description: post.excerpt,
       type: 'article',
+      /* Its own card, carrying its own title — see tools/og-image.mjs. */
+      image: `/og/${post.slug}.png`,
     }),
     { property: 'article:published_time', content: post.date },
     {
