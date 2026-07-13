@@ -14,14 +14,43 @@ describe('ShareBar', () => {
     delete navigator.share;
   });
 
-  it('links to LinkedIn with the absolute url, encoded', () => {
+  it('carries the absolute url, encoded, to every channel', () => {
     renderBar();
-    const link = screen.getByRole('link', { name: /Share on LinkedIn/i });
 
-    /* A relative url is meaningless the moment it leaves the page. */
-    expect(link.getAttribute('href')).toContain(encodeURIComponent(URL));
-    /* It is a plain link, so it works with the page's JavaScript switched off. */
-    expect(link.tagName).toBe('A');
+    for (const name of ['X', 'Bluesky', 'LinkedIn', 'Hacker News']) {
+      const link = screen.getByRole('link', {
+        name: new RegExp(`Share on ${name}`, 'i'),
+      });
+      /* A relative url is meaningless the moment it leaves the page. */
+      expect(link.getAttribute('href')).toContain(encodeURIComponent(URL));
+      /* Plain links: they work with the page's JavaScript switched off. */
+      expect(link.tagName).toBe('A');
+    }
+  });
+
+  it('sends the title along, where the channel takes one', () => {
+    renderBar();
+    /* Bluesky's intent has one text field, so the link lives inside it. */
+    expect(
+      screen
+        .getByRole('link', { name: /Share on Bluesky/i })
+        .getAttribute('href'),
+    ).toContain(encodeURIComponent('A post'));
+    expect(
+      screen
+        .getByRole('link', { name: /Share on Hacker News/i })
+        .getAttribute('href'),
+    ).toContain('news.ycombinator.com/submitlink');
+  });
+
+  it('shows only the channels it is given', () => {
+    render(<ShareBar url={URL} title="A post" channels={['bluesky']} />);
+    expect(
+      screen.getByRole('link', { name: /Share on Bluesky/i }),
+    ).toBeTruthy();
+    expect(screen.queryByRole('link', { name: /Share on X/i })).toBeNull();
+    /* Copy is not a channel: it is always there. */
+    expect(screen.getByRole('button', { name: /Copy link/i })).toBeTruthy();
   });
 
   it('copies the link, and says so out loud', async () => {
