@@ -45,7 +45,7 @@ function read(file: string): PostSummary {
     new RegExp(`^${name}:\\s*(.+)$`, 'm').exec(frontmatter)?.[1]?.trim() ?? '';
 
   return {
-    slug: file.replace(/\.md$/, ''),
+    slug: file.replace(/\.mdx$/, ''),
     title: field('title'),
     tags: field('tags')
       .split(',')
@@ -57,7 +57,7 @@ function read(file: string): PostSummary {
 
 /** Newest first — the same order the site shows them in. */
 export const posts: PostSummary[] = readdirSync(POSTS_DIR)
-  .filter((file) => file.endsWith('.md'))
+  .filter((file) => file.endsWith('.mdx'))
   .map(read)
   .sort((a, b) => b.date.localeCompare(a.date));
 

@@ -109,7 +109,7 @@ function card(headline, eyebrow) {
 /** title + date, straight from the frontmatter. */
 function readPosts() {
   return readdirSync(POSTS_DIR)
-    .filter((file) => file.endsWith('.md'))
+    .filter((file) => file.endsWith('.mdx'))
     .map((file) => {
       const raw = readFileSync(join(POSTS_DIR, file), 'utf8');
       const frontmatter = /^---\n([\s\S]*?)\n---/.exec(raw)?.[1] ?? '';
@@ -118,7 +118,7 @@ function readPosts() {
         '';
 
       return {
-        slug: file.replace(/\.md$/, ''),
+        slug: file.replace(/\.mdx$/, ''),
         title: field('title'),
         date: field('date'),
       };
