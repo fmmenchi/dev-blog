@@ -10,3 +10,7 @@ allowBuilds:
   workerd: true
   puppeteer: true # unlighthouse drives Chrome through it
   vue-demi: true # unlighthouse's report UI
+
+# Refuse to install on the wrong Node instead of printing a warning nobody reads.
+# The version itself lives in .nvmrc, and `engines` in package.json states the range.
+engineStrict: true
