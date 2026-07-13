@@ -141,8 +141,14 @@ The rule I'd write on the wall: **what nobody reviews needs a gate, not a review
 
 ## Where it landed
 
-Performance 71 → 82. First paint 4.6s → 3.5s. Layout shift to zero. Accessibility 100 on every page. Two icons you can now see.
+Performance 71 → 82. First paint 4.6s → 3.4s. Layout shift to zero. Accessibility 100 on every page. Two icons you can now see.
 
-It's still not fast enough. About 195 KiB of JavaScript ships for pages that are mostly text and barely need any. That's the next one.
+Although — I wrote that line about accessibility before I checked it, and when I did, this page was scoring 98. It had no `<main>` landmark. Every other page on the site had one; the article about invisible bugs was the page you could not navigate to.
+
+The accessibility sweep had passed it, every time, because `landmark-one-main` is a best-practice rule and the sweep was only asking about WCAG A/AA. **A rule you never ask for is a rule that cannot fail.** It asks for both now, and that immediately turned up one more: two `<nav>` landmarks both called "Social", on the page where you go to find out who I am.
+
+So: five bugs that never failed. The fifth was in the sentence claiming there were four.
+
+It's still not fast enough, either. About 114 KiB of JavaScript ships for pages that are mostly text and barely need any. That's the next one.
 
 Which is fine. The only thing that really matters is the direction — get that right, and every change can be a small one.

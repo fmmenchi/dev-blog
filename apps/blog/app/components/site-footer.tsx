@@ -38,8 +38,13 @@ export function SiteFooter() {
             </Link>
           </nav>
 
-          {/* Brings its own <nav aria-label="Social"> — a sibling, never nested. */}
-          <IconLinks label="Social" links={socialLinks} />
+          {/*
+           * NOT a landmark. /about already has a "Social" nav in the profile card, and
+           * two landmarks with the same name are worse than none — the landmark list
+           * shows two identical entries and no way to choose. This one is a labelled
+           * list: still announced, no longer claiming to be a place.
+           */}
+          <IconLinks label="Social" links={socialLinks} landmark={false} />
         </div>
       </Container>
     </footer>
