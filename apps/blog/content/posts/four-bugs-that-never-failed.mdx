@@ -7,6 +7,8 @@ excerpt: I rebuilt this site in the open. Four things broke, and not one of them
 featured: true
 ---
 
+import invisibleIcons from '../../app/images/invisible-icons.png?w=760;1520&format=avif;webp&as=picture';
+
 I rebuilt this site in the open over the last few weeks. Four things were broken while I did it. What they have in common is more interesting than any of them: **none of them failed**. No error, no red test, no warning in the console. Every one of them shipped through a green build.
 
 ## What the site is
@@ -29,7 +31,15 @@ Look at what isn't there: the path has no `fill`. And SVG's default fill is **bl
 
 My SVGR config had a rule to handle colour — it replaced `#000` with `currentColor`, so an icon would inherit the colour of the text around it. Sensible rule. It matched nothing, because there is no `#000` in the file. There is no colour in the file at all.
 
-So two icons rendered black, on a near-black background. They were in the DOM. They had correct accessible names. They passed the accessibility sweep, which had no opinion about them, because an invisible icon is not an accessibility violation — it's just gone.
+So two icons rendered black, on a near-black background.
+
+<Image
+  image={invisibleIcons}
+  alt="Two panels side by side. On the left, three icon buttons whose icons are black on a near-black card: barely more than dark smudges. On the right, the same three buttons with the icons in currentColor: GitHub, LinkedIn and mail, plainly legible."
+  sizes="(min-width: 56rem) 42.5rem, 100vw"
+/>
+
+Not invisible, exactly. Worse than invisible: a dark smudge on a dark background is something your eye slides straight past. They were in the DOM. They had correct accessible names. They passed the accessibility sweep, which had no opinion about them, because an icon nobody can see is not an accessibility violation — it is just gone.
 
 The fix went in the config, not in the SVGs. Those files are vendored: the next person to re-download one would have quietly undone a hand edit. A config that guesses at a string is a config that will guess wrong again.
 

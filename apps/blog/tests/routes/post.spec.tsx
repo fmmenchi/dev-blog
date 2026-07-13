@@ -1,8 +1,8 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { createRoutesStub } from 'react-router';
 
 import Post, { loader } from '../../app/routes/post';
-import { firstPost, posts, sectionsOf, slugify } from '../support/content';
+import { firstPost, posts } from '../support/content';
 
 function renderPost(slug: string) {
   const Stub = createRoutesStub([
@@ -13,39 +13,52 @@ function renderPost(slug: string) {
 
 /* Whatever is published. Rewrite every post tomorrow and these still hold. */
 const post = firstPost();
-const sections = sectionsOf(post);
 
 describe('Post', () => {
   it('renders the article with its title and its sections', async () => {
     renderPost(post.slug);
+
     expect(
       await screen.findByRole('heading', { level: 1, name: post.title }),
     ).toBeTruthy();
 
-    for (const section of sections) {
-      expect(
-        screen.getByRole('heading', { level: 2, name: section }),
-      ).toBeTruthy();
+    /* The content is an MDX component, loaded lazily — it arrives after the shell. */
+    for (const { text } of post.toc) {
+      await waitFor(() =>
+        expect(
+          screen.getByRole('heading', { level: 2, name: text }),
+        ).toBeTruthy(),
+      );
     }
   });
 
-  it('builds a table of contents from those sections, and anchors them', async () => {
+  it('builds a table of contents whose links land on real headings', async () => {
     renderPost(post.slug);
+
     expect(
       await screen.findByRole('navigation', { name: 'On this page' }),
     ).toBeTruthy();
 
-    const [first] = sections;
+    const [first] = post.toc;
     if (first === undefined) throw new Error('the post has no ## sections');
 
-    /* The link must point at an id the page actually renders. */
+    /*
+     * The id in the TOC comes from our remark plugin; the id on the heading comes from
+     * rehype-slug. If the two ever disagree the link points at nothing — silently, which
+     * is the only way it could go wrong.
+     */
     const link = screen.getByRole('link', {
-      name: new RegExp(`01 · ${first}`),
+      name: new RegExp(`01 · ${first.text}`),
     });
-    expect(link.getAttribute('href')).toBe(`#${slugify(first)}`);
-    expect(
-      screen.getByRole('heading', { level: 2, name: first }).getAttribute('id'),
-    ).toBe(slugify(first));
+    expect(link.getAttribute('href')).toBe(`#${first.id}`);
+
+    await waitFor(() =>
+      expect(
+        screen
+          .getByRole('heading', { level: 2, name: first.text })
+          .getAttribute('id'),
+      ).toBe(first.id),
+    );
   });
 
   it('shows the siblings nav only when there are siblings', async () => {

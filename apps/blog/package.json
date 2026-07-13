@@ -98,7 +98,6 @@
     "@dev-blog/theme": "workspace:*",
     "@dev-blog/ui": "workspace:*",
     "isbot": "^4.4.0",
-    "marked": "^18.0.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router": "^8.1.0"

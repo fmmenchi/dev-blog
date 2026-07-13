@@ -2,9 +2,9 @@ import { Avatar, Card, Container, Link, Prose, ShareBar } from '@dev-blog/ui';
 import { useLoaderData, type LoaderFunctionArgs } from 'react-router';
 
 import { SectionHeading } from '../components/section-heading';
+import { mdxComponents } from '../components/mdx';
 import { profile } from '../lib/content';
 import { avatarSrc } from '../lib/avatar-image';
-import { renderMarkdown } from '../lib/markdown.server';
 import { getPost, getPosts } from '../lib/posts.server';
 import { originFromMatches, seoMeta } from '../lib/seo';
 import { SITE_NAME, SITE_URL } from '../lib/site';
@@ -17,15 +17,39 @@ export function loader({ params }: LoaderFunctionArgs) {
   }
   const posts = getPosts();
   const index = posts.findIndex((p) => p.slug === post.slug);
-  const { html, toc } = renderMarkdown(post.body);
+
   return {
     post,
-    html,
-    toc,
     prev: posts[index + 1] ?? null,
     next: posts[index - 1] ?? null,
   };
 }
+
+/*
+ * The post's CONTENT is a component, so it cannot travel through the loader — loader data
+ * is JSON. It is imported with the route instead.
+ *
+ * EAGERLY, and that was measured, not assumed. Lazy-loading it split each article into its
+ * own chunk, which sounds strictly better — until you throttle the network. The Suspense
+ * boundary then falls back during hydration, the article BLANKS OUT and comes back, and
+ * layout shift went from 0 to 0.108. A chunk boundary is not worth a page that jumps
+ * under the reader.
+ *
+ * The cost is that this route carries every post. At a handful of articles that is a few
+ * KB; when it stops being, the answer is to render the body without hydrating it, not to
+ * put the split back.
+ */
+const contents = import.meta.glob('../../content/posts/*.mdx', {
+  eager: true,
+  import: 'default',
+}) as Record<string, React.ComponentType<{ components?: unknown }>>;
+
+const CONTENT = Object.fromEntries(
+  Object.entries(contents).map(([path, Component]) => [
+    path.replace(/^.*\//, '').replace(/\.mdx$/, ''),
+    Component,
+  ]),
+);
 
 export const meta = ({
   loaderData,
@@ -70,7 +94,9 @@ const SIBLING_TITLE =
   'text-[14.5px] leading-[1.35] font-semibold [transition:var(--transition-color)] group-hover:text-primary';
 
 export default function Post() {
-  const { post, html, toc, prev, next } = useLoaderData<typeof loader>();
+  const { post, prev, next } = useLoaderData<typeof loader>();
+  const Content = CONTENT[post.slug];
+  const { toc } = post;
 
   return (
     // Phone: one column. From `md` the table of contents becomes a right rail.
@@ -92,12 +118,17 @@ export default function Post() {
           {post.title}
         </h1>
 
-        {/* `body` stays a CSS Module: it styles the Markdown that marked
-            renders at runtime, which no class in this file can reach. */}
-        <Prose
-          className={styles['body']}
-          dangerouslySetInnerHTML={{ __html: html }}
-        />
+        {/*
+         * The article, as COMPONENTS. `mdxComponents` is what lets a post contain an
+         * <Image> with a srcset, and what turns its internal links into router links
+         * instead of full page reloads.
+         *
+         * `body` stays a CSS Module because it styles the elements MDX emits (p, code,
+         * blockquote…), which no class in this file can reach.
+         */}
+        <Prose className={styles['body']}>
+          <Content components={mdxComponents} />
+        </Prose>
 
         {/* At the END: the moment sharing becomes a thing anyone wants to do is the
             moment they have finished reading. The url is the CANONICAL one, never the
