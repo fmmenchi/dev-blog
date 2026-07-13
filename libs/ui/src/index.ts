@@ -7,7 +7,6 @@ export * from './components/card/card.component';
 export * from './components/container/container.component';
 export * from './components/empty-state/empty-state.component';
 export * from './components/error-state/error-state.component';
-export * from './components/footer/footer.component';
 export * from './components/icon-links/icon-links.component';
 export * from './components/link/link.component';
 export * from './components/picture/picture.component';
