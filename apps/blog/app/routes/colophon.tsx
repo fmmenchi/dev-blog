@@ -151,8 +151,24 @@ export default function Colophon() {
         />
       </section>
 
+      {/*
+        This used to read "No analytics, no cookies, no tracking", which was false: the
+        zone has Cloudflare Web Analytics turned on, and the edge injects its beacon into
+        every page. Nobody wrote that script into this repo, so nobody was ever going to
+        read it in a diff either.
+
+        What is written here now is what was actually measured on the live site: zero
+        cookies, empty localStorage and sessionStorage, and a pageloadId that is a fresh
+        UUID on every load, so nothing identifies a visitor across two of them. Naming the
+        vendor and the data is a stronger promise than "no analytics" was, because a reader
+        can check it.
+
+        Turn the beacon off in the dashboard and this paragraph has to change back.
+      */}
       <p className="rounded-e-lg border-s-[3px] border-primary bg-card px-6 py-4 text-sm text-muted-foreground">
-        No analytics, no cookies, no tracking.
+        No cookies, no consent banner, nothing kept on your device. Cloudflare
+        Web Analytics records how fast this page loaded for you, anonymously,
+        with no identifier that outlives the visit.
       </p>
     </Container>
   );

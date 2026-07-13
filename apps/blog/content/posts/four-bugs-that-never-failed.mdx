@@ -76,7 +76,7 @@ It was waiting for the fonts, which came from Google Fonts. That is one line in 
 
 The site was never slow. It was blocked, on infrastructure I do not control, to load a typeface.
 
-There is a second problem in the same line of HTML, and it is the one that actually bothers me. The colophon of this site says: no analytics, no cookies, no tracking. Meanwhile every visitor's IP address was being sent to Google, twice, in order to render the page making that promise.
+There is a second problem in the same line of HTML, and it is the one that actually bothers me. The colophon of this site promises no tracking. Meanwhile every visitor's IP address was being sent to Google, twice, in order to render the page making the promise.
 
 Self-hosting the fonts fixes both. `font-display: swap` then paints the text immediately in a fallback face, instead of leaving it invisible while a file downloads. But swap has a cost of its own: when the real font arrives the layout jumps, because the fallback has different metrics.
 
