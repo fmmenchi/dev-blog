@@ -1,10 +1,13 @@
 import { expect, test } from './fixtures';
 
 /*
- * The accent is remembered in localStorage — NOT a cookie, because /colophon promises
- * there are none. So the server cannot know it, and the HTML always leaves with
- * `yellow`. A small inline script in the head applies the saved one before the first
- * paint.
+ * The accent is remembered in localStorage, which /colophon names as the one thing this
+ * site keeps on your device. (It is not a cookie because the server never needs it, not
+ * to keep a "no cookies" line technically true — that was the old reasoning, and the
+ * line has since been rewritten to say what is actually stored.)
+ *
+ * The server cannot know it, so the HTML always leaves with `yellow`, and a small inline
+ * script in the head applies the saved one before the first paint.
  *
  * The failure this guards against is a FLASH: without the script the page paints
  * yellow and only turns lime once React has hydrated. Nothing errors, no test fails —

@@ -70,6 +70,11 @@ export default function Colophon() {
                 'Nx with pnpm workspaces: the app plus a design-token library and a component library.',
             },
             { term: 'bundler', detail: 'Vite.' },
+            {
+              term: 'hosting',
+              detail:
+                'Cloudflare Workers. The pages are rendered at the edge, not on a server in one place.',
+            },
           ]}
         />
       </section>
@@ -88,7 +93,7 @@ export default function Colophon() {
             {
               term: 'accent',
               detail:
-                'Switchable — yellow, lime or amber — from the header, remembered per visitor.',
+                'Switchable — yellow, lime or amber — from the header. Your choice is kept in localStorage, and it is the only thing this site puts on your device.',
             },
             {
               term: 'type',
@@ -112,7 +117,7 @@ export default function Colophon() {
             {
               term: 'posts',
               detail:
-                'Markdown files with frontmatter, bundled at build time and rendered with marked.',
+                'MDX, compiled at build time — so an article can use the same components as the rest of the site, and its images ship with a srcset like every other image here.',
             },
             { term: 'feed', detail: 'Hand-built RSS 2.0 at /rss.xml.' },
           ]}
@@ -132,7 +137,12 @@ export default function Colophon() {
             {
               term: 'e2e',
               detail:
-                'Playwright flows plus an axe WCAG A/AA sweep over every page.',
+                'Playwright flows, plus an axe sweep over every page: WCAG A/AA and the best-practice rules, which is where the landmark checks live.',
+            },
+            {
+              term: 'security',
+              detail:
+                'A Content Security Policy with a fresh nonce on every response, and the usual headers. Dependencies are scanned with Trivy on every change and once a week.',
             },
             {
               term: 'releases',
@@ -152,23 +162,29 @@ export default function Colophon() {
       </section>
 
       {/*
-        This used to read "No analytics, no cookies, no tracking", which was false: the
-        zone has Cloudflare Web Analytics turned on, and the edge injects its beacon into
-        every page. Nobody wrote that script into this repo, so nobody was ever going to
-        read it in a diff either.
+        This paragraph has been wrong twice, in two different ways, and both are worth
+        remembering.
 
-        What is written here now is what was actually measured on the live site: zero
-        cookies, empty localStorage and sessionStorage, and a pageloadId that is a fresh
-        UUID on every load, so nothing identifies a visitor across two of them. Naming the
-        vendor and the data is a stronger promise than "no analytics" was, because a reader
-        can check it.
+        It first read "No analytics, no cookies, no tracking". The zone has Cloudflare Web
+        Analytics switched on, so the edge injects a beacon into every response. Nobody
+        wrote that script into this repo, which is exactly why nobody caught it in a diff.
 
-        Turn the beacon off in the dashboard and this paragraph has to change back.
+        The correction then said "nothing kept on your device" — also false, and written
+        without checking. The accent switcher puts your choice in localStorage. Worse, the
+        comment in root.tsx admits it CHOSE localStorage over a cookie so that the old
+        "no cookies" line would stay technically true. That is lawyering, not a promise.
+
+        So this now says the two things that are actually kept, and names them. Measured on
+        the live site: no cookies at all, one localStorage key (the accent), and a
+        pageloadId that is a fresh UUID each load, so nothing joins two visits together.
+
+        If you change what the site stores, this paragraph is the thing you change with it.
       */}
       <p className="rounded-e-lg border-s-[3px] border-primary bg-card px-6 py-4 text-sm text-muted-foreground">
-        No cookies, no consent banner, nothing kept on your device. Cloudflare
-        Web Analytics records how fast this page loaded for you, anonymously,
-        with no identifier that outlives the visit.
+        No cookies, and no consent banner to click away. One thing is kept on
+        your device: the accent you picked. Cloudflare Web Analytics measures
+        how fast this page loaded for you — anonymously, with a new id each
+        load, and none that outlives it.
       </p>
     </Container>
   );
