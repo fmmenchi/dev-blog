@@ -1,1 +1,1 @@
-export * from './lib/slack.js';
+export * from './lib/slack';
