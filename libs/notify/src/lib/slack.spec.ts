@@ -1,4 +1,4 @@
-import { alertBlocks, postToSlack } from './slack.js';
+import { alertBlocks, postToSlack } from './slack';
 
 const message = {
   token: 'xoxb-test',
