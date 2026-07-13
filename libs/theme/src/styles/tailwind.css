@@ -64,6 +64,7 @@
   --color-muted: var(--color-muted);
   --color-muted-foreground: var(--color-muted-foreground);
   --color-border: var(--color-border);
+  --color-border-strong: var(--color-border-strong);
   --color-ring: var(--color-ring);
   --color-ring-offset: var(--color-ring-offset);
 
@@ -97,6 +98,20 @@
   --leading-normal: var(--leading-normal);
   --leading-copy: var(--leading-copy);
   --leading-relaxed: var(--leading-relaxed);
+
+  /*
+   * Layout widths, as utilities: `max-w-content` (the page shell) and
+   * `max-w-prose` (the reading measure). They used to be written as arbitrary
+   * values — `max-w-[var(--layout-content-width)]` — repeated in six files. An
+   * arbitrary value that wraps a token is a token missing from this bridge.
+   */
+  --container-content: var(--layout-content-width);
+  /*
+   * `measure`, not `prose`: Tailwind ships its own `max-w-prose` (65ch), so that
+   * name would not override it — it would collide with it, and the reading pages
+   * would silently get Tailwind's width while looking like they used ours.
+   */
+  --container-measure: var(--layout-prose-width);
 
   /* Radius */
   --radius-sm: var(--radius-sm);

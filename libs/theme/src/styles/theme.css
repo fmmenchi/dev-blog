@@ -149,6 +149,11 @@
   --color-muted: var(--color-neutral-800);
   --color-muted-foreground: var(--color-neutral-400);
   --color-border: var(--color-neutral-800);
+  /* A border you can SEE. `--color-border` is a separator — 1.18:1 against a card,
+     felt rather than seen, which is right for a rule between rows and wrong for the
+     edge of a chip, where it made the chip disappear and left the text floating.
+     This one clears 3:1 (WCAG 1.4.11) so a component actually has an outline. */
+  --color-border-strong: var(--color-neutral-500);
 
   /* Focus ring — deliberately NOT the accent. A yellow ring vanishes the moment
      a focusable element sits on a yellow surface, and we have one. The offset
