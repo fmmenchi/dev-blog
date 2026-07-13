@@ -26,7 +26,18 @@ export default defineConfig(() => ({
     // which trips the plugin's environment validation).
     !process.env.VITEST &&
       !(globalThis as Record<string, unknown>)['NX_GRAPH_CREATION'] &&
-      cloudflare({ viteEnvironment: { name: 'ssr' } }),
+      cloudflare({
+        viteEnvironment: { name: 'ssr' },
+        /*
+         * workerd's inspector binds a FIXED port (9229, then 9230…), so two
+         * preview servers cannot coexist however careful you are with the HTTP
+         * port — and this repo is developed in git worktrees, where two e2e runs
+         * at once is normal. The loser died with EADDRINUSE, which read as "the
+         * tests are broken" rather than "two debuggers wanted the same socket".
+         * The suite never debugs the worker, so the e2e run switches it off.
+         */
+        inspectorPort: process.env['E2E'] === '1' ? false : undefined,
+      }),
     !process.env.VITEST && reactRouter(),
   ],
   // Uncomment this if you are using workers.
