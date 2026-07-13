@@ -55,9 +55,21 @@ jobs:
       # would run inside that image, which has no node and no pnpm, and nx could not
       # start at all.
       #
-      # The DB is NOT cached, deliberately. It is a single 1.1 GB file: saving and
-      # restoring it through actions/cache costs more than the ~12s trivy takes to
-      # download it compressed. A cache step that makes CI slower is worse than none.
+      # The DB is NOT cached, and the reason is the DB's SHELF LIFE, not its size.
+      #
+      # Size was the obvious objection and it is wrong: 1.1 GB on disk, but 70 MB packed
+      # with zstd — which is what actions/cache stores. Caching it is perfectly feasible.
+      #
+      # It expires in 21 hours (metadata.json: DownloadedAt -> NextUpdate). Our runs are
+      # a WEEK apart. So a restored cache would always hold a stale DB, trivy would throw
+      # it away and pull the fresh 100 MB layer anyway, and then we would upload another
+      # 70 MB for next time: +140 MB of transfer and three extra steps, for nothing.
+      #
+      # It is also not incremental, and cannot be: the DB is a single blob shipped as one
+      # OCI layer. There is no delta protocol to exploit.
+      #
+      # A cache would pay off only with several runs inside the same day — which these
+      # triggers, by design, do not produce.
       - name: Scan
         run: pnpm nx run @dev-blog/security:scan:ci
 
