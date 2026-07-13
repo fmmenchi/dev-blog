@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 
 /*
  * The accent is remembered in localStorage — NOT a cookie, because /colophon promises

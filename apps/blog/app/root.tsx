@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import {
   Links,
   Meta,
@@ -147,6 +148,18 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+  /*
+   * Mark the document hydrated once React has taken over on the client. The SSR
+   * HTML ships without it, so a test can wait for interactivity deterministically
+   * instead of racing it: an e2e click that lands before hydration hits markup
+   * with no handler attached, does nothing, and the assertion times out — which
+   * is what made the accent spec flake, but only on a cold server. Inert in
+   * production; nothing reads it but the tests.
+   */
+  useEffect(() => {
+    document.documentElement.dataset['hydrated'] = 'true';
+  }, []);
+
   return <Outlet />;
 }
 
