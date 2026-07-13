@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/schema",
+  "version": 2,
+  "title": "Trivy scan",
+  "description": "Scans the workspace for known vulnerabilities and for committed secrets.",
+  "type": "object",
+  "properties": {
+    "scanners": {
+      "type": "array",
+      "description": "What to look for. `misconfig` is deliberately NOT a default: this repo has no Dockerfile, no Kubernetes and no Terraform, so it would scan nothing and report success \u2014 a green check that means nothing is worse than no check at all.",
+      "items": {
+        "type": "string",
+        "enum": ["vuln", "secret", "misconfig", "license"]
+      },
+      "default": ["vuln", "secret"]
+    },
+    "severity": {
+      "type": "array",
+      "description": "Severities that fail the build. Below HIGH the noise drowns the signal and people stop reading it.",
+      "items": {
+        "type": "string",
+        "enum": ["UNKNOWN", "LOW", "MEDIUM", "HIGH", "CRITICAL"]
+      },
+      "default": ["HIGH", "CRITICAL"]
+    },
+    "ignoreUnfixed": {
+      "type": "boolean",
+      "description": "Skip vulnerabilities with no fix available: there is nothing to do about them, and a report you cannot act on teaches you to stop reading it.",
+      "default": true
+    },
+    "skipDirs": {
+      "type": "array",
+      "description": "Not scanned. node_modules is already covered through the lockfile, which is the source of truth; the rest is build output.",
+      "items": {
+        "type": "string"
+      },
+      "default": [
+        "node_modules",
+        "dist",
+        "build",
+        ".nx",
+        ".unlighthouse",
+        "out-tsc"
+      ]
+    },
+    "runner": {
+      "type": "string",
+      "description": "How to run Trivy. `auto` prefers the binary on PATH and falls back to Docker. `docker` FORCES the pinned image \u2014 that is what CI uses, so the result never depends on whichever trivy happens to be installed on a runner.",
+      "enum": ["auto", "docker", "binary"],
+      "default": "auto"
+    },
+    "includeDevDeps": {
+      "type": "boolean",
+      "description": "Scan devDependencies too. ON by default, and that is not Trivy's default: it suppresses them. In THIS workspace almost everything is a devDependency \u2014 the runtime deps are React and React Router \u2014 so leaving them out would mean scanning almost nothing and reporting a confident zero.",
+      "default": true
+    },
+    "project": {
+      "type": "string",
+      "description": "Scan what THIS app ships instead of the workspace. Nx's project graph is asked for the app's production dependencies, and a package.json + pruned lockfile are written for exactly those. Without it the scan reads the workspace lockfile \u2014 which is the toolbox (Playwright, Vitest, ESLint), not the app."
+    }
+  },
+  "required": []
+}

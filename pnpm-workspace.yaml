@@ -1,6 +1,7 @@
 packages:
   - 'apps/*'
   - 'libs/*'
+  - 'plugins/*'
 allowBuilds:
   nx: true
   '@swc/core': true
@@ -8,9 +9,7 @@ allowBuilds:
   '@parcel/watcher': false
   sharp: false
   workerd: true
-  puppeteer: true # unlighthouse drives Chrome through it
-  vue-demi: true # unlighthouse's report UI
-
-# Refuse to install on the wrong Node instead of printing a warning nobody reads.
-# The version itself lives in .nvmrc, and `engines` in package.json states the range.
+  puppeteer: true
+  vue-demi: true
+  unrs-resolver: true
 engineStrict: true

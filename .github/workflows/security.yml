@@ -1,0 +1,101 @@
+name: Security
+
+# A vulnerability scan is not like a test. A test goes red because the CODE changed; a
+# scan goes red because the WORLD changed — a CVE was published against a dependency
+# nobody touched. So it runs on two triggers, and it needs both:
+#
+#   - when the dependencies change, because that is when WE introduce something;
+#   - every Monday, because that is when the world does.
+#
+# Running it on every push would tell us the same thing forty times a week and teach us
+# to stop reading it.
+on:
+  pull_request:
+    paths:
+      - 'pnpm-lock.yaml'
+      - '**/package.json'
+      - 'plugins/security/**'
+  push:
+    branches: [main]
+    paths:
+      - 'pnpm-lock.yaml'
+      - '**/package.json'
+      - 'plugins/security/**'
+  schedule:
+    # Monday 06:00 UTC. Early enough that a bad Monday is still a Monday.
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+    inputs:
+      test_notification:
+        description: 'Post a test message to Slack instead of scanning'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    name: Vulnerabilities & secrets
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: 'pnpm'
+
+      - run: pnpm install --frozen-lockfile
+
+      # A notification you cannot test is a notification you do not have. Without this,
+      # the first time the Slack path runs for real is the Monday it matters — which is
+      # also the first time anyone discovers the bot was never invited to the channel.
+      #
+      # The message lives in the target's `test` configuration, not here: a Slack emoji
+      # is full of colons, and colons in a YAML `run:` are a mapping.
+      - name: Test the Slack wiring
+        if: inputs.test_notification
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          SLACK_CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: pnpm nx run @dev-blog/security:notify:test
+
+      # The job runs on the plain ubuntu runner (node, pnpm and docker are all there).
+      # Nx and the executor run on the runner; the executor then starts the pinned trivy
+      # CONTAINER for the scan itself. The `ci` configuration is what forces that, so a
+      # result never depends on whichever trivy a runner happens to ship.
+      #
+      # `container: aquasec/trivy` at job level would be the wrong shape: every step
+      # would run inside that image, which has no node and no pnpm, and nx could not
+      # start at all.
+      #
+      # The DB is NOT cached, and the reason is its SHELF LIFE, not its size. Size was
+      # the obvious objection and it is wrong: 1.1 GB on disk, but 70 MB packed with
+      # zstd, which is what actions/cache stores. It expires in 21 hours, and these runs
+      # are a WEEK apart — so a restored cache would always be stale, trivy would throw
+      # it away and pull the fresh 100 MB layer anyway, and we would upload another
+      # 70 MB for next time. It is not incremental either, and cannot be: the DB is a
+      # single blob shipped as one OCI layer. Verified, not assumed.
+      - name: Scan
+        if: ${{ !inputs.test_notification }}
+        run: pnpm nx run @dev-blog/security:scan:ci
+
+      # Only on the schedule, and only when it broke: a PR already shows a red check, and
+      # a message that arrives every week regardless is a message nobody opens.
+      #
+      # The message is built and sent in TypeScript (@dev-blog/notify, called through the
+      # plugin's `notify` executor), not in curl and jq here. The failure that actually
+      # happens — Slack answering 200 while REFUSING the message — is testable, and a
+      # shell script is not. Missing secrets skip the step rather than failing it.
+      - name: Tell Slack
+        if: failure() && github.event_name == 'schedule'
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          SLACK_CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: pnpm nx run @dev-blog/security:notify
