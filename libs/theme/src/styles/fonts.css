@@ -50,11 +50,24 @@
   line-gap-override: 0%;
 }
 
+/*
+ * COURIER NEW, not Arial — and that distinction is the whole point of this block.
+ *
+ * A monospaced font must fall back to a monospaced one. Arial was used here at first, and
+ * it is proportional: every glyph had the wrong advance width, so when JetBrains Mono
+ * finally arrived the header's nav re-flowed onto one line, the header lost 33px, and the
+ * entire page jumped UP under the reader. CLS 0.155 on a phone. The overrides hid it in
+ * body copy and could not hide it in a header — a fallback that is the wrong KIND of font
+ * cannot be repaired with numbers.
+ *
+ * The size-adjust says it plainly: 136% against Arial, 100.3% against Courier New. The
+ * second is what a fallback is supposed to look like.
+ */
 @font-face {
   font-family: 'JetBrains Mono Variable Fallback';
-  src: local('Arial');
-  size-adjust: 136.3823%;
-  ascent-override: 74.7898%;
-  descent-override: 21.997%;
+  src: local('Courier New');
+  size-adjust: 100.317%;
+  ascent-override: 101.6777%;
+  descent-override: 29.9052%;
   line-gap-override: 0%;
 }

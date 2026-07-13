@@ -4,6 +4,12 @@ import { reactRouter } from '@react-router/dev/vite';
 import { cloudflare } from '@cloudflare/vite-plugin';
 import tailwindcss from '@tailwindcss/vite';
 import { imagetools } from 'vite-imagetools';
+import mdx from '@mdx-js/rollup';
+import remarkFrontmatter from 'remark-frontmatter';
+import remarkMdxFrontmatter from 'remark-mdx-frontmatter';
+import rehypeSlug from 'rehype-slug';
+
+import { remarkToc } from './tools/remark-toc.mjs';
 
 /**
  * Close the server on SIGTERM/SIGHUP instead of dying where we stand.
@@ -60,6 +66,27 @@ export default defineConfig(() => ({
   plugins: [
     reapWorkerdOnSignals(),
     tailwindcss(),
+    /*
+     * Posts compile to React components at BUILD time. That is what lets a post use
+     * <Image> and our <Link> — a component cannot be rendered from a string of HTML,
+     * which is what marked produced and dangerouslySetInnerHTML injected. It also means
+     * no markdown parser ships at runtime: `marked` leaves the bundle entirely.
+     *
+     * `enforce: 'pre'` so .mdx becomes JSX before the React plugin looks at it.
+     */
+    {
+      enforce: 'pre',
+      ...mdx({
+        remarkPlugins: [
+          remarkFrontmatter,
+          [remarkMdxFrontmatter, { name: 'frontmatter' }],
+          remarkToc,
+        ],
+        /* The same ids the table of contents links to. */
+        rehypePlugins: [rehypeSlug],
+        providerImportSource: '@mdx-js/react',
+      }),
+    },
     // Build-time image transforms: sharp runs once, output is hashed and
     // immutable and first-party. See .agent/assets.md.
     imagetools(),
