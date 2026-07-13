@@ -24,12 +24,12 @@ jobs:
       # Learn more at https://nx.dev/docs/reference/nx-cloud-cli#npx-nxcloud-startcirun
       - run: npx nx start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="e2e"
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
 
       # Cache node_modules
       - uses: actions/setup-node@v5
         with:
-          node-version: 24
+          node-version-file: .nvmrc
           cache: 'pnpm'
 
       - run: pnpm install --frozen-lockfile
@@ -67,11 +67,11 @@ jobs:
           filter: tree:0
           fetch-depth: 0
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
 
       - uses: actions/setup-node@v5
         with:
-          node-version: 24
+          node-version-file: .nvmrc
           cache: 'pnpm'
 
       - run: pnpm install --frozen-lockfile
@@ -102,11 +102,11 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
 
       - uses: actions/setup-node@v5
         with:
-          node-version: 24
+          node-version-file: .nvmrc
           cache: 'pnpm'
 
       - run: pnpm install --frozen-lockfile

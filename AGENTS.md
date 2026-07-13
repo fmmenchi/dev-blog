@@ -21,6 +21,10 @@ libraries (design tokens + UI components).
 
 ## Setup & commands
 
+**Node**: the version lives in `.nvmrc` (24 — the current LTS line, so patches
+arrive on their own). CI reads that same file; `engines` + `engineStrict` make
+pnpm **refuse** to install on anything else rather than warn. `nvm use` and go.
+
 ```bash
 pnpm install                 # install (workspace: apps/* + libs/*)
 pnpm nx dev blog             # dev server → http://localhost:4200
