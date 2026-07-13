@@ -94,9 +94,19 @@ export function AccentSwitcher({ className }: { className?: string }) {
       <button
         type="button"
         className={cn(
-          'inline-flex cursor-pointer items-center gap-2 rounded-md border border-border bg-transparent px-2.75 py-1.5 font-mono text-2xs text-muted-foreground [transition:var(--transition-color)] hover:border-primary hover:text-foreground',
+          'inline-flex cursor-pointer items-center gap-2 rounded-md border bg-transparent px-2.75 py-1.5 font-mono text-2xs text-muted-foreground [transition:var(--transition-color)] hover:text-foreground',
           className,
         )}
+        /*
+         * The border is the colour the button is OFFERING, the same one as the swatch
+         * and the word beside it. It used to be `border-border` — the separator grey,
+         * 1.18:1 against the background — so the control had no visible edge at all,
+         * and only found one on hover, which a phone does not have.
+         *
+         * Inline, because the value depends on state; a class list cannot hold three
+         * accents. It is the same token the swatch reads, so the two can never drift.
+         */
+        style={{ borderColor: SWATCH[next] }}
         onClick={cycle}
         title="switch accent"
         aria-label={`Change accent color to ${next}`}
