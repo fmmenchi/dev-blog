@@ -1,4 +1,4 @@
-import { Badge, Card, EmptyState, Link } from '@dev-blog/ui';
+import { Badge, Card, Container, EmptyState, Link } from '@dev-blog/ui';
 import { useLoaderData, type LoaderFunctionArgs } from 'react-router';
 
 import { FilterBar } from '../components/filter-bar.lazy';
@@ -44,7 +44,7 @@ export default function Blog() {
   const filtered = selected.length > 0;
 
   return (
-    <main className="mx-auto w-full max-w-content px-8 pt-14 pb-18">
+    <Container as="main" className="pt-14 pb-18">
       <h1 className="mb-3.5 text-[clamp(1.875rem,4vw,2.75rem)] leading-tight font-bold tracking-[-0.03em]">
         Blog
       </h1>
@@ -117,6 +117,6 @@ export default function Blog() {
           ))}
         </ul>
       )}
-    </main>
+    </Container>
   );
 }

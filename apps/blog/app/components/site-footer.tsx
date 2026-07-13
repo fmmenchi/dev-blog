@@ -1,4 +1,4 @@
-import { IconLinks, Link } from '@dev-blog/ui';
+import { Container, IconLinks, Link } from '@dev-blog/ui';
 
 import { socialLinks } from '../lib/social-links';
 
@@ -9,7 +9,10 @@ export function SiteFooter() {
   return (
     <footer className="border-t border-border">
       {/* Everything wraps on a phone rather than running off it. */}
-      <div className="mx-auto flex max-w-content flex-wrap items-center justify-between gap-x-4 gap-y-3 px-4 py-6 font-mono text-xs text-muted-foreground md:flex-nowrap md:px-8">
+      <Container
+        padding="bar"
+        className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3 py-6 font-mono text-xs text-muted-foreground md:flex-nowrap"
+      >
         <span>© 2026 fabiomenchicchi.com</span>
 
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 md:gap-4.5">
@@ -38,7 +41,7 @@ export function SiteFooter() {
           {/* Brings its own <nav aria-label="Social"> — a sibling, never nested. */}
           <IconLinks label="Social" links={socialLinks} />
         </div>
-      </div>
+      </Container>
     </footer>
   );
 }

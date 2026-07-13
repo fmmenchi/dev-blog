@@ -1,4 +1,12 @@
-import { Avatar, Badge, BadgeList, Card, EmptyState, Link } from '@dev-blog/ui';
+import {
+  Avatar,
+  Badge,
+  BadgeList,
+  Card,
+  Container,
+  EmptyState,
+  Link,
+} from '@dev-blog/ui';
 import { useLoaderData } from 'react-router';
 
 import { SectionHeading } from '../components/section-heading';
@@ -30,7 +38,7 @@ export default function Home() {
 
   return (
     <main className="w-full">
-      <div className="mx-auto max-w-content px-8 pt-14 pb-5">
+      <Container className="pt-14 pb-5">
         <h1 className="mb-4.5 max-w-[48.75rem] text-[clamp(2.125rem,4.5vw,3.25rem)] leading-[1.08] font-bold tracking-[-0.03em]">
           Software, systems and the{' '}
           <span className="text-primary">decisions</span> behind the code.
@@ -38,10 +46,10 @@ export default function Home() {
         <p className="max-w-[35rem] text-lg leading-copy text-balance text-muted-foreground">
           Notes on architecture, tooling and developer experience.
         </p>
-      </div>
+      </Container>
 
       {/* Phone: one column. From `md` the profile sidebar moves alongside. */}
-      <div className="mx-auto grid max-w-content grid-cols-1 items-start gap-5 px-8 pt-9 pb-16 md:grid-cols-[300px_1fr]">
+      <Container className="grid grid-cols-1 items-start gap-5 pt-9 pb-16 md:grid-cols-[300px_1fr]">
         {/* Sticky only once there is a column to be sticky in. */}
         <aside className="flex flex-col gap-3.5 md:sticky md:top-6">
           <Card className="flex flex-col items-start gap-3.5">
@@ -159,7 +167,7 @@ export default function Home() {
             </>
           )}
         </section>
-      </div>
+      </Container>
     </main>
   );
 }
