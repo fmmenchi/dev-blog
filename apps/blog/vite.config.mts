@@ -1,9 +1,50 @@
 /// <reference types='vitest' />
-import { defineConfig } from 'vite';
+import { defineConfig, type Plugin, type ViteDevServer } from 'vite';
 import { reactRouter } from '@react-router/dev/vite';
 import { cloudflare } from '@cloudflare/vite-plugin';
 import tailwindcss from '@tailwindcss/vite';
 import { imagetools } from 'vite-imagetools';
+
+/**
+ * Close the server on SIGTERM/SIGHUP instead of dying where we stand.
+ *
+ * The Cloudflare plugin runs the worker in `workerd`, a CHILD PROCESS that
+ * miniflare only kills when the server is closed properly. Ctrl-C already did
+ * the right thing (SIGINT is handled upstream), but a SIGTERM — an editor
+ * stopping the task, a script, an agent, `nx` being killed — hits Node with no
+ * handler installed, and Node's default action for SIGTERM is to terminate
+ * *immediately*: no plugin teardown, no miniflare dispose, and `workerd`
+ * outlives its parent. Every such stop leaked one. We found ten of them, up to
+ * three and a half hours old, sitting on 64 MB and — before the ports were
+ * freed — on 4200 and 9229.
+ *
+ * Installing a handler overrides that default: we close the server (which runs
+ * the plugin teardown that reaps workerd) and only then exit.
+ */
+function reapWorkerdOnSignals(): Plugin {
+  const closeOn = (server: { close: () => Promise<void> }) => {
+    const shutdown = () => {
+      void server
+        .close()
+        .catch(() => undefined)
+        .finally(() => process.exit(0));
+    };
+
+    /* `once`: a second signal must kill us outright, not queue a second close. */
+    process.once('SIGTERM', shutdown);
+    process.once('SIGHUP', shutdown);
+  };
+
+  return {
+    name: 'dev-blog:reap-workerd-on-signals',
+    configureServer(server: ViteDevServer) {
+      closeOn(server);
+    },
+    configurePreviewServer(server) {
+      closeOn(server);
+    },
+  };
+}
 
 export default defineConfig(() => ({
   root: import.meta.dirname,
@@ -17,6 +58,7 @@ export default defineConfig(() => ({
     host: 'localhost',
   },
   plugins: [
+    reapWorkerdOnSignals(),
     tailwindcss(),
     // Build-time image transforms: sharp runs once, output is hashed and
     // immutable and first-party. See .agent/assets.md.
