@@ -42,6 +42,17 @@
         },
         "defaultConfiguration": "off",
         "cache": false
+      },
+      "assess": {
+        "executor": "nx:run-commands",
+        "cache": false,
+        "dependsOn": [
+          "build"
+        ],
+        "options": {
+          "cwd": "{workspaceRoot}",
+          "command": "node tools/assess.mjs"
+        }
       }
     }
   },

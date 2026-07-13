@@ -23,7 +23,7 @@ test.describe('article', () => {
       page.getByRole('heading', { level: 1, name: 'Starting a notebook' }),
     ).toBeVisible();
     await expect(
-      page.getByRole('navigation', { name: 'More articles' }),
+      page.getByRole('navigation', { name: 'More posts' }),
     ).toHaveCount(0);
   });
 
