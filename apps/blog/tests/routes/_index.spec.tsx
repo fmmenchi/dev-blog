@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react';
 
 import { getPosts } from '../../app/lib/posts.server';
 import Home, { loader } from '../../app/routes/home';
+import { firstPost } from '../support/content';
 
 function renderHome() {
   const Stub = createRoutesStub([{ path: '/', Component: Home, loader }]);
@@ -23,13 +24,14 @@ describe('Home', () => {
 
   it('features the latest post with its tags', async () => {
     renderHome();
+    const featured = firstPost();
+
     expect(
-      await screen.findByRole('heading', {
-        level: 2,
-        name: 'Starting a notebook',
-      }),
+      await screen.findByRole('heading', { level: 2, name: featured.title }),
     ).toBeTruthy();
-    expect(screen.getByText('#meta')).toBeTruthy();
+    for (const tag of featured.tags) {
+      expect(screen.getByText(`#${tag}`)).toBeTruthy();
+    }
     expect(screen.getByText('★ latest')).toBeTruthy();
   });
 

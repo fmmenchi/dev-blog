@@ -1,7 +1,8 @@
-import { createRoutesStub } from 'react-router';
 import { render, screen } from '@testing-library/react';
+import { createRoutesStub } from 'react-router';
 
 import Post, { loader } from '../../app/routes/post';
+import { firstPost, posts, sectionsOf, slugify } from '../support/content';
 
 function renderPost(slug: string) {
   const Stub = createRoutesStub([
@@ -10,38 +11,49 @@ function renderPost(slug: string) {
   return render(<Stub initialEntries={[`/blog/${slug}`]} />);
 }
 
+/* Whatever is published. Rewrite every post tomorrow and these still hold. */
+const post = firstPost();
+const sections = sectionsOf(post);
+
 describe('Post', () => {
-  it('renders the article with title and numbered sections', async () => {
-    renderPost('starting-a-notebook');
+  it('renders the article with its title and its sections', async () => {
+    renderPost(post.slug);
     expect(
-      await screen.findByRole('heading', {
-        level: 1,
-        name: 'Starting a notebook',
-      }),
+      await screen.findByRole('heading', { level: 1, name: post.title }),
     ).toBeTruthy();
-    expect(
-      screen.getByRole('heading', { level: 2, name: /What goes here/ }),
-    ).toBeTruthy();
+
+    for (const section of sections) {
+      expect(
+        screen.getByRole('heading', { level: 2, name: section }),
+      ).toBeTruthy();
+    }
   });
 
-  it('exposes a table of contents linking to the sections', async () => {
-    renderPost('starting-a-notebook');
-    const toc = await screen.findByRole('navigation', {
-      name: 'On this page',
+  it('builds a table of contents from those sections, and anchors them', async () => {
+    renderPost(post.slug);
+    expect(
+      await screen.findByRole('navigation', { name: 'On this page' }),
+    ).toBeTruthy();
+
+    const [first] = sections;
+    if (first === undefined) throw new Error('the post has no ## sections');
+
+    /* The link must point at an id the page actually renders. */
+    const link = screen.getByRole('link', {
+      name: new RegExp(`01 · ${first}`),
     });
-    expect(toc).toBeTruthy();
-    const first = screen.getByRole('link', { name: /01 · What goes here/ });
-    expect(first.getAttribute('href')).toBe('#what-goes-here');
+    expect(link.getAttribute('href')).toBe(`#${slugify(first)}`);
     expect(
-      screen
-        .getByRole('heading', { level: 2, name: /What goes here/ })
-        .getAttribute('id'),
-    ).toBe('what-goes-here');
+      screen.getByRole('heading', { level: 2, name: first }).getAttribute('id'),
+    ).toBe(slugify(first));
   });
 
-  it('hides the siblings nav when a post has no neighbours', async () => {
-    renderPost('starting-a-notebook');
+  it('shows the siblings nav only when there are siblings', async () => {
+    renderPost(post.slug);
     await screen.findByRole('heading', { level: 1 });
-    expect(screen.queryByRole('navigation', { name: 'More posts' })).toBeNull();
+
+    const nav = screen.queryByRole('navigation', { name: 'More posts' });
+    if (posts.length > 1) expect(nav).toBeTruthy();
+    else expect(nav).toBeNull();
   });
 });

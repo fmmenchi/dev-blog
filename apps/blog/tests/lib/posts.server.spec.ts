@@ -29,12 +29,20 @@ describe('posts', () => {
     expect(dates).toEqual([...dates].sort().reverse());
   });
 
-  it('exposes the featured post with parsed frontmatter', () => {
-    const post = getPost('starting-a-notebook');
-    expect(post?.title).toBe('Starting a notebook');
-    expect(post?.minutes).toBe(2);
-    expect(post?.tags).toEqual(['meta']);
-    expect(post?.featured).toBe(true);
-    expect(post?.body).toContain('## What goes here');
+  /* Asserts that the frontmatter is PARSED, not what any given post happens to say. */
+  it('parses the frontmatter of every published post', () => {
+    for (const { slug, title, minutes, tags, body } of getPosts()) {
+      const post = getPost(slug);
+      expect(post?.title).toBe(title);
+      expect(title.length).toBeGreaterThan(0);
+      expect(minutes).toBeGreaterThan(0);
+      expect(tags.length).toBeGreaterThan(0);
+      /* The frontmatter block itself must not survive into the body. */
+      expect(body.startsWith('---')).toBe(false);
+    }
+  });
+
+  it('marks exactly one post as featured', () => {
+    expect(getPosts().filter((post) => post.featured)).toHaveLength(1);
   });
 });

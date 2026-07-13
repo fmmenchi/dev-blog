@@ -1,6 +1,7 @@
 import { loader as robotsLoader } from '../../app/routes/robots';
 import { loader as sitemapLoader } from '../../app/routes/sitemap';
 import { originFromMatches, seoMeta } from '../../app/lib/seo';
+import { posts } from '../support/content';
 
 describe('seoMeta', () => {
   const tags = seoMeta({
@@ -41,10 +42,13 @@ describe('sitemap.xml', () => {
     const xml = await res.text();
     expect(xml).toContain('<loc>https://fabiomenchicchi.com/</loc>');
     expect(xml).toContain('<loc>https://fabiomenchicchi.com/projects</loc>');
-    expect(xml).toContain(
-      '<loc>https://fabiomenchicchi.com/blog/starting-a-notebook</loc>',
-    );
-    expect(xml).toContain('<lastmod>2026-07-12</lastmod>');
+    /* Every published post is listed, whichever they happen to be. */
+    for (const post of posts) {
+      expect(xml).toContain(
+        `<loc>https://fabiomenchicchi.com/blog/${post.slug}</loc>`,
+      );
+      expect(xml).toContain(`<lastmod>${post.date}</lastmod>`);
+    }
   });
 });
 
