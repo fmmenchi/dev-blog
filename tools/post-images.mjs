@@ -29,20 +29,44 @@ const MONO = readFileSync(
   'apps/blog/public/fonts/jetbrains-mono-latin-wght-normal.woff2',
 ).toString('base64');
 
-/** The vendored sources, exactly as simple-icons ships them: a bare path, no fill. */
-const icons = ['github', 'linkedin', 'mail'].map((name) =>
-  readFileSync(`libs/icons/svg/${name}.svg`, 'utf8')
-    .replace(/<title>.*?<\/title>/, '')
-    .replace(/stroke="#000"/, 'stroke="currentColor"'),
+/** The vendored sources, exactly as simple-icons ships them. */
+const sources = ['github', 'linkedin', 'mail'].map((name) =>
+  readFileSync(`libs/icons/svg/${name}.svg`, 'utf8').replace(
+    /<title>.*?<\/title>/,
+    '',
+  ),
 );
 
-/** `fill` is what the whole bug was about, so it is the only thing that differs. */
-const row = (fill) => `
+/**
+ * What SVGR did BEFORE: substitute an explicit `#000`.
+ *
+ * It is why the mail icon always worked — it declares `stroke="#000"`, so the rule had
+ * something to match. github.svg and linkedin.svg declare no colour at all, so the rule
+ * matched nothing and they kept SVG's default fill, which is black.
+ */
+const before = (svg) => svg.replace(/stroke="#000"/g, 'stroke="currentColor"');
+
+/**
+ * What it does NOW: give the root <svg> a fill when the file declares none.
+ *
+ * The stroke-drawn mail icon says `fill="none"` and must keep saying it, or it fills in
+ * as a solid blob — which is why the rule is "when absent", not "always".
+ *
+ * The first version of this figure got the AFTER panel wrong: it set `color` on the
+ * wrapper and assumed the icons would inherit it. They do not — that is the entire bug.
+ * So the fix is applied here, to the markup, exactly as the svgr config applies it.
+ */
+const after = (svg) =>
+  /<svg[^>]*\sfill=/.test(svg)
+    ? before(svg)
+    : before(svg).replace('<svg', '<svg fill="currentColor"');
+
+const row = (transform, color) => `
   <div class="row">
-    ${icons
+    ${sources
       .map(
         (svg) =>
-          `<span class="chip" style="color:${fill}">${svg
+          `<span class="chip" style="color:${color}">${transform(svg)
             .replace('<svg', `<svg width="18" height="18"`)
             .replace(/^\s+/, '')}</span>`,
       )
@@ -78,12 +102,12 @@ const html = `<!doctype html>
 <body>
   <div class="panel">
     <p class="label"><b>before</b> — no fill declared</p>
-    ${row('#000')}
+    ${row(before, MUTED)}
     <p class="note">The build was green.<br>The icons are right there.</p>
   </div>
   <div class="panel">
     <p class="label"><b>after</b> — currentColor</p>
-    ${row(MUTED)}
+    ${row(after, MUTED)}
     <p class="note">Same markup. Same tests.<br>One line of config.</p>
   </div>
 </body>`;
