@@ -31,6 +31,28 @@
   margin-block: var(--spacing-stack-m);
 }
 
+/*
+ * Tailwind's reset strips `list-style` and the indent from every list, which is
+ * right for a nav and wrong for prose: a post's list came out as loose lines with
+ * nothing to mark them. Give the markers back here, where the content lives.
+ */
+.prose ul,
+.prose ol {
+  padding-inline-start: var(--spacing-inset-l);
+}
+
+.prose ul {
+  list-style: disc;
+}
+
+.prose ol {
+  list-style: decimal;
+}
+
+.prose li::marker {
+  color: var(--color-muted-foreground);
+}
+
 .prose a {
   color: var(--color-primary);
   text-underline-offset: 0.25em;
