@@ -1,0 +1,65 @@
+---
+title: Can I Import This? Module Boundaries in a Monorepo
+date: 2026-07-15
+minutes: 7
+tags: monorepo, typescript, architecture, tooling
+excerpt: When you join a monorepo, one question sits under everything you do — can I import this from here, and if I do, what breaks? The answer depends on where the boundaries between your libraries actually live, and most people never get a clear picture of that.
+featured: false
+---
+
+When you join a monorepo, one question sits underneath everything you do: _can I
+import this from here — and if I do, what breaks?_ It sounds trivial. It isn't. The
+answer depends on where the boundaries between your libraries actually live, and most
+people never get a clear picture of that.
+
+## There isn't one boundary. There are three.
+
+The confusion starts because "boundary" means three different things, and people blur
+them together. Pull them apart and everything else gets clearer.
+
+```mermaid
+flowchart TB
+  Q["Can I import this?"]:::accent
+  Q --> A["Architectural — checked at lint, only warns"]
+  Q --> B["Compiler visibility — checked at type-check"]
+  Q --> C["Runtime — bundle or Node, at build/run"]
+```
+
+Most boundary pain comes from assuming these three line up. By default, they don't — and
+when the graph gets tangled, an app and three libraries with deep imports running between
+them in a cycle, a static list stops helping:
+
+```mermaid
+flowchart TB
+  app["App (bundler)"]:::accent
+  app --> components
+  app --> data["data-access"]
+  components -->|deep import| data
+  data -->|deep import| utils
+  utils -->|deep import| components
+```
+
+Every one of those deep imports resolves fine, and none of them should exist.
+
+## The fix: make the library a package
+
+Stop treating a library as a folder of source; treat it as a package that declares its
+own public surface through an `exports` map. Now the same library serves every consumer,
+each through the right door:
+
+```mermaid
+flowchart LR
+  P["@myorg/components"]:::accent
+  P -->|types| T["Type-checker"]
+  P -->|import| N["Bundler / Node (ESM)"]
+  P -->|require| J["CommonJS consumer"]
+```
+
+Whatever isn't listed isn't reachable, so the deep-import into internals stops working.
+The public API becomes real.
+
+## Where this is heading
+
+Making a library a package fixes the runtime side. But it still hasn't made the compiler
+enforce the visibility boundary — that's what project references are for, and that's the
+next article.
