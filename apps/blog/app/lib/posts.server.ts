@@ -44,15 +44,41 @@ interface Frontmatter {
   featured?: boolean;
 }
 
-const frontmatters = import.meta.glob('../../content/posts/*.mdx', {
+const publishedFrontmatters = import.meta.glob('../../content/posts/*.mdx', {
   eager: true,
   import: 'frontmatter',
 }) as Record<string, Frontmatter>;
 
-const tocs = import.meta.glob('../../content/posts/*.mdx', {
+const publishedTocs = import.meta.glob('../../content/posts/*.mdx', {
   eager: true,
   import: 'toc',
 }) as Record<string, TocEntry[]>;
+
+/*
+ * Drafts are a separate, committed folder that ships ONLY while developing. In the
+ * production build `import.meta.env.DEV` is the literal `false`, so these globs sit in
+ * dead code and the bundler drops them along with every module they would have pulled in
+ * — a draft's frontmatter, its table of contents and (in post.tsx) its body never reach
+ * the deployed site. Publish a draft by moving its file into content/posts/.
+ *
+ * See post.tsx for the matching gate on the content component.
+ */
+const draftFrontmatters = import.meta.env.DEV
+  ? (import.meta.glob('../../content/drafts/*.mdx', {
+      eager: true,
+      import: 'frontmatter',
+    }) as Record<string, Frontmatter>)
+  : {};
+
+const draftTocs = import.meta.env.DEV
+  ? (import.meta.glob('../../content/drafts/*.mdx', {
+      eager: true,
+      import: 'toc',
+    }) as Record<string, TocEntry[]>)
+  : {};
+
+const frontmatters = { ...publishedFrontmatters, ...draftFrontmatters };
+const tocs = { ...publishedTocs, ...draftTocs };
 
 export function slugOf(path: string): string {
   return path.replace(/^.*\//, '').replace(/\.mdx$/, '');
