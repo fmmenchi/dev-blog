@@ -1,0 +1,66 @@
+{
+  "name": "@dev-blog/release",
+  "version": "0.0.1",
+  "private": true,
+  "type": "commonjs",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "@dev-blog/source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "nx": {
+    "targets": {
+      "build": {
+        "executor": "@nx/js:tsc",
+        "outputs": [
+          "{options.outputPath}"
+        ],
+        "options": {
+          "outputPath": "plugins/release/dist",
+          "main": "plugins/release/src/index.ts",
+          "tsConfig": "plugins/release/tsconfig.lib.json",
+          "rootDir": "plugins/release/src",
+          "generatePackageJson": false,
+          "assets": [
+            {
+              "input": "./plugins/release/src",
+              "glob": "**/!(*.ts)",
+              "output": "."
+            },
+            {
+              "input": "./plugins/release/src",
+              "glob": "**/*.d.ts",
+              "output": "."
+            }
+          ]
+        }
+      },
+      "notify": {
+        "executor": "@dev-blog/release:notify",
+        "cache": false
+      }
+    },
+    "tags": [
+      "scope:shared",
+      "type:tooling"
+    ]
+  },
+  "dependencies": {
+    "@nx/devkit": "23.0.1",
+    "tslib": "^2.3.0",
+    "@dev-blog/notify": "workspace:*"
+  },
+  "executors": "./executors.json",
+  "files": [
+    "dist",
+    "!**/*.tsbuildinfo",
+    "executors.json"
+  ]
+}

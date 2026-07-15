@@ -93,3 +93,36 @@ export function alertBlocks(message: string, url: string): SlackBlock[] {
     },
   ];
 }
+
+/**
+ * Announces a release, with a link to its notes.
+ *
+ * Deliberately not `alertBlocks`: a release is not something that went wrong, so it does
+ * not borrow the alarm's framing or its "See the run" wording. The button points at the
+ * GitHub release, which is the one thing a reader actually wants after "a version shipped".
+ *
+ * `version` is the tag without its leading `v` — `1.0.0`, not `v1.0.0` — because the
+ * heading adds the `v` back, and the caller (a git tag) is the one place the two forms
+ * are easy to confuse.
+ */
+export function releaseBlocks(version: string, url: string): SlackBlock[] {
+  return [
+    {
+      type: 'section',
+      text: {
+        type: 'mrkdwn',
+        text: `:rocket: *dev-blog \`v${version}\`* is out.`,
+      },
+    },
+    {
+      type: 'actions',
+      elements: [
+        {
+          type: 'button',
+          text: { type: 'plain_text', text: 'View release' },
+          url,
+        },
+      ],
+    },
+  ];
+}

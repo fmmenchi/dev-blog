@@ -1,4 +1,4 @@
-import { alertBlocks, postToSlack } from './slack';
+import { alertBlocks, postToSlack, releaseBlocks } from './slack';
 
 const message = {
   token: 'xoxb-test',
@@ -70,5 +70,22 @@ describe('alertBlocks', () => {
     /* An alert you cannot act on is noise. */
     const button = (blocks[1] as { elements: { url: string }[] }).elements[0];
     expect(button.url).toBe('https://ci/run/1');
+  });
+});
+
+describe('releaseBlocks', () => {
+  it('renders the version with a single leading v and links to the notes', () => {
+    const blocks = releaseBlocks('1.0.0', 'https://gh/releases/tag/v1.0.0');
+
+    const heading = (blocks[0] as { text: { text: string } }).text.text;
+    /* The caller passes the bare version; exactly one `v` comes back. */
+    expect(heading).toContain('`v1.0.0`');
+    expect(heading).not.toContain('vv');
+
+    const button = (
+      blocks[1] as { elements: { text: { text: string }; url: string }[] }
+    ).elements[0];
+    expect(button.text.text).toBe('View release');
+    expect(button.url).toBe('https://gh/releases/tag/v1.0.0');
   });
 });

@@ -1,0 +1,9 @@
+{
+  "executors": {
+    "notify": {
+      "implementation": "./src/executors/notify/executor",
+      "schema": "./src/executors/notify/schema.json",
+      "description": "Announce a freshly cut release to Slack."
+    }
+  }
+}
