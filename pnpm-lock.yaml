@@ -306,6 +306,18 @@ importers:
         specifier: ^8.1.0
         version: 8.1.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
 
+  plugins/release:
+    dependencies:
+      '@dev-blog/notify':
+        specifier: workspace:*
+        version: link:../../libs/notify
+      '@nx/devkit':
+        specifier: 23.0.1
+        version: 23.0.1(nx@23.0.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.18))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.18)))
+      tslib:
+        specifier: ^2.3.0
+        version: 2.8.1
+
   plugins/security:
     dependencies:
       '@dev-blog/notify':

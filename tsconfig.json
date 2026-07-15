@@ -20,6 +20,9 @@
     },
     {
       "path": "./libs/notify"
+    },
+    {
+      "path": "./plugins/release"
     }
   ]
 }

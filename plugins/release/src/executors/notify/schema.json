@@ -1,0 +1,8 @@
+{
+  "$schema": "https://json-schema.org/schema",
+  "version": 2,
+  "title": "Slack release notification",
+  "description": "Announces a freshly cut release to Slack. Everything comes from the environment, not from options: SLACK_BOT_TOKEN and SLACK_CHANNEL_ID because a token must never land in the project graph, and RELEASE_VERSION and RELEASE_URL because they change with every release and are known only to the run that cut the tag.",
+  "type": "object",
+  "properties": {}
+}

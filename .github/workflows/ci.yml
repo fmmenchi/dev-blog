@@ -82,15 +82,37 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Release
+        id: release
         # --first-release is required when no v* tag exists yet
         run: |
-          if git describe --tags --abbrev=0 --match "v*" >/dev/null 2>&1; then
+          before=$(git describe --tags --abbrev=0 --match "v*" 2>/dev/null || echo "")
+          if [ -n "$before" ]; then
             pnpm nx release --skip-publish
           else
             pnpm nx release --skip-publish --first-release
           fi
+          after=$(git describe --tags --abbrev=0 --match "v*" 2>/dev/null || echo "")
+          # Only a changed tag is a release: a push with no releasable commits leaves it
+          # untouched, and the notify step downstream keys off this being non-empty.
+          if [ -n "$after" ] && [ "$after" != "$before" ]; then
+            echo "version=${after#v}" >> "$GITHUB_OUTPUT"
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Tell Slack, but only when a new tag was actually cut. The message is built and
+      # sent in tested TypeScript (@dev-blog/notify, through the release plugin's notify
+      # executor), not curl and jq: the failure that happens is Slack answering 200 while
+      # refusing the message, and only a unit test pins that down. Missing secrets skip
+      # the step rather than failing it.
+      - name: Announce the release to Slack
+        if: steps.release.outputs.version != ''
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          SLACK_CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID }}
+          RELEASE_VERSION: ${{ steps.release.outputs.version }}
+          RELEASE_URL: ${{ github.server_url }}/${{ github.repository }}/releases/tag/v${{ steps.release.outputs.version }}
+        run: pnpm nx run @dev-blog/release:notify
 
   # Deploy to Cloudflare Workers on every green push to main.
   # Requires the CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID repo secrets;
