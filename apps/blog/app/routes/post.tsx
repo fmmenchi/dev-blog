@@ -44,8 +44,18 @@ const contents = import.meta.glob('../../content/posts/*.mdx', {
   import: 'default',
 }) as Record<string, React.ComponentType<{ components?: unknown }>>;
 
+/* Draft bodies, in development only — the production build folds `import.meta.env.DEV`
+   to false and drops this glob, so no draft component reaches the bundle. See
+   posts.server.ts for the matching gate on the frontmatter. */
+const draftContents = import.meta.env.DEV
+  ? (import.meta.glob('../../content/drafts/*.mdx', {
+      eager: true,
+      import: 'default',
+    }) as Record<string, React.ComponentType<{ components?: unknown }>>)
+  : {};
+
 const CONTENT = Object.fromEntries(
-  Object.entries(contents).map(([path, Component]) => [
+  Object.entries({ ...contents, ...draftContents }).map(([path, Component]) => [
     path.replace(/^.*\//, '').replace(/\.mdx$/, ''),
     Component,
   ]),

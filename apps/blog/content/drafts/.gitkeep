@@ -1,0 +1,4 @@
+Drafts live here. They are committed (versioned) but excluded from the production
+build: posts.server.ts and post.tsx glob this folder only when import.meta.env.DEV
+is true, so nothing here reaches the deployed bundle. Publish by moving the file
+to ../posts/.
