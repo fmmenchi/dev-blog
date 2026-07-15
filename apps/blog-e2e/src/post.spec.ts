@@ -17,7 +17,14 @@ test.describe('article', () => {
     const href = await first.getAttribute('href');
     await first.click();
     await expect(page).toHaveURL(new RegExp(`${href}$`));
-    await expect(page.locator(String(href))).toBeInViewport();
+
+    /*
+     * By id, NOT by `#id` as a CSS selector: a heading like "1. Code nobody reads"
+     * slugs to an id that starts with a digit, which is valid HTML and a valid
+     * fragment — the browser scrolls to it — but an illegal CSS selector.
+     */
+    const id = String(href).slice(1);
+    await expect(page.locator(`[id="${id}"]`)).toBeInViewport();
   });
 
   // An empty nav landmark helps nobody, so it appears only when there is a neighbour.

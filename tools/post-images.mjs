@@ -1,5 +1,5 @@
 /*
- * The figures for "Four bugs that never failed" — the ones that ARE the argument.
+ * The figures for "Four UI bugs that never failed" — the ones that ARE the argument.
  *
  *   apps/blog/app/images/invisible-icons.png    the icons you cannot see
  *   apps/blog/app/images/invisible-border.png   the border you cannot see
