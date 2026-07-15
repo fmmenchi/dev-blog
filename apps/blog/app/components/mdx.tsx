@@ -2,6 +2,7 @@ import { Link } from '@dev-blog/ui';
 import type { ComponentProps } from 'react';
 
 import { Image } from './image';
+import { MermaidDiagram } from './mermaid';
 
 /**
  * What the elements of a post compile to.
@@ -38,4 +39,11 @@ export const mdxComponents = {
    * article is worth importing.
    */
   Image,
+
+  /**
+   * A ```mermaid block, compiled by remark-mermaid to `<MermaidDiagram hash>` and inlined
+   * here from a pre-rendered, themed SVG. Diagrams follow the accent switch; the browser
+   * that lays them out runs only in nx run blog:diagrams, never in the build.
+   */
+  MermaidDiagram,
 };
