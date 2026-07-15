@@ -62,6 +62,6 @@ export const profile = {
     'DX',
     'AI',
   ],
-  building: 'this blog — rewriting it in the open',
-  buildingProgress: 70,
+  building: 'the next post — Nx and TypeScript project references',
+  buildingProgress: 20,
 };
