@@ -35,6 +35,7 @@ export interface PostSummary {
   title: string;
   tags: string[];
   date: string;
+  draft: boolean;
 }
 
 function read(file: string): PostSummary {
@@ -52,13 +53,20 @@ function read(file: string): PostSummary {
       .map((tag) => tag.trim())
       .filter(Boolean),
     date: field('date'),
+    draft: field('draft') === 'true',
   };
 }
 
-/** Newest first — the same order the site shows them in. */
+/**
+ * Newest first, published only — the same set the built site shows. A draft is excluded
+ * here for the same reason it is in the app: its page 404s in production, so a spec that
+ * picked it (firstPost, the a11y sweep, the feeds) would be testing a page nobody can
+ * reach.
+ */
 export const posts: PostSummary[] = readdirSync(POSTS_DIR)
   .filter((file) => file.endsWith('.mdx'))
   .map(read)
+  .filter((post) => !post.draft)
   .sort((a, b) => b.date.localeCompare(a.date));
 
 export function firstPost(): PostSummary {

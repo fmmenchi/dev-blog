@@ -18,10 +18,14 @@ export function loader({ params }: LoaderFunctionArgs) {
   const posts = getPosts();
   const index = posts.findIndex((p) => p.slug === post.slug);
 
+  /* A draft (dev-only) is not in the published list, so it has no neighbours: index is
+     -1, and prev/next must stay null rather than wrap onto the newest post. */
+  const inList = index !== -1;
+
   return {
     post,
-    prev: posts[index + 1] ?? null,
-    next: posts[index - 1] ?? null,
+    prev: inList ? (posts[index + 1] ?? null) : null,
+    next: inList ? (posts[index - 1] ?? null) : null,
   };
 }
 

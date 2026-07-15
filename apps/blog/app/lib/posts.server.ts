@@ -30,6 +30,11 @@ export interface Post {
   tags: string[];
   excerpt: string;
   featured: boolean;
+  /**
+   * A draft is written in the open but not published: it is kept out of every listing,
+   * the feed and the sitemap, and its page 404s in the built site. See getPost/getPosts.
+   */
+  draft: boolean;
   /** Its `##` headings, collected from the syntax tree by tools/remark-toc.mjs. */
   toc: TocEntry[];
 }
@@ -42,6 +47,7 @@ interface Frontmatter {
   tags?: string;
   excerpt?: string;
   featured?: boolean;
+  draft?: boolean;
 }
 
 const frontmatters = import.meta.glob('../../content/posts/*.mdx', {
@@ -75,6 +81,7 @@ function toPost(path: string, meta: Frontmatter): Post {
       : [],
     excerpt: meta.excerpt ?? '',
     featured: meta.featured === true,
+    draft: meta.draft === true,
     toc: tocs[path] ?? [],
   };
 }
@@ -83,10 +90,37 @@ const all = Object.entries(frontmatters)
   .map(([path, meta]) => toPost(path, meta))
   .sort((a, b) => b.date.localeCompare(a.date));
 
+/*
+ * The draft rules, kept pure and separate from how the posts are loaded, so they can be
+ * tested without a fixture on disk. A draft never appears in a list; it is reachable by
+ * its own URL, but only where drafts are allowed to exist at all.
+ */
+
+/** Published posts only — what every listing, the feed and the sitemap should show. */
+export function listPublished(posts: Post[]): Post[] {
+  return posts.filter((post) => !post.draft);
+}
+
+/**
+ * The post at `slug`, or nothing. A draft resolves only when `draftsVisible`; in the
+ * built site that is false, so a draft's URL 404s like a slug that was never written.
+ */
+export function resolvePost(
+  posts: Post[],
+  slug: string,
+  draftsVisible: boolean,
+): Post | undefined {
+  const post = posts.find((p) => p.slug === slug);
+  if (!post) return undefined;
+  return post.draft && !draftsVisible ? undefined : post;
+}
+
 export function getPosts(): Post[] {
-  return all;
+  return listPublished(all);
 }
 
 export function getPost(slug: string): Post | undefined {
-  return all.find((post) => post.slug === slug);
+  /* Drafts are viewable while developing, and nowhere else. `import.meta.env.DEV` is
+     replaced with a literal at build time, so the check costs nothing in production. */
+  return resolvePost(all, slug, import.meta.env.DEV);
 }

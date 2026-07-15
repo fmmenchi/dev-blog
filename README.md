@@ -25,7 +25,9 @@ libs/
 ```
 
 Posts are Markdown with frontmatter under `apps/blog/content/posts/`, bundled at
-build time. The feed is hand-built at `/rss.xml`.
+build time. The feed is hand-built at `/rss.xml`. Add `draft: true` to a post's
+frontmatter to keep it out of every listing, the feed and the sitemap: a draft is
+viewable by its URL on the dev server, and 404s in the built site.
 
 ## How it is built
 
