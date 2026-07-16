@@ -46,4 +46,15 @@ export const mdxComponents = {
    * that lays them out runs only in nx run blog:diagrams, never in the build.
    */
   MermaidDiagram,
+
+  /**
+   * A GFM table (remark-gfm turns `| … |` into real table nodes) gets a scroll container:
+   * on a phone a wide table scrolls sideways inside its own box instead of forcing the
+   * whole page to. The table's own look comes from `.body table` in post.module.css.
+   */
+  table: ({ children, ...rest }: ComponentProps<'table'>) => (
+    <div className="max-w-full overflow-x-auto">
+      <table {...rest}>{children}</table>
+    </div>
+  ),
 };
