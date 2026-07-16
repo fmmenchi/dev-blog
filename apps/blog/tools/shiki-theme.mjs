@@ -16,6 +16,7 @@ const S = {
   muted: '#d0d0d2',
   accent: '#d0d0d3',
   bg: '#d0d0d4',
+  string: '#d0d0d5',
 };
 
 export const colorReplacements = {
@@ -23,6 +24,10 @@ export const colorReplacements = {
   [S.muted]: 'var(--color-muted-foreground)',
   [S.accent]: 'var(--color-primary)',
   [S.bg]: 'var(--color-code-background)',
+  /* Strings get one sober extra hue — a muted teal — so JSON/config values read apart
+     from keys without a rainbow. Its own token, `--color-code-string`; it does not follow
+     the accent (only the structural words do). */
+  [S.string]: 'var(--color-code-string)',
 };
 
 /** A minimal TextMate theme: three roles, mapped to tokens above. */
@@ -56,6 +61,12 @@ export const shikiTheme = {
         'meta.object-literal.key',
       ],
       settings: { foreground: S.accent },
+    },
+    {
+      /* String literals and their JSON values. A more specific property-name scope above
+         still wins for JSON keys, so keys stay accent and values turn teal. */
+      scope: ['string', 'string.quoted', 'string.template'],
+      settings: { foreground: S.string },
     },
   ],
 };
