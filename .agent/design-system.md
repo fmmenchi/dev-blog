@@ -36,7 +36,19 @@ source.
 - **An arbitrary value that only wraps a token is a token missing from the
   bridge.** `max-w-[var(--layout-content-width)]` was copy-pasted into six files;
   it is now `max-w-content` (with `max-w-measure` for the reading column). If you
-  are about to write `[var(--…)]`, bridge it instead.
+  are about to write `[var(--…)]`, bridge it instead. The same purge produced
+  `text-display` / `text-hero` (a page's h1 / the home headline — size, leading
+  AND tracking in one class), `tracking-heading` (for a heading that sizes
+  itself some other way) and `max-w-intro` (the lede paragraph under a title).
+- **A raw colour in an arbitrary value is a lint ERROR**, not just a rule in
+  this file: `no-restricted-syntax` in the root eslint config rejects
+  `bg-[#…]` / `text-[oklch(…)]` in any `.tsx`. Stylelint guards the two CSS
+  modules; this guards where the styling actually lives.
+- **Known gap — off-scale type sizes.** A dozen `text-[13px]`-style one-offs
+  (11.5–26px) survive in the routes: hand-tuned optical sizes from the design
+  phase that sit between the scale's steps. Snapping them is a design decision
+  (retune every page by eye, or grow the scale), not a mechanical refactor — do
+  not "fix" them in passing, and do not add new ones.
 - **Check the name is ours before you claim it.** Tailwind ships `max-w-prose`
   (65ch), so a `--container-prose` would not have overridden it — it would have
   collided, and the reading pages would silently have used Tailwind's width. Hence
