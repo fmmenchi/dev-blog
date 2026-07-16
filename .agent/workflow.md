@@ -53,3 +53,10 @@ pnpm nx run-many -t lint test build typecheck lint-css
   rebase: `nx release` derives the version and the changelog from the individual
   conventional commits that land on `main`.
 - Never push to `main` directly. Never force-push without being asked.
+
+When the release job cuts a new tag it also posts to Slack, in tested TypeScript
+(`@dev-blog/release`'s `notify` executor over `@dev-blog/notify`) — never `curl`, because
+Slack answers `200` while refusing a bad message and only a unit test catches that. The
+step reads its secrets from the environment and skips (green) when they are absent, so a
+fork does not go red over a notification it was never set up to send. A **local** `nx
+release` does NOT notify or deploy — only the CI release job does.
