@@ -7,6 +7,7 @@ import tailwindcss from '@tailwindcss/vite';
 import { imagetools } from 'vite-imagetools';
 import mdx from '@mdx-js/rollup';
 import remarkFrontmatter from 'remark-frontmatter';
+import remarkGfm from 'remark-gfm';
 import remarkMdxFrontmatter from 'remark-mdx-frontmatter';
 import rehypeSlug from 'rehype-slug';
 import { createHighlighter } from 'shiki';
@@ -162,6 +163,9 @@ export default defineConfig(async () => ({
         remarkPlugins: [
           remarkFrontmatter,
           [remarkMdxFrontmatter, { name: 'frontmatter' }],
+          /* GFM tables (and strikethrough / autolinks): plain Markdown `| … |`
+             tables become real table nodes. Without it, pipes render literally. */
+          remarkGfm,
           remarkToc,
           /* ```mermaid → <MermaidDiagram hash>, pointing at a pre-rendered themed SVG.
              No browser here: rendering is nx run blog:diagrams. */
