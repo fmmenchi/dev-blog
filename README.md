@@ -28,11 +28,12 @@ Posts are Markdown with frontmatter under `apps/blog/content/posts/`, bundled at
 build time. The feed is hand-built at `/rss.xml`.
 
 Drafts live next door, in `apps/blog/content/drafts/`. They are committed like any
-post, but the two globs that read them are gated on `import.meta.env.DEV`, so the
-production build folds that to `false` and drops the folder entirely — a draft's
-frontmatter and body never reach the deployed bundle. On the dev server a draft
-behaves exactly like a post: listed, linked, previewable. Publish it by moving the
-file into `posts/`.
+post, but the globs that read them are gated on `import.meta.env.MODE === 'development'`,
+true only on the dev server: the production build folds it to `false` and drops the
+folder entirely — a draft's frontmatter and body never reach the deployed bundle — and
+Vitest (`MODE === 'test'`) does not see drafts either, so a spec asserts against the
+posts that actually ship. On the dev server a draft behaves exactly like a post: listed,
+linked, previewable. Publish it by moving the file into `posts/`.
 
 ## How it is built
 
