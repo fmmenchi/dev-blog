@@ -45,10 +45,8 @@ export default function Blog() {
 
   return (
     <Container as="main" className="pt-14 pb-18">
-      <h1 className="mb-3.5 text-[clamp(1.875rem,4vw,2.75rem)] leading-tight font-bold tracking-[-0.03em]">
-        Blog
-      </h1>
-      <p className="mb-8 max-w-[35rem] text-base leading-copy text-muted-foreground">
+      <h1 className="mb-3.5 text-display font-bold">Blog</h1>
+      <p className="mb-8 max-w-intro text-base leading-copy text-muted-foreground">
         Everything I have written here.
       </p>
 

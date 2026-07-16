@@ -46,9 +46,7 @@ function Rows({ rows }: { rows: Row[] }) {
 export default function Uses() {
   return (
     <Container as="main" width="measure" className="pt-14 pb-18">
-      <h1 className="mb-3.5 text-[clamp(1.875rem,4vw,2.75rem)] leading-tight font-bold tracking-[-0.03em]">
-        Uses
-      </h1>
+      <h1 className="mb-3.5 text-display font-bold">Uses</h1>
       <p className="mb-10 text-base leading-copy text-muted-foreground">
         The tools I actually work with, updated occasionally. Inspired by{' '}
         <Link href="https://uses.tech">uses.tech</Link>.

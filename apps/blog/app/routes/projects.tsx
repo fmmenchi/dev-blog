@@ -42,8 +42,8 @@ export const meta = ({
 
 /** Unlisted languages fall back to the muted dot. */
 const LANGUAGE_COLOR: Record<string, string> = {
-  TypeScript: 'oklch(70% 0.13 250)',
-  Go: 'oklch(75% 0.15 130)',
+  TypeScript: 'var(--color-lang-typescript)',
+  Go: 'var(--color-lang-go)',
 };
 
 export default function Projects() {
@@ -53,10 +53,8 @@ export default function Projects() {
 
   return (
     <Container as="main" className="pt-14 pb-18">
-      <h1 className="mb-3.5 text-[clamp(1.875rem,4vw,2.75rem)] leading-tight font-bold tracking-[-0.03em]">
-        Projects
-      </h1>
-      <p className="mb-10 max-w-[35rem] text-base leading-copy text-muted-foreground">
+      <h1 className="mb-3.5 text-display font-bold">Projects</h1>
+      <p className="mb-10 max-w-intro text-base leading-copy text-muted-foreground">
         Things I build to understand how they work. Almost all open source,
         almost none finished.
       </p>

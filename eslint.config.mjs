@@ -83,4 +83,26 @@ export default [
     // Override or add rules here
     rules: {},
   },
+  {
+    // Stylelint's declaration-strict-value guards the two surviving CSS modules,
+    // but almost all styling here is Tailwind utilities in TSX — where no CSS
+    // linter looks. This closes that gap for COLOURS: a raw colour inside an
+    // arbitrary utility (`bg-[#fff]`, `text-[oklch(…)]`) bypasses the palette,
+    // and the design-system rule is that a colour in brackets is a bug. Add the
+    // value to the theme and bridge it instead (.agent/design-system.md).
+    // '**/*.tsx' and not per-project paths: this block is spread into each
+    // project's own flat config, and files globs resolve relative to THAT file.
+    files: ['**/*.tsx'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector:
+            'Literal[value=/\\[(#[0-9a-fA-F]|oklch\\(|rgba?\\(|hsla?\\()/]',
+          message:
+            'Raw colour in an arbitrary Tailwind value. Colours come from the theme: add a token to libs/theme and bridge it (see .agent/design-system.md).',
+        },
+      ],
+    },
+  },
 ];
