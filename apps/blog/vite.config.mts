@@ -9,9 +9,43 @@ import mdx from '@mdx-js/rollup';
 import remarkFrontmatter from 'remark-frontmatter';
 import remarkMdxFrontmatter from 'remark-mdx-frontmatter';
 import rehypeSlug from 'rehype-slug';
+import { createHighlighter } from 'shiki';
+import type { PluggableList } from 'unified';
 
 import { remarkMermaid } from './tools/remark-mermaid.mjs';
 import { remarkToc } from './tools/remark-toc.mjs';
+import { rehypeShiki } from './tools/rehype-shiki.mjs';
+import { shikiTheme } from './tools/shiki-theme.mjs';
+
+/*
+ * Syntax highlighting runs at build time (static HTML, no client JS), driven by our own
+ * rehype-shiki over a highlighter created here — @shikijs/rehype drops a raw theme's
+ * tokenColors. The languages are loaded up front; add one here when a post first uses it.
+ * Skipped under Nx graph creation and Vitest, where loading grammars would be dead weight.
+ */
+const inGraphOrTest =
+  !!(globalThis as Record<string, unknown>)['NX_GRAPH_CREATION'] ||
+  !!process.env.VITEST;
+
+async function shikiPlugins(): Promise<PluggableList> {
+  if (inGraphOrTest) return [];
+  const highlighter = await createHighlighter({
+    themes: [shikiTheme],
+    langs: [
+      'js',
+      'ts',
+      'tsx',
+      'jsx',
+      'json',
+      'css',
+      'html',
+      'xml',
+      'yaml',
+      'bash',
+    ],
+  });
+  return [[rehypeShiki, highlighter]];
+}
 
 /**
  * Close the server on SIGTERM/SIGHUP instead of dying where we stand.
@@ -92,7 +126,7 @@ const VERSION =
 
 const COMMIT = process.env['GIT_HASH'] || git('rev-parse', '--short', 'HEAD');
 
-export default defineConfig(() => ({
+export default defineConfig(async () => ({
   root: import.meta.dirname,
   cacheDir: '../../node_modules/.vite/apps/blog',
   /*
@@ -133,8 +167,9 @@ export default defineConfig(() => ({
              No browser here: rendering is nx run blog:diagrams. */
           remarkMermaid,
         ],
-        /* The same ids the table of contents links to. */
-        rehypePlugins: [rehypeSlug],
+        /* The same ids the table of contents links to, plus Shiki highlighting whose
+           colours map to our tokens (so code follows the accent). See shikiPlugins. */
+        rehypePlugins: [rehypeSlug, ...(await shikiPlugins())],
         providerImportSource: '@mdx-js/react',
       }),
     },

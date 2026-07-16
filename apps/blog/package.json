@@ -140,6 +140,8 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "mermaid": "^11.16.0",
+    "shiki": "^4.3.1",
+    "unified": "^11.0.5",
     "wrangler": "^4.107.0"
   },
   "version": "0.8.0"
