@@ -87,29 +87,27 @@ let referenced = 0;
 let renderedCount = 0;
 let pruned = 0;
 
+/*
+ * Every run renders every diagram from scratch, rather than skipping the ones already on
+ * disk. The hash keys on the diagram's SOURCE, not the theme — so skipping would silently
+ * ignore a change to mermaid-theme.mjs. Nx already caches this target on the content and
+ * the theme files (see package.json inputs), so an unchanged workspace never re-runs it;
+ * when it does run, it is because something a diagram depends on moved, and then all of
+ * them are re-rendered honestly.
+ */
 for (const { dir, out } of BUCKETS) {
   const wanted = collectDiagrams(dir);
   referenced += wanted.size;
   mkdirSync(out, { recursive: true });
 
-  const have = new Set(
-    readdirSync(out)
-      .filter((f) => f.endsWith('.svg'))
-      .map((f) => f.replace(/\.svg$/, '')),
-  );
-
-  /* Prune SVGs whose diagram is gone or was edited (its hash changed). */
-  for (const hash of have) {
-    if (!wanted.has(hash)) {
-      rmSync(join(out, `${hash}.svg`));
-      pruned++;
-    }
+  /* Clear the folder first: stale files (a removed or edited diagram) leave no orphan. */
+  for (const file of readdirSync(out).filter((f) => f.endsWith('.svg'))) {
+    rmSync(join(out, file));
+    pruned++;
   }
 
-  /* Render only the ones we do not already have. */
-  const missing = new Map([...wanted].filter(([hash]) => !have.has(hash)));
-  if (missing.size > 0) {
-    const rendered = await render(missing);
+  if (wanted.size > 0) {
+    const rendered = await render(wanted);
     for (const [hash, svg] of rendered) {
       writeFileSync(join(out, `${hash}.svg`), svg);
     }
@@ -118,5 +116,5 @@ for (const { dir, out } of BUCKETS) {
 }
 
 console.log(
-  `diagrams: ${referenced} referenced, ${renderedCount} rendered, ${pruned} pruned.`,
+  `diagrams: ${referenced} referenced, ${renderedCount} rendered, ${pruned} cleared.`,
 );
