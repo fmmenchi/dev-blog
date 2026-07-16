@@ -175,6 +175,10 @@
   /* Code blocks */
   --color-code-background: var(--color-neutral-1000);
   --color-code-foreground: var(--color-neutral-100);
+  /* Syntax: the one non-neutral in a highlighted block — a muted teal for strings, so
+     values read apart from keys. Keywords use --color-primary (they follow the accent);
+     comments use --color-muted-foreground. See apps/blog/tools/shiki-theme.mjs. */
+  --color-code-string: oklch(76% 0.075 190);
 
   /* Typography roles */
   --typography-h1-size: var(--text-3xl);
