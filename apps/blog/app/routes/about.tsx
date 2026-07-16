@@ -51,7 +51,7 @@ export default function About() {
       </aside>
 
       <main className="min-w-0 max-w-[40rem]">
-        <h1 className="mb-5.5 text-[clamp(1.875rem,4vw,2.75rem)] leading-tight font-bold tracking-[-0.03em]">
+        <h1 className="mb-5.5 text-display font-bold">
           Hi, I'm <span className="text-primary">{profile.name}</span>.
         </h1>
         <p className={PARAGRAPH}>

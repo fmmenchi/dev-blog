@@ -132,7 +132,7 @@ export default function Post() {
           <span>{post.minutes} min read</span>
           <span>{post.tags.map((tag) => `#${tag}`).join(' ')}</span>
         </div>
-        <h1 className="mb-5 text-3xl leading-tight font-bold tracking-[-0.03em]">
+        <h1 className="mb-5 text-3xl leading-tight font-bold tracking-heading">
           {post.title}
         </h1>
 

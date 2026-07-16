@@ -39,11 +39,11 @@ export default function Home() {
   return (
     <main className="w-full">
       <Container className="pt-14 pb-5">
-        <h1 className="mb-4.5 max-w-[48.75rem] text-[clamp(2.125rem,4.5vw,3.25rem)] leading-[1.08] font-bold tracking-[-0.03em]">
+        <h1 className="mb-4.5 max-w-[48.75rem] text-hero font-bold">
           Software, systems and the{' '}
           <span className="text-primary">decisions</span> behind the code.
         </h1>
-        <p className="max-w-[35rem] text-lg leading-copy text-balance text-muted-foreground">
+        <p className="max-w-intro text-lg leading-copy text-balance text-muted-foreground">
           Notes on architecture, tooling and developer experience.
         </p>
       </Container>
@@ -115,7 +115,7 @@ export default function Home() {
                   <h2 className="text-[26px] leading-[1.16] font-bold tracking-[-0.02em] [transition:var(--transition-color)] group-hover:text-primary">
                     {featured.title}
                   </h2>
-                  <p className="max-w-[35rem] text-[14.5px] leading-copy text-muted-foreground">
+                  <p className="max-w-intro text-[14.5px] leading-copy text-muted-foreground">
                     {featured.excerpt}
                   </p>
                   <div className="mt-1.5 flex gap-2">

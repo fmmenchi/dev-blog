@@ -67,6 +67,13 @@
   --text-lg: 1.0625rem;
   --text-xl: 1.4375rem;
   --text-3xl: 2.5rem;
+  /* The two responsive display steps. `display` is the page <h1> (every route);
+     `hero` is the home headline. They were the same clamp() hand-copied into six
+     files — an arbitrary value that wraps a token is a token missing from the
+     bridge, so now they ARE the token. The bridge pairs each with the heading
+     leading and tracking, so `text-display` is the whole heading treatment. */
+  --text-display: clamp(1.875rem, 4vw, 2.75rem);
+  --text-hero: clamp(2.125rem, 4.5vw, 3.25rem);
 
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
@@ -180,6 +187,14 @@
      comments use --color-muted-foreground. See apps/blog/tools/shiki-theme.mjs. */
   --color-code-string: oklch(76% 0.075 190);
 
+  /* Data-viz dots — the language markers on /projects. Like --color-code-string,
+     these are DATA hues, not UI states: they identify a language the way GitHub's
+     dots do, so they sit outside the neutrals-plus-one-accent rule on purpose.
+     Never use them for interactive or stateful UI. Unlisted languages fall back
+     to --color-muted-foreground. */
+  --color-lang-typescript: oklch(70% 0.13 250);
+  --color-lang-go: oklch(75% 0.15 130);
+
   /* Typography roles */
   --typography-h1-size: var(--text-3xl);
   --typography-h2-size: var(--text-xl);
@@ -209,6 +224,9 @@
   /* Layout */
   --layout-content-width: 70rem;
   --layout-prose-width: 42.5rem;
+  /* The intro paragraph under a page title — narrower than the prose column,
+     because a two-line lede reads better than a one-and-a-half-line one. */
+  --layout-intro-width: 35rem;
 }
 
 /* Switchable accent — primary family only */

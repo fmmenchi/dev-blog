@@ -91,6 +91,22 @@
   --text-xl: var(--text-xl);
   --text-3xl: var(--text-3xl);
 
+  /*
+   * The display steps carry their leading and tracking as sub-keys, so
+   * `text-display` / `text-hero` IS the whole heading treatment — the clamp,
+   * the tight leading and the negative tracking used to be three arbitrary
+   * values hand-copied into every route's <h1>.
+   */
+  --text-display: var(--text-display);
+  --text-display--line-height: var(--leading-tight);
+  --text-display--letter-spacing: var(--typography-heading-tracking);
+  --text-hero: var(--text-hero);
+  --text-hero--line-height: var(--leading-tight);
+  --text-hero--letter-spacing: var(--typography-heading-tracking);
+
+  /* For a heading that sets its size some other way (the post title's text-3xl). */
+  --tracking-heading: var(--typography-heading-tracking);
+
   --font-weight-medium: var(--font-weight-medium);
   --font-weight-semibold: var(--font-weight-semibold);
   --font-weight-bold: var(--font-weight-bold);
@@ -113,6 +129,8 @@
    * would silently get Tailwind's width while looking like they used ours.
    */
   --container-measure: var(--layout-prose-width);
+  /* The lede paragraph under a page title (`max-w-intro`) — was max-w-[35rem] ×4. */
+  --container-intro: var(--layout-intro-width);
 
   /* Radius */
   --radius-sm: var(--radius-sm);
