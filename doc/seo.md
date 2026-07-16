@@ -48,16 +48,16 @@ one, and what lets an aggregator treat the page as a post rather than as a page.
 Everything else on the site is a `website`, honestly. The `/uses` page is not an
 article and does not pretend to be one.
 
-## The previews: the one real gap
+## The previews
 
-**There is no `og:image`.** Not a generated one, not even a static fallback.
+Every link used to preview as a bare rectangle of text: there was no `og:image`, and
+`twitter:card` was `summary`, which without an image shows no card at all.
 
-Every link to this blog — in a chat, on a social platform, in a Slack channel —
-previews as a bare rectangle of text. It is the single highest-leverage SEO thing
-still undone here, and it is undone because an image is a design decision, not a
-code one: a static card with the site's name and accent, or one rendered per post
-from the title. Until that is decided, the site is quietly less shareable than it
-looks.
+Now `tools/og-image.mjs` renders a 1200×630 card from the site's own tokens and fonts —
+one for the site (`public/og.png`) and one per post (`public/og/<slug>.png`), carrying the
+post's title. They are committed, not rendered at request time, and `tools/check-og.mjs`
+fails the build if a post is missing its card or a rename leaves an orphan. Regenerate
+with `node tools/og-image.mjs` when the palette, the name, the tagline or a title changes.
 
 ## What is deliberately not here
 

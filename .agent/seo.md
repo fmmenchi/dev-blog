@@ -29,19 +29,18 @@ The "why" is in [`doc/seo.md`](../doc/seo.md). These are the rules.
 **BlogPosting** JSON-LD block. A new post needs no code: the sitemap and the RSS
 feed read the post list.
 
+A **draft** (`content/drafts/`) is off that list by construction — `getPosts()` is the
+one source the sitemap, the feed, the home and the index all read, and it never returns a
+draft. So a draft is in no sitemap, no feed, no listing, and its page 404s in production;
+it exists only on the dev server. Nothing to remember to exclude — publishing is moving
+the file to `content/posts/`. See the README.
+
 ## Feeds and crawlers
 
 - `/rss.xml`, `/sitemap.xml`, `/robots.txt` are **resource routes** — real
   document requests. Link them with a bare `<a>`, not the router `Link`. This is
   the one exception to the internal-links rule.
 - `robots.txt` allows everything and points at the sitemap.
-
-## Known gap
-
-**There is no `og:image`.** Every link to this site previews as text on every
-social platform and in every chat app. Fixing it means an image (static or
-generated per post) plus `og:image` + `twitter:card: summary_large_image` in
-`seoMeta`.
 
 ## The social card
 
@@ -50,6 +49,12 @@ generated per post) plus `og:image` + `twitter:card: summary_large_image` in
 which produces no card at all: every link shared to LinkedIn, Slack or WhatsApp arrived
 as a grey line of text.
 
-The PNG is `apps/blog/public/og.png`, generated from the site's own tokens and fonts by
-`node tools/og-image.mjs`. Regenerate and commit it when the palette, the name or the
-tagline change — a card that drifts from the site it advertises is worse than no card.
+The PNGs are generated from the site's own tokens and fonts by `node tools/og-image.mjs`:
+`apps/blog/public/og.png` for the site, and `apps/blog/public/og/<slug>.png` per post —
+a post's card carries **its own title**, so a shared article previews as itself, not as
+the site. `post.tsx` points `seoMeta`'s `image` at `/og/<slug>.png`.
+
+The cards are committed. Regenerate and commit them when the palette, the name, the
+tagline **or a post's title/slug** change — a card that drifts from what it advertises is
+worse than no card. `tools/check-og.mjs` fails the build on a post with no card, or an
+orphan card left by a rename.

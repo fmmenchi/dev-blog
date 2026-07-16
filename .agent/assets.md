@@ -41,9 +41,11 @@ instead of every component.
 - The source file must be **big enough for the 2x variant**. Upscaling is not a
   transform, it is a blur.
 
-## Known gap
+## OG cards — `tools/og-image.mjs`
 
-There is **no `og:image`**, so every link to the blog previews as bare text. See
+Not part of the `vite-imagetools` pipeline: these are the social preview cards, generated
+and **committed** — `apps/blog/public/og.png` for the site, `public/og/<slug>.png` per
+post (its own title). `tools/check-og.mjs` gates it. Details, and the `seoMeta` wiring, in
 [`.agent/seo.md`](./seo.md).
 
 ## Icons — `libs/icons`
