@@ -73,6 +73,10 @@ const rgbForm = (hex) => {
 };
 
 /** Rewrite every sentinel (hex or rgb form) and stray black to a token. */
+/** Corner radius on node boxes, in SVG user units. 0 = mermaid's sharp corners. */
+const NODE_RADIUS = 6;
+
+/** Rewrite sentinel colours to tokens, and round the node boxes. */
 export function recolour(svg) {
   let out = svg;
   for (const [hex, token] of Object.entries(TOKEN)) {
@@ -80,9 +84,16 @@ export function recolour(svg) {
       .replace(new RegExp(hex, 'gi'), token)
       .replace(rgbForm(hex), token);
   }
-  return out.replace(
+  out = out.replace(
     /#000000\b|#000\b|\brgb\(\s*0\s*,\s*0\s*,\s*0\s*\)/gi,
     BLACK_TOKEN,
+  );
+  /* A node's box is `<rect class="basic label-container">`; mermaid gives it no rx.
+     Add one so the boxes match the site's rounded cards. Edge-label backgrounds are a
+     different rect and stay square. */
+  return out.replace(
+    /<rect class="basic label-container"/g,
+    `<rect rx="${NODE_RADIUS}" ry="${NODE_RADIUS}" class="basic label-container"`,
   );
 }
 
