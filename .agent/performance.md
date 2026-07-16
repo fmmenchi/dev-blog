@@ -62,5 +62,9 @@ cacheable rather than content-hashed on every build. `@font-face` lives in
 
 ## Known gap
 
-~195 KiB of JavaScript ships unused on first paint (React + Router hydration). It does
-not block — TBT is 0 — but it is the next thing worth attacking.
+~114 KiB of JavaScript ships unused on first paint (measured 2026-07-16: 62 KiB in
+`entry.client`, 52 KiB in the shared `components` chunk). Sourcemap analysis says it
+is react-dom and react-router themselves — hydration, not an accidental heavy
+import; the post chunk carries no Shiki or Mermaid runtime, and the radix-based
+filter bar is already lazy. It does not block — TBT is 0 — so the only fix left is
+architectural (reducing or removing hydration). Don't chase it with bundler tweaks.

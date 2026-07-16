@@ -13,3 +13,13 @@ allowBuilds:
   vue-demi: true
   unrs-resolver: true
 engineStrict: true
+# Both dragged in by unlighthouse (dev-only tooling); the overrides keep
+# `trivy --include-dev-deps` clean. Acceptance test after touching either:
+# `pnpm nx assess blog` must still complete its sweep. Drop them once
+# unlighthouse's chain moves past the vulnerable ranges.
+# - @opentelemetry/core 1.x: CVE-2026-54285 (DoS via oversized baggage headers),
+#   via lighthouse → @sentry/node.
+# - esbuild <0.28.1: GHSA-g7r4-m6w7-qqqr (dev-server CORS), via @nuxt/fonts.
+overrides:
+  '@opentelemetry/core': '>=2.8.0'
+  esbuild: '>=0.28.1'
