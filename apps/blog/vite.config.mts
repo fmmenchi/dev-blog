@@ -10,6 +10,7 @@ import remarkFrontmatter from 'remark-frontmatter';
 import remarkMdxFrontmatter from 'remark-mdx-frontmatter';
 import rehypeSlug from 'rehype-slug';
 
+import { remarkMermaid } from './tools/remark-mermaid.mjs';
 import { remarkToc } from './tools/remark-toc.mjs';
 
 /**
@@ -128,6 +129,9 @@ export default defineConfig(() => ({
           remarkFrontmatter,
           [remarkMdxFrontmatter, { name: 'frontmatter' }],
           remarkToc,
+          /* ```mermaid → <MermaidDiagram hash>, pointing at a pre-rendered themed SVG.
+             No browser here: rendering is nx run blog:diagrams. */
+          remarkMermaid,
         ],
         /* The same ids the table of contents links to. */
         rehypePlugins: [rehypeSlug],

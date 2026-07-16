@@ -73,6 +73,38 @@ An icon is **decorative**: `aria-hidden`, with the name in an `sr-only` span bes
 (never an `aria-label` on the link — it overrides the content, and with it the "opens
 in a new tab" hint). `IconLinks` enforces both.
 
+## Diagrams — mermaid
+
+Write a ` ```mermaid ` block in a post. mermaid needs a browser to lay out, and the blog
+puts one nowhere near the deploy or the client, so the browser runs in **one** place:
+`nx run blog:diagrams` (local), which renders each diagram to an SVG and **commits** it.
+The build only inlines it. Re-run it whenever you add or change a diagram — an edit
+changes the content hash, so the stale SVG is pruned and a new one cut. Same shape as the
+OG cards and the icons: **generated, committed, gated.**
+
+The pieces:
+
+- **`apps/blog/tools/remark-mermaid.mjs`** (wired in `vite.config.mts`) rewrites a
+  ` ```mermaid ` block to `<MermaidDiagram hash="…" />`. It does **not** render — no
+  browser at build. The hash (`hashDiagram`, sha256 of the source) is the whole link.
+- **`apps/blog/tools/mermaid-generate.mjs`** (the `diagrams` target) renders with the
+  Chromium Playwright already ships for e2e, then recolours mermaid's palette onto the
+  design tokens.
+- **`apps/blog/app/components/mermaid.tsx`** inlines the committed SVG by hash —
+  **inlined, not an `<img>`**, so the SVG's `var(--color-…)` resolve against the page and
+  the diagram **follows the accent switch**, the way the icons follow `currentColor`.
+
+**The theme lives in ONE file, `apps/blog/tools/mermaid-theme.mjs`:** the `themeVariables`
+and the sentinel→token map (mermaid can't take `var()` directly, so it paints with
+sentinel hexes that `recolour()` rewrites to tokens). Change diagram theming there and
+nowhere else. Black arrowheads — mermaid's default, black-on-black on a dark card — map to
+the line colour, the same bug the icons fixed.
+
+A draft's diagrams live in `app/diagrams-draft` and are gated on `MODE` like its prose, so
+they never reach the production bundle. `tools/check-diagrams.mjs` fails the build if a
+**published** post references a diagram that was never rendered — so you cannot ship the
+"not rendered yet" placeholder.
+
 ## Fonts
 
 Self-hosted under `apps/blog/public/fonts`, `@font-face` in
