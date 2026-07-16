@@ -35,6 +35,13 @@ Vitest (`MODE === 'test'`) does not see drafts either, so a spec asserts against
 posts that actually ship. On the dev server a draft behaves exactly like a post: listed,
 linked, previewable. Publish it by moving the file into `posts/`.
 
+Diagrams are written as ` ```mermaid ` blocks. Because mermaid needs a browser, they are
+rendered **once, locally**, by `pnpm nx run blog:diagrams` — which commits a themed SVG per
+diagram — and the build only inlines the committed SVG, so no browser runs in CI or the
+deploy and no diagram JavaScript reaches the reader. The SVGs follow the accent switch.
+Re-run the command whenever you add or change a diagram; `check-diagrams` fails the build
+if you forget. See [`.agent/assets.md`](./.agent/assets.md).
+
 ## How it is built
 
 **Tailwind, but over my own tokens.** The token system comes first — OKLCH
