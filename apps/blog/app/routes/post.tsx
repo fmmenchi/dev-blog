@@ -1,7 +1,7 @@
 import { Avatar, Card, Container, Link, Prose, ShareBar } from '@dev-blog/ui';
 import { useLoaderData, type LoaderFunctionArgs } from 'react-router';
 
-import { SectionHeading } from '../components/section-heading';
+import { TableOfContents } from '../components/table-of-contents';
 import { mdxComponents } from '../components/mdx';
 import { profile } from '../lib/content';
 import { avatarSrc } from '../lib/avatar-image';
@@ -207,22 +207,7 @@ export default function Post() {
 
       {/* Phone: the contents come first. From `md` they become a sticky rail. */}
       <aside className="-order-1 flex flex-col gap-3.5 md:order-none md:sticky md:top-6">
-        <SectionHeading>on this page</SectionHeading>
-        <nav
-          aria-label="On this page"
-          className="flex flex-col gap-0.5 border-s border-border"
-        >
-          {toc.map((entry, i) => (
-            <Link
-              key={entry.id}
-              href={`#${entry.id}`}
-              variant="plain"
-              className="ps-4 py-1.75 text-[13.5px] text-muted-foreground no-underline [transition:var(--transition-color)] hover:text-primary"
-            >
-              {String(i + 1).padStart(2, '0')} · {entry.text}
-            </Link>
-          ))}
-        </nav>
+        <TableOfContents entries={toc} />
       </aside>
     </Container>
   );
