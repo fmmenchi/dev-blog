@@ -1,155 +1,186 @@
 ---
-title: Can I Import This? Module Boundaries and Compatibility in a Monorepo
+title: Can I import this?
 date: 2026-07-16
 minutes: 5
 tags: monorepo, typescript, architecture
-excerpt: Your monorepo lets you import anything from anywhere — until a library needs to work outside the bundler. Here is why that boundary was never really there, and what turns a folder into a package.
+excerpt: This repo resolves the same import in three different ways, and I could not have told you which one was running. A lint rule, a TypeScript resolver and a loader each answer "can I import this?" separately — and one of the answers is a package.json.
 featured: false
 ---
 
-You open a fresh monorepo, type `import { thing } from '@myorg/util'`, and it works. So does `import { internal } from '@myorg/util/src/internal/secret'`. Both resolve, both type-check, both run. It feels like there are no rules. There are rules — they just live in three different places, and only one of them is even trying to stop you.
+This repo has four libraries, one app and two nx plugins, and until I went
+looking I could not have told you why `import { Button } from '@dev-blog/ui'`
+works. It resolves in the editor, it resolves in the build, and
+`@dev-blog/notify` — imported by a plugin that runs outside Vite — resolves
+through something else again. "Can I import this?" is three questions wearing one
+sentence, and in this repo each of them is answered by a different file.
 
-## 1. There isn't one boundary — there are three
+## 1. Three boundaries
 
-When you ask "can I import this?", you are really asking three separate questions, and they have different answers. There is the **architectural** boundary: is this import _allowed_ by the team's rules? There is the **compiler-visibility** boundary: can TypeScript _resolve and see_ the module you named? And there is the **runtime** boundary: will the thing that actually runs your code — a bundler, or Node — _load_ it?
+The **architectural** boundary asks whether the import is allowed. Here that is
+`@nx/enforce-module-boundaries`, set to `error` in `eslint.config.mjs`, and lint
+sits in the definition of done and in the CI job for `main` — so a violation
+fails the build rather than printing a warning. It works off tags: a package
+tagged `type:ui` may depend on `type:ui`, `type:theme` and `type:icons` and
+nothing else, and `type:icons` may depend on nothing at all. It reads imports,
+and that is where it stops. Nothing about it decides whether the code runs.
 
-These are enforced by different tools at different moments. The architectural boundary is a lint rule; it warns. The compiler-visibility boundary is TypeScript answering "I found a type for that." The runtime boundary is whatever loader ships your code deciding it can read the file. Conflate them and every compatibility bug looks like magic.
+The **compiler-visibility** boundary asks whether TypeScript can resolve the
+specifier and find types behind it. The **runtime** boundary asks whether the
+thing executing the code can load the file it lands on. Those last two disagree
+in this repo, and that disagreement is most of this article.
 
 ```mermaid
 flowchart LR
-  Q["import<br/>@myorg/util"] --> A["Architectural<br/>lint · warns"]
+  accDescr: The single question "can I import this" fans out to three independent answers: an architectural lint rule set to error, TypeScript's resolver, and whichever loader runs the code.
+  Q["import<br/>@dev-blog/ui"] --> A["Architectural<br/>lint · error, fails CI"]
   Q --> C["Compiler<br/>can TS resolve it?"]:::accent
   Q --> R["Runtime<br/>can it be loaded?"]
 ```
 
-## 2. By default, everything is one big program
+## 2. What makes a folder importable
 
-Most workspaces start with `paths` aliases in the root `tsconfig` that point each package name straight at its TypeScript source.
+There is no `paths` alias in this workspace. `grep '"paths"'` across every
+tsconfig returns nothing, which surprised me, because the alias map is the thing
+I would have said a monorepo is made of.
 
-```json
-{
-  "compilerOptions": {
-    "paths": {
-      "@myorg/util": ["libs/util/src/index.ts"],
-      "@myorg/util/*": ["libs/util/*"]
-    }
-  }
-}
-```
-
-That second wildcard is the quiet part. With it, `@myorg/util/src/internal/secret` resolves to `libs/util/src/internal/secret` just as happily as the package name itself. TypeScript now treats the whole workspace as **one program**: every file can see every other file's source. The `index.ts` barrel is a _convention_ — a suggested front door — but nothing enforces it. Deep imports into a library's internals are silently allowed, because to the compiler there are no libraries, only files.
-
-```mermaid
-flowchart LR
-  App["app"] --> Barrel["util/src/index.ts"]
-  App -.->|deep import| Internal["util/src/internal/secret.ts"]:::accent
-  Barrel --> Internal
-```
-
-## 3. The hidden assumption
-
-Why does pointing an import at a raw `.ts` file work at all? Because something downstream transpiles it. In dev and in the production build, a bundler reads TypeScript source, strips the types, resolves your aliases, and emits JavaScript. The `paths` model leans entirely on that: it assumes the consumer is a bundler that understands both TypeScript _and_ your alias map.
-
-That assumption is invisible right up until it breaks. Node will run type-strippable TypeScript directly now, but it will never follow your `tsconfig` `paths` aliases — that resolution lives in the compiler and the bundler, not the runtime. And type-stripping only erases annotations; it does not rewrite those alias specifiers into real file paths, nor transform every TS construct into something Node accepts. So the raw-source model — a bare `.ts` reached through an alias — still falls apart the moment the consumer isn't the bundler you configured.
-
-```mermaid
-flowchart LR
-  Src["util/src<br/>raw .ts"] --> Bundler["Bundler<br/>strips types"]
-  Bundler --> JS["JavaScript"]
-  Src -.->|won't follow paths| Node["Node"]
-  Bundler:::accent
-```
-
-## 4. The compatibility problem
-
-Push a library past that boundary and the cracks show. The moment more than one kind of consumer wants your code, the raw-source model stops being enough. A second bundler with a different config, a Node script, a package that emits CommonJS — each asks the library a different question, and the bare `src/index.ts` can only answer one of them.
-
-Say you add a `@myorg/cli` package that imports the same `@myorg/util` and runs directly under Node. It resolves the bare `@myorg/util` specifier through Node's own rules, finds no `exports` field and no built entry to land on, and fails — right where the app, driven by the bundler and its alias map, never did.
-
-```mermaid
-flowchart LR
-  Lib["@myorg/util<br/>src/index.ts"] --> BA["Bundler A"]
-  Lib -->|"other config"| BB["Bundler B"]
-  Lib -.->|"no paths aliases"| Node["Node · ESM"]
-  Lib -.->|"needs require()"| CJS["CommonJS pkg"]
-  Lib:::accent
-```
-
-The bundler you set up is fine. Everyone else fails, and they fail for the same underlying reason: there is no map telling each consumer which file to load and in what form.
-
-## 5. The fix: make it a package
-
-A folder becomes a package when its `package.json` publishes an **exports map**. The map routes each consumer to the right entry, using _conditions_ that each tool knows how to read.
+What is there instead: each folder is a real package. pnpm links it into
+`node_modules` under its name, and its `package.json` publishes an **exports
+map** that says which file each kind of consumer gets.
 
 ```json
 {
-  "name": "@myorg/util",
-  "type": "module",
+  "name": "@dev-blog/ui",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
-    }
+      "types": "./src/index.ts",
+      "import": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./package.json": "./package.json"
   }
 }
 ```
 
-Now every boundary has an answer. The type-checker follows `types`. A bundler and Node's ESM loader follow `import`; a CommonJS consumer follows `require`. With `"type": "module"`, a bare `.js` _is_ ESM and `.cjs` is CommonJS, so each condition points at a file in the form it promises.
+The map is also a wall: what it does not list is unreachable from outside the
+package. `@dev-blog/ui` resolves. `@dev-blog/ui/src/button/button` does not —
+the compiler answers `error TS2307: Cannot find module` — and it fails at the
+resolver, not at a lint rule I could disable with a comment.
 
-Order matters, too: resolvers take the _first_ matching condition, so `types` is listed first and more specific conditions sit above generic fallbacks — a broad catch-all placed early would shadow everything below it. And exports is also a _wall_: anything not listed is unreachable from outside the package.
+That wall holds because there is no alias to walk around it. A `paths` entry
+would open it again: `paths` substitution runs **before** `exports` is consulted,
+so a wildcard like `@dev-blog/ui/*` would resolve the deep import straight past
+the map, and [TypeScript's own docs say so](https://www.typescriptlang.org/docs/handbook/modules/reference.html#paths).
+The wall and the alias cannot both exist.
 
-But that wall only binds consumers that resolve through Node. TypeScript still holds the `@myorg/util/*` wildcard from step 2, and `paths` substitution runs _before_ exports is ever consulted — so the compiler, and any bundler honouring that wildcard, would resolve the deep import straight past the wall. So making it a package means dropping the wildcard too, keeping only the barrel alias `@myorg/util` → `src/index.ts`. That removes the deep import's last resolution route, so `@myorg/util/src/internal/secret` now fails everywhere. The surviving barrel alias still pulls `util`'s source into one program, though — exactly the whole-program visibility step 8 comes back to.
+## 3. The libraries point at their own source
 
-```mermaid
-flowchart LR
-  Pkg["package.json<br/>exports"]
-  Pkg -->|types| DTS["index.d.ts"]
-  Pkg -->|import| ESM["index.js"]
-  Pkg -->|require| CJS["index.cjs"]
-  Pkg -.->|not exported| Deep["internal/secret"]
-  Pkg:::accent
+Look at that map again: `types`, `import` and `default` all land on the same
+`.ts` file. That is not a shortcut around a build step — there is no build step.
+`libs/ui` and `libs/theme` are never compiled on their own, because the only
+thing that consumes them is the app, and the app is bundled by Vite, which reads
+TypeScript directly.
+
+So the source-only map carries an assumption: whatever imports these packages can
+transpile them. As long as the app is the only consumer, that assumption stays
+invisible, because the bundler you configured is the one answering.
+
+## 4. The consumer that is not Vite
+
+The two nx plugins run outside the app. `plugins/release` compiles to `dist` with
+`tsc`, and its executor imports `@dev-blog/notify` to post to Slack when a
+release goes out. That makes `notify` the first library in the repo asked to
+answer a consumer that is not a bundler.
+
+It answers, but not on its own. CI runs `nx run @dev-blog/release:notify` after
+each release and the last one logged `Announced v1.7.0 to Slack.` — nx registers
+a TypeScript loader for workspace packages, so `notify`'s `src/index.ts` is
+transpiled on the way in.
+
+Take nx out and the same import fails:
+
+```bash
+cd plugins/release && node -e "require('@dev-blog/notify')"
 ```
 
-## 6. Why moduleResolution suddenly matters
-
-`moduleResolution` is how a library and its consumer agree on what a "module" even is — how specifiers are resolved and which `exports` conditions apply. While everything was one bundled program, `"bundler"` was the honest setting: it mirrors what your bundler does, and it is perfectly fine for bundler-only consumers.
-
-Once a real Node consumer enters, that setting no longer describes reality. You need `"nodenext"`, which resolves the way Node actually does — respecting `import`/`require` conditions and the `type` field. If your consumers span both ESM and CommonJS, that is also where the pressure for **dual output** comes from: you ship both an ESM and a CJS build so each condition has something valid to point at.
-
-```mermaid
-flowchart LR
-  BundlerOnly["Bundler-only<br/>consumers"] --> B["moduleResolution<br/>bundler"]
-  Mixed["+ Node · CJS<br/>consumers"] --> NN["moduleResolution<br/>nodenext"]
-  NN --> Dual["dual ESM + CJS<br/>output"]
-  NN:::accent
+```text
+Warning: Failed to load the ES module: libs/notify/src/index.ts.
+Make sure to set "type": "module" in the nearest package.json file
+or use the .mjs extension.
+SyntaxError: Unexpected token 'export'
 ```
 
-## 7. Can I import this?
-
-The same imports, before and after the library becomes a package:
-
-| Import                            | `paths` → raw source                     | Real package + `exports`            |
-| --------------------------------- | ---------------------------------------- | ----------------------------------- |
-| `@myorg/util` (barrel)            | resolves                                 | resolves via `.`                    |
-| `@myorg/util/src/internal/secret` | resolves (deep import open)              | **fails** — no alias / not exported |
-| From a second bundler config      | may resolve inconsistently               | resolves via `import`               |
-| From Node (ESM)                   | fails — Node won't follow tsconfig paths | resolves via `import` → `.js`       |
-| From a CommonJS package           | fails                                    | resolves via `require` → `.cjs`     |
-| Type information                  | from source files                        | from `types` → `.d.ts`              |
-
-The package version is stricter and more portable at once: it closes the internals and opens the doors that matter.
-
-## 8. Where this is heading
-
-Notice what the exports map did _not_ fix. It closed the runtime boundary and gave the architectural boundary teeth. But the **compiler-visibility** boundary is still wide open: with `paths` pointing at source, TypeScript still sees the entire workspace as one program and rechecks it as one unit. There is no enforced graph telling the compiler which package depends on which, and no way to type-check or rebuild just what changed.
-
-That gap is exactly what **project references** close — `composite`, `references`, and incremental, per-package type-checking that turns the workspace into a real dependency graph. That is the subject of part 2.
+Node 24 strips types from a `.ts` file, so TypeScript is not what stopped it. The
+module system is: `libs/notify/package.json` declares `"type": "commonjs"` and
+`src/index.ts` opens with `export *`. Node believed the package and read the file
+as CommonJS, where `export` is a syntax error. The exports map pointed at a file
+Node could find and could not use.
 
 ```mermaid
 flowchart LR
-  Runtime["Runtime<br/>closed by exports"] --> Done["fixed"]
-  Arch["Architectural<br/>lint + exports wall"] --> Done
-  Compiler["Compiler visibility<br/>still one program"] -.->|part 2| Refs["project<br/>references"]
-  Compiler:::accent
+  accDescr: One exports map, three consumers. Vite and the nx loader both read the source entry and transpile it. Plain Node reaches the same file and fails, because the package declares commonjs while the source is ESM.
+  Map["@dev-blog/notify<br/>exports · src/index.ts"] --> Vite["Vite<br/>transpiles"]
+  Map --> NX["nx loader<br/>transpiles"]
+  Map -.->|"SyntaxError"| Node["plain node<br/>type: commonjs"]:::accent
+```
+
+The two plugins are the packages here that _are_ built, and they carry the shape
+that survives being consumed both ways:
+
+```json
+"exports": {
+  ".": {
+    "@dev-blog/source": "./src/index.ts",
+    "types": "./dist/index.d.ts",
+    "import": "./dist/index.js",
+    "default": "./dist/index.js"
+  }
+}
+```
+
+`tsconfig.base.json` sets `"customConditions": ["@dev-blog/source"]`, so
+TypeScript asks for that key first and lands on the source, while anything
+resolving through the standard conditions gets `dist`. Resolvers take the
+[first matching condition](https://nodejs.org/api/packages.html#conditional-exports),
+which is why the custom one sits at the top. Nothing in the repo imports either
+plugin as a module yet, so today it is a promise rather than a mechanism.
+
+## 5. Why moduleResolution has two values here
+
+`tsconfig.base.json` sets `"moduleResolution": "nodenext"`.
+`apps/blog/tsconfig.json` overrides it to `"bundler"`. Both are accurate, which
+is the part worth noticing: the app is never loaded by Node, so `bundler`
+describes what actually resolves its imports, and the plugins are, so the base
+setting has to describe theirs. One workspace, two resolvers, and the exports map
+is what lets a single package answer both — each consumer reads a different
+condition out of the same file.
+
+## 6. So, can I import this?
+
+Everything below is the same question asked of this repo, and answered by running
+it.
+
+| Import                                           | Answer      | Decided by                                        |
+| ------------------------------------------------ | ----------- | ------------------------------------------------- |
+| `@dev-blog/ui` from the app                      | resolves    | `exports["."]` → `src/index.ts`, Vite transpiles  |
+| `@dev-blog/ui/src/button/button`                 | **TS2307**  | not in the exports map, and no alias to bypass it |
+| `@dev-blog/theme/styles/tailwind.css`            | resolves    | `exports["./styles/*"]`, listed on purpose        |
+| `@dev-blog/notify` from a plugin, under nx       | resolves    | nx's TypeScript loader                            |
+| `@dev-blog/notify` under plain `node`            | SyntaxError | `type: commonjs` vs an ESM source file            |
+| anything tagged `type:icons` importing `type:ui` | lint error  | `@nx/enforce-module-boundaries`, fails CI         |
+
+## 7. What the exports map did not fix
+
+It closed the runtime question and it closed deep imports. It says nothing about
+which package depends on which. TypeScript still needs that written down
+separately, in a file next to the imports that already state it — and when I
+added the release plugin, the file was missing a line and the build went red.
+
+That is [part 2](/blog/nx-typescript-project-references).
+
+```mermaid
+flowchart LR
+  accDescr: The runtime boundary and the architectural boundary are settled by the exports map and the lint rule. The compiler still has no dependency graph, which is what project references add in part 2.
+  Runtime["Runtime<br/>exports map"] --> Done["settled"]
+  Arch["Architectural<br/>lint · error"] --> Done
+  Compiler["Compiler<br/>no dependency graph"] -.->|part 2| Refs["project<br/>references"]:::accent
 ```
