@@ -1,7 +1,7 @@
 ---
 title: The tsconfig that has to agree with the other tsconfig
-date: 2026-07-15
-minutes: 6
+date: 2026-07-17
+minutes: 4
 tags: meta, tooling, typescript, nx
 excerpt: I added a package to this monorepo and the build went red — not on a type error, but because one tsconfig did not mention another. This is what TypeScript project references are, why they drift, and why a tool writes them for me now.
 featured: false
@@ -11,17 +11,19 @@ I added a small package to this repo — the plugin that posts to Slack when a
 release goes out — and the build went red. Not on a type error: nothing I wrote
 was wrong. It failed with this.
 
-```
+```text
 NX   The workspace is out of sync
 
 [@nx/js:typescript-sync]: Some TypeScript configuration files are missing project
-references to the projects they depend on.
+references to the projects they depend on, contain stale project references, or
+have duplicate project references.
 ```
 
-The new package imports another one, `@dev-blog/notify`. My code said so. The
-dependency was real and correct. What was missing is that a **second file** also
-had to say so, and did not. This is about that second file: what it is, why it
-exists, and why I stopped writing it by hand.
+The new package imports another one, `@dev-blog/notify`. My code said so, and the
+exports map that makes the import resolve — [the subject of part 1](/blog/can-i-import-this) —
+was in place too. What was missing is that a **second file** also had to say so,
+and did not. This is about that second file, and about why I
+stopped writing it by hand.
 
 ## What a project reference is
 
@@ -40,9 +42,12 @@ depends on:
 }
 ```
 
-Turn on `composite: true` and TypeScript will build them as a graph: `notify`
-before the package that references it, its output cached so an unchanged project
-is not compiled twice. My base config turns it on for everything:
+Turn on `composite: true` and run `tsc --build`, and TypeScript treats them as a
+graph: `notify` before the package that references it, its output cached so an
+unchanged project is not compiled twice. Plain `tsc` gets you neither — the
+ordering and the reuse are what
+[build mode](https://www.typescriptlang.org/docs/handbook/project-references.html)
+adds. My base config turns composite on for everything:
 
 ```json
 {
@@ -53,19 +58,10 @@ is not compiled twice. My base config turns it on for everything:
 }
 ```
 
-That second line is the part I would keep even in a much smaller repo. Each
-package's `package.json` carries an export condition pointing at its source:
-
-```json
-"exports": { ".": { "@dev-blog/source": "./src/index.ts" } }
-```
-
-and `customConditions` tells TypeScript to honour it. So when the release plugin
-imports `@dev-blog/notify`, TypeScript resolves it to `notify`'s **source**, not
-to a built `.d.ts` in `node_modules`. Cross-package go-to-definition lands on the
-real line. A rename propagates across packages. Types are accurate before
-anything has been built. The monorepo reads like one codebase instead of a
-handful of published libraries.
+The second line has nothing to do with project references. It is how a workspace
+import lands on a package's own source instead of a built `.d.ts`, which is the
+subject of [part 1](/blog/can-i-import-this). The two settings share a file
+because both are workspace-wide, and that is all they share.
 
 ## Why it drifts
 
@@ -83,41 +79,39 @@ anywhere but at the line you forgot.
 
 ## Why a tool writes it now
 
-Here is the thing that makes the whole problem dissolve: **nx already knows the
-graph.** It has to. It cannot run `build` or `typecheck` in the right order
-without first working out that the release plugin depends on `notify`. The
-dependency graph is not something I should be re-typing into a tsconfig by hand —
-it is already computed, sitting right there.
+**nx already knows the graph.** It has to: it cannot run `build` or `typecheck`
+in the right order without first working out that the release plugin depends on
+`notify`. So the dependency graph is not something I should be re-typing into a
+tsconfig — it is already computed.
 
-So `@nx/js:typescript-sync` reads that graph and writes the references to match
-it. `nx sync` and the tsconfigs are correct. And — this is the part that turned
-my build red — it also **gates**: if the references on disk do not match the
-graph, the build fails before it runs, with the "out of sync" message above.
+So [`@nx/js:typescript-sync`](https://nx.dev/concepts/sync-generators) reads that
+graph and writes the references to match it. Run `nx sync` and the tsconfigs are
+correct. And — this is the part that turned my build red — it also **gates**: if
+the references on disk do not match the graph, nx stops before the tasks run. In
+CI that is a failure with the "out of sync" message above; in a terminal it is
+the same message as a warning, plus an offer to apply the fix for you.
 
 That is what stopped me. I had added `@dev-blog/release`, imported
 `@dev-blog/notify`, and left the references untouched. nx knew the two disagreed
 and refused to build a drifted config. One command fixed it:
 
-```
-$ nx sync
+```bash
+nx sync
 ```
 
 It wrote two lines — a reference to the new plugin in the root tsconfig, and a
-reference to `notify` inside the plugin's — and the build went green.
+reference to `notify` inside the plugin's `tsconfig.lib.json` — and the build
+went green.
 
 ## Where it lands
 
-I have a rule on this blog by now: a fact the code already contains should not be
-re-entered by a human, because a human will get it wrong and no one will notice.
-The last time it was icon colours in a generated file nobody reads. This is the
-same shape. The dependency graph is a fact the imports already contain. The
-project references are that fact, copied. So the copy is generated, and a gate
-fails the build when the copy and the original disagree — which is the only way I
-was ever going to catch a reference I forgot.
+The last time this shape came up here it was icon colours in a generated file
+nobody reads. The dependency graph is a fact the imports already contain, and the
+project references are that fact, copied by hand into a second file. So the copy
+is generated, and a gate fails the build when the copy and the original disagree
+— which is the only way I was ever going to catch a reference I forgot.
 
-The honest cost: project references earn their keep at scale, and this repo is not
-large. For a few libraries the incremental-build win is mostly theoretical. What
-is not theoretical, even here, is the source resolution — `customConditions`
-pointing every import at the real source file. That one I would set up on day one,
-in a repo of any size. The references are the bookkeeping it drags along, and the
-right amount of attention to pay bookkeeping is none: let the graph write it.
+The honest cost: project references earn their keep at scale, and this repo is
+not large, so the incremental-build win is mostly theoretical. What is not
+theoretical is that the references still have to be right, and one command writes
+them from a graph that already exists.
