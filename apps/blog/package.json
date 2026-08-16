@@ -58,7 +58,7 @@
         "executor": "nx:run-commands",
         "cache": true,
         "inputs": [
-          "{projectRoot}/content/posts/**/*.md",
+          "{projectRoot}/content/posts/**/*.mdx",
           "{projectRoot}/public/og/**/*.png",
           "{projectRoot}/public/og.png",
           "{workspaceRoot}/tools/check-og.mjs"
