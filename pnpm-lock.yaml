@@ -295,8 +295,6 @@ importers:
 
   libs/icons: {}
 
-  libs/notify: {}
-
   libs/theme: {}
 
   libs/ui:
