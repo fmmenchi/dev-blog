@@ -16,9 +16,6 @@
       "path": "./apps/blog-e2e"
     },
     {
-      "path": "./plugins/security"
-    },
-    {
       "path": "./libs/notify"
     },
     {

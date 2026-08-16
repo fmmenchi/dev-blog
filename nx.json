@@ -10,7 +10,14 @@
       "!{projectRoot}/tsconfig.spec.json",
       "!{projectRoot}/src/test-setup.[jt]s"
     ],
-    "sharedGlobals": [{ "env": "APP_VERSION" }, { "env": "GIT_HASH" }]
+    "sharedGlobals": [
+      {
+        "env": "APP_VERSION"
+      },
+      {
+        "env": "GIT_HASH"
+      }
+    ]
   },
   "plugins": [
     {
@@ -70,7 +77,9 @@
       "options": {
         "targetName": "e2e"
       }
-    }
+    },
+    "@fmmenchi/nx-trivy",
+    "@fmmenchi/nx-notify"
   ],
   "release": {
     "projectsRelationship": "fixed",

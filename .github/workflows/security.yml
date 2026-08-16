@@ -72,7 +72,11 @@ jobs:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
           SLACK_CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        run: pnpm nx run @dev-blog/security:notify:test
+        run: >-
+          pnpm nx run blog:announce-error
+          --appName=dev-blog
+          --message=":white_check_mark: *Test message.* The security scan can reach this
+          channel — so the day it goes red, this is where you will hear about it."
 
       # The job runs on the plain ubuntu runner (node, pnpm and docker are all there).
       # Nx and the executor run on the runner; the executor then starts the pinned trivy
@@ -90,21 +94,33 @@ jobs:
       # it away and pull the fresh 100 MB layer anyway, and we would upload another
       # 70 MB for next time. It is not incremental either, and cannot be: the DB is a
       # single blob shipped as one OCI layer. Verified, not assumed.
+      # Both targets are INFERRED by @fmmenchi/nx-trivy onto the workspace root project —
+      # the scan reads the whole workspace, so the project hosting the target is incidental.
+      # It is named explicitly rather than found with `nx run-many -t`, which exits 0 when
+      # nothing matches: a workspace that lost the plugin would report a green scan.
       - name: Scan
         if: ${{ !inputs.test_notification }}
-        run: pnpm nx run @dev-blog/security:scan:ci
+        run: |
+          pnpm nx run @dev-blog/source:scan-docker
+          pnpm nx run @dev-blog/source:scan-secrets-docker
 
       # Only on the schedule, and only when it broke: a PR already shows a red check, and
       # a message that arrives every week regardless is a message nobody opens.
       #
-      # The message is built and sent in TypeScript (@dev-blog/notify, called through the
-      # plugin's `notify` executor), not in curl and jq here. The failure that actually
-      # happens — Slack answering 200 while REFUSING the message — is testable, and a
-      # shell script is not. Missing secrets skip the step rather than failing it.
+      # The message is built and sent in TypeScript (@fmmenchi/nx-notify's `announce-error`,
+      # inferred onto every project — the announce is workspace-level, so which project
+      # hosts it is incidental), not in curl and jq here. The failure that actually happens
+      # — Slack answering 200 while REFUSING the message — is testable, and a shell script
+      # is not. Missing secrets skip the step rather than failing it.
       - name: Tell Slack
         if: failure() && github.event_name == 'schedule'
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
           SLACK_CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        run: pnpm nx run @dev-blog/security:notify
+        run: >-
+          pnpm nx run blog:announce-error
+          --appName=dev-blog
+          --message=":rotating_light: *The weekly security scan went red.* Nothing was
+          committed. A CVE was published against a dependency that was already there —
+          which is the one thing only this scan can catch."
