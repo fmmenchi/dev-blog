@@ -48,12 +48,28 @@ export const mdxComponents = {
   MermaidDiagram,
 
   /**
+   * A code block scrolls sideways rather than wrapping (`.prose pre` in the design
+   * system), which makes it a scrollable region — and a scrollable region has to be
+   * reachable without a mouse, or its overflow is simply lost to anyone using a
+   * keyboard. `tabIndex` is the whole fix; the focus ring comes from the theme.
+   */
+  pre: ({ children, ...rest }: ComponentProps<'pre'>) => (
+    <pre {...rest} tabIndex={0}>
+      {children}
+    </pre>
+  ),
+
+  /**
    * A GFM table (remark-gfm turns `| … |` into real table nodes) gets a scroll container:
    * on a phone a wide table scrolls sideways inside its own box instead of forcing the
    * whole page to. The table's own look comes from `.body table` in post.module.css.
+   *
+   * `tabIndex` is what makes that box reachable without a mouse. A region that scrolls
+   * and cannot be focused is unreadable by keyboard — its overflow is simply lost — which
+   * axe reports as `scrollable-region-focusable`.
    */
   table: ({ children, ...rest }: ComponentProps<'table'>) => (
-    <div className="max-w-full overflow-x-auto">
+    <div className="max-w-full overflow-x-auto" tabIndex={0}>
       <table {...rest}>{children}</table>
     </div>
   ),
