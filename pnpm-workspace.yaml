@@ -1,7 +1,6 @@
 packages:
   - 'apps/*'
   - 'libs/*'
-  - 'plugins/*'
 allowBuilds:
   nx: true
   '@swc/core': true

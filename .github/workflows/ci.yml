@@ -119,18 +119,20 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # Tell Slack, but only when a new tag was actually cut. The message is built and
-      # sent in tested TypeScript (@dev-blog/notify, through the release plugin's notify
-      # executor), not curl and jq: the failure that happens is Slack answering 200 while
-      # refusing the message, and only a unit test pins that down. Missing secrets skip
-      # the step rather than failing it.
+      # sent in tested TypeScript (@fmmenchi/nx-notify's `announce-release`, inferred onto
+      # every project), not curl and jq: the failure that happens is Slack answering 200
+      # while refusing the message, and only a unit test pins that down. Missing secrets
+      # skip the step rather than failing it.
       - name: Announce the release to Slack
         if: steps.release.outputs.version != ''
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
           SLACK_CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID }}
-          RELEASE_VERSION: ${{ steps.release.outputs.version }}
-          RELEASE_URL: ${{ github.server_url }}/${{ github.repository }}/releases/tag/v${{ steps.release.outputs.version }}
-        run: pnpm nx run @dev-blog/release:notify
+        run: >-
+          pnpm nx run blog:announce-release
+          --appName=dev-blog
+          --version=${{ steps.release.outputs.version }}
+          --url=${{ github.server_url }}/${{ github.repository }}/releases/tag/v${{ steps.release.outputs.version }}
 
   # Deploy to Cloudflare Workers on every green push to main.
   # Requires the CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID repo secrets;
