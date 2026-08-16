@@ -1,6 +1,14 @@
 /// <reference types='vitest' />
 import { execFileSync } from 'node:child_process';
-import { defineConfig, type Plugin, type ViteDevServer } from 'vite';
+import {
+  defineConfig,
+  type Plugin,
+  type PluginOption,
+  type ViteDevServer,
+} from 'vite';
+/* Vitest's own view of the config: vite's `UserConfig` has no `test` key, and the
+   annotation below has to admit the block at the bottom of this file. */
+import type { ViteUserConfig } from 'vitest/config';
 import { reactRouter } from '@react-router/dev/vite';
 import { cloudflare } from '@cloudflare/vite-plugin';
 import tailwindcss from '@tailwindcss/vite';
@@ -127,7 +135,11 @@ const VERSION =
 
 const COMMIT = process.env['GIT_HASH'] || git('rev-parse', '--short', 'HEAD');
 
-export default defineConfig(async () => ({
+/* The return type is annotated rather than inferred. Left to infer, TypeScript compares
+   this whole object — every plugin, every nested option — against `UserConfigFnPromise`
+   and gives up with TS2321, "excessive stack depth". Naming the type stops the comparison
+   before it starts. */
+export default defineConfig(async (): Promise<ViteUserConfig> => ({
   root: import.meta.dirname,
   cacheDir: '../../node_modules/.vite/apps/blog',
   /*
@@ -148,7 +160,10 @@ export default defineConfig(async () => ({
   },
   plugins: [
     reapWorkerdOnSignals(),
-    tailwindcss(),
+    /* Spread: this returns an array, and a nested array inside `plugins` is legal but
+       makes the element type recursive enough for TS2321. Flat, every entry is a
+       `Plugin` and the check stays shallow. */
+    ...tailwindcss(),
     /*
      * Posts compile to React components at BUILD time. That is what lets a post use
      * <Image> and our <Link> — a component cannot be rendered from a string of HTML,
@@ -176,29 +191,40 @@ export default defineConfig(async () => ({
         rehypePlugins: [rehypeSlug, ...(await shikiPlugins())],
         providerImportSource: '@mdx-js/react',
       }),
-    },
+      /* `mdx()` is a rollup plugin, so spreading it with `enforce` produces a plain
+         object literal rather than a `Plugin`. Left unannotated it widens the array's
+         element union enough for TS2321 — say what it is instead. */
+    } as Plugin,
     // Build-time image transforms: sharp runs once, output is hashed and
     // immutable and first-party. See .agent/assets.md.
     imagetools(),
-    // The Cloudflare plugin must not load while Nx builds its project graph
-    // (Nx evaluates this config without the react-router CLI orchestration,
-    // which trips the plugin's environment validation).
-    !process.env.VITEST &&
-      !(globalThis as Record<string, unknown>)['NX_GRAPH_CREATION'] &&
-      cloudflare({
-        viteEnvironment: { name: 'ssr' },
-        /*
-         * workerd's inspector binds a FIXED port (9229, then 9230…), so two
-         * preview servers cannot coexist however careful you are with the HTTP
-         * port — and this repo is developed in git worktrees, where two e2e runs
-         * at once is normal. The loser died with EADDRINUSE, which read as "the
-         * tests are broken" rather than "two debuggers wanted the same socket".
-         * The suite never debugs the worker, so the e2e run switches it off.
-         */
-        inspectorPort: process.env['E2E'] === '1' ? false : undefined,
-      }),
-    !process.env.VITEST && reactRouter(),
-  ],
+    /* The Cloudflare plugin must not load while Nx builds its project graph (Nx
+       evaluates this config without the react-router CLI orchestration, which trips the
+       plugin's environment validation).
+       Spread rather than `condition && cloudflare(…)`: this plugin returns an ARRAY, so
+       the guard would type the entry `false | Plugin[]`, and vite's `PluginOption` will
+       not take that union nested inside the plugins array. An empty array says the same
+       thing and stays one type. */
+    ...(process.env.VITEST ||
+    (globalThis as Record<string, unknown>)['NX_GRAPH_CREATION']
+      ? []
+      : cloudflare({
+          viteEnvironment: { name: 'ssr' },
+          /*
+           * workerd's inspector binds a FIXED port (9229, then 9230…), so two
+           * preview servers cannot coexist however careful you are with the HTTP
+           * port — and this repo is developed in git worktrees, where two e2e runs
+           * at once is normal. The loser died with EADDRINUSE, which read as "the
+           * tests are broken" rather than "two debuggers wanted the same socket".
+           * The suite never debugs the worker, so the e2e run switches it off.
+           */
+          inspectorPort: process.env['E2E'] === '1' ? false : undefined,
+        })),
+    ...(process.env.VITEST ? [] : reactRouter()),
+    /* Annotated, not inferred. `PluginOption` is recursive, and letting TypeScript
+       compare an inferred array of plugins against it exhausts the instantiation depth
+       (TS2321) — a limit vite's own types have shipped past since 8.x. */
+  ] as PluginOption[],
   /*
    * Source maps for the WORKER ONLY — never for the client.
    *

@@ -129,9 +129,9 @@
     "@dev-blog/theme": "workspace:*",
     "@dev-blog/ui": "workspace:*",
     "isbot": "^4.4.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-router": "^8.1.0"
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-router": "^8.3.0"
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "^1.43.0",

@@ -24,5 +24,8 @@
     {
       "path": "./plugins/release"
     }
-  ]
+  ],
+  "compilerOptions": {
+    "ignoreDeprecations": "6.0"
+  }
 }
