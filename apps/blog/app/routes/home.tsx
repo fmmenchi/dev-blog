@@ -1,6 +1,5 @@
 import {
   Avatar,
-  Badge,
   BadgeList,
   Card,
   Container,
@@ -9,6 +8,7 @@ import {
 } from '@dev-blog/ui';
 import { useLoaderData } from 'react-router';
 
+import { PostCard } from '../components/post-card';
 import { SectionHeading } from '../components/section-heading';
 import { profile } from '../lib/content';
 import { avatarSrc } from '../lib/avatar-image';
@@ -18,15 +18,8 @@ export function loader() {
   return { posts: getPosts() };
 }
 
-function compactDate(date: string) {
-  return date.slice(5);
-}
-
 /** The home is a shop window, not the archive: featured post plus this many. */
 const COMPACT_POSTS = 4;
-
-/** `group` so the card title can react to a hover anywhere on the card link. */
-const CARD_LINK = 'group block text-inherit no-underline';
 
 export default function Home() {
   const { posts } = useLoaderData<typeof loader>();
@@ -96,77 +89,10 @@ export default function Home() {
             />
           ) : (
             <>
-              <Link
-                to={`/blog/${featured.slug}`}
-                variant="plain"
-                className={CARD_LINK}
-              >
-                <Card
-                  as="article"
-                  interactive
-                  className="flex flex-col gap-2.5"
-                >
-                  <div className="flex justify-between gap-4 font-mono text-2xs text-muted-foreground">
-                    <span className="text-primary">★ latest</span>
-                    <span>
-                      {featured.date} · {featured.minutes} min
-                    </span>
-                  </div>
-                  <h2 className="text-[26px] leading-[1.16] font-bold tracking-[-0.02em] [transition:var(--transition-color)] group-hover:text-primary">
-                    {featured.title}
-                  </h2>
-                  <p className="max-w-intro text-[14.5px] leading-copy text-muted-foreground">
-                    {featured.excerpt}
-                  </p>
-                  {/* `flex-wrap`, or the chips run past the card edge on a
-                      phone: a flex row cannot shrink a word. */}
-                  <div className="mt-1.5 flex flex-wrap gap-2">
-                    {featured.tags.map((tag) => (
-                      <Badge key={tag} variant="tag">
-                        #{tag}
-                      </Badge>
-                    ))}
-                  </div>
-                </Card>
-              </Link>
+              <PostCard post={featured} variant="featured" latest />
 
               {rest.map((post) => (
-                <Link
-                  key={post.slug}
-                  to={`/blog/${post.slug}`}
-                  variant="plain"
-                  className={CARD_LINK}
-                >
-                  <Card
-                    as="article"
-                    interactive
-                    className="flex flex-col gap-2.5 py-5 sm:flex-row sm:items-start sm:justify-between sm:gap-5"
-                  >
-                    <div>
-                      <h2 className="text-lg leading-[1.3] font-semibold [transition:var(--transition-color)] group-hover:text-primary">
-                        {post.title}
-                      </h2>
-                      <p className="mt-1 text-[13px] text-muted-foreground">
-                        {post.excerpt}
-                      </p>
-                      {/* Same chips as the featured card and as /blog: a post
-                          preview carries its tags, whichever card it lands in. */}
-                      <div className="mt-2.5 flex flex-wrap gap-2">
-                        {post.tags.map((tag) => (
-                          <Badge key={tag} variant="tag">
-                            #{tag}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                    {/* Phone: the meta line moves on top, like the featured
-                        card — beside the title it leaves a column two words
-                        wide. From `sm` it goes back to the right. */}
-                    <span className="order-first font-mono text-2xs whitespace-nowrap text-muted-foreground sm:order-none">
-                      {compactDate(post.date)} · {post.minutes} min
-                    </span>
-                  </Card>
-                </Link>
+                <PostCard key={post.slug} post={post} />
               ))}
 
               {hasMore ? (
