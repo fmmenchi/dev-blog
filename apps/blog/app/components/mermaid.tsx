@@ -56,8 +56,13 @@ export function MermaidDiagram({ hash }: { hash: string }) {
 
   return (
     <figure className="my-7">
+      {/* A wide diagram scrolls inside its own box rather than pushing the page
+          sideways — and `tabIndex` is what lets a keyboard reach that scroll. Without
+          it the overflow is unreachable without a mouse, which axe reports as
+          `scrollable-region-focusable`. */}
       <div
         className="overflow-x-auto rounded-xl border border-border bg-card p-6 [&_svg]:mx-auto [&_svg]:h-auto [&_svg]:max-w-full"
+        tabIndex={0}
         dangerouslySetInnerHTML={{ __html: svg }}
       />
     </figure>
