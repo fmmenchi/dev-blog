@@ -58,13 +58,5 @@
       "package": "@nx/react",
       "name": "update-23-1-0-create-ai-instructions-for-react-19"
     }
-  ],
-  "nx-console": {
-    "initialGitRef": {
-      "ref": "b21809c50304cdd640938034514661a5b6ec00af",
-      "subject": "Merge branch 'fix/og-card-and-cache-inputs'"
-    },
-    "targetVersion": "latest",
-    "confirmedPackageUpdates": true
-  }
+  ]
 }
