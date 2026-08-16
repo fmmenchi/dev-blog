@@ -57,8 +57,12 @@ export default [
               onlyDependOnLibsWithTags: ['type:util'],
             },
             {
+              // Design tokens are a leaf, like the icons: they are the bottom of the
+              // stack, so there is nothing below them left to reach for. Allowing
+              // `type:theme` here would only ever permit one theme lib to depend on
+              // another, which is a cycle waiting to be written.
               sourceTag: 'type:theme',
-              onlyDependOnLibsWithTags: ['type:theme'],
+              onlyDependOnLibsWithTags: [],
             },
             {
               sourceTag: 'scope:shared',

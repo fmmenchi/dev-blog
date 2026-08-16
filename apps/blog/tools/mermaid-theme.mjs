@@ -36,6 +36,25 @@ export const themeVariables = {
   tertiaryTextColor: SENTINEL.label,
   edgeLabelBackground: SENTINEL.labelBg,
   fontSize: '14px',
+  /* Sequence diagrams do not derive these from primaryColor: notes ship mermaid's own
+     yellow and the boxes its own grey, neither of which recolour() would ever see. Name
+     them so a sequence diagram lands on the same roles as every other diagram. */
+  noteBkgColor: SENTINEL.node,
+  noteTextColor: SENTINEL.text,
+  noteBorderColor: SENTINEL.border,
+  actorBkg: SENTINEL.node,
+  actorBorder: SENTINEL.border,
+  actorTextColor: SENTINEL.text,
+  actorLineColor: SENTINEL.border,
+  signalColor: SENTINEL.text,
+  signalTextColor: SENTINEL.text,
+  labelBoxBkgColor: SENTINEL.node,
+  labelBoxBorderColor: SENTINEL.border,
+  labelTextColor: SENTINEL.text,
+  loopTextColor: SENTINEL.text,
+  activationBkgColor: SENTINEL.node,
+  activationBorderColor: SENTINEL.border,
+  sequenceNumberColor: SENTINEL.accentText,
 };
 
 export const mermaidConfig = {
@@ -44,10 +63,73 @@ export const mermaidConfig = {
   fontFamily: 'ui-monospace, "SF Mono", "JetBrains Mono", monospace',
   themeVariables,
   flowchart: { curve: 'basis', padding: 14 },
+  /* C4 draws relationship labels straight onto the canvas, with no background and no
+     attempt to avoid the boxes — so the gap between two shapes has to be wide enough to
+     hold the longest label, or it lands on a box and becomes unreadable. 90 is the
+     smallest margin at which none of our labels overlaps a box; the empty band this
+     leaves around the diagram is cropped away after render (see mermaid-generate.mjs). */
+  c4: { diagramMarginX: 8, diagramMarginY: 8, c4ShapeMargin: 90 },
+};
+
+/* Two sentinels the render step needs by hand: one to spot accented shapes in the DOM,
+   one to paint the arrowheads it normalises across diagram types. */
+export const ACCENT_SENTINEL = SENTINEL.accent;
+export const TEXT_SENTINEL = SENTINEL.text;
+
+/* mermaid gives each diagram type its own arrowhead and its own corner radius, so a
+   flowchart and a C4 in one article do not look like one hand drew them. These are the
+   C4's, and the render step puts every diagram on them. */
+export const SHARED_SHAPE = {
+  headSize: 10,
+  headAnchor: 9,
+  radius: 2.5,
+  borderWidth: '0.5',
 };
 
 /** classDef the diagrams use for an emphasised (accent) node: `:::accent`. */
 export const accentClassDef = `classDef accent fill:${SENTINEL.accent},stroke:${SENTINEL.accent},color:${SENTINEL.accentText};`;
+
+/*
+ * C4 is the one diagram type that ignores themeVariables: its blues are baked into the
+ * renderer, so there is nothing for recolour() to rewrite. The only lever mermaid gives
+ * is per element, which means the styling has to name every alias in the diagram — so we
+ * read them out of the source here rather than making each article repeat them. Mark the
+ * subject with a `%% accent <alias> [<alias>…]` comment and those elements get the accent
+ * instead; `%% accent-rel <from> <to>` does the same for one relation's line.
+ */
+/* Every C4 element type, spelled as a base plus the optional suffixes mermaid allows,
+   rather than as a hand-kept list — an unlisted type is not a no-op, it is an element left
+   painted in mermaid's blue. `*_Boundary(` does not match: the suffix alternation has to be
+   followed by the opening bracket. */
+const C4_ELEMENT =
+  /^\s*(?:Deployment_Node|Person|System|Container|Component|Node)(?:Db|Queue)?(?:_Ext)?\s*\(\s*([A-Za-z0-9_]+)/gm;
+const C4_ACCENT = /^\s*%%\s*accent\s+([A-Za-z0-9_ ]+?)\s*$/m;
+const C4_ACCENT_REL =
+  /^\s*%%\s*accent-rel\s+([A-Za-z0-9_]+)\s+([A-Za-z0-9_]+)\s*$/gm;
+
+export function c4ThemeDirectives(source) {
+  const accented = new Set(
+    (source.match(C4_ACCENT)?.[1] ?? '').split(/\s+/).filter(Boolean),
+  );
+  const lines = [];
+
+  for (const [, alias] of source.matchAll(C4_ELEMENT)) {
+    const isAccent = accented.has(alias);
+    lines.push(
+      `UpdateElementStyle(${alias}, $bgColor="${isAccent ? SENTINEL.accent : SENTINEL.node}", $borderColor="${isAccent ? SENTINEL.accent : SENTINEL.border}", $fontColor="${isAccent ? SENTINEL.accentText : SENTINEL.text}")`,
+    );
+  }
+
+  /* `%% accent-rel <from> <to>` accents one relation — the LINE only. The label keeps the
+     normal text role: it is drawn straight onto the canvas with no background, so it can
+     end up over an accented box, where an accent-coloured label would vanish. */
+  for (const [, from, to] of source.matchAll(C4_ACCENT_REL)) {
+    lines.push(
+      `UpdateRelStyle(${from}, ${to}, $lineColor="${SENTINEL.accent}", $textColor="${SENTINEL.text}")`,
+    );
+  }
+  return lines.join('\n');
+}
 
 /** sentinel → design token. */
 const TOKEN = {
@@ -73,10 +155,6 @@ const rgbForm = (hex) => {
 };
 
 /** Rewrite every sentinel (hex or rgb form) and stray black to a token. */
-/** Corner radius on node boxes, in SVG user units. 0 = mermaid's sharp corners. */
-const NODE_RADIUS = 6;
-
-/** Rewrite sentinel colours to tokens, and round the node boxes. */
 export function recolour(svg) {
   let out = svg;
   for (const [hex, token] of Object.entries(TOKEN)) {
@@ -88,13 +166,19 @@ export function recolour(svg) {
     /#000000\b|#000\b|\brgb\(\s*0\s*,\s*0\s*,\s*0\s*\)/gi,
     BLACK_TOKEN,
   );
-  /* A node's box is `<rect class="basic label-container">`; mermaid gives it no rx.
-     Add one so the boxes match the site's rounded cards. Edge-label backgrounds are a
-     different rect and stay square. */
-  return out.replace(
-    /<rect class="basic label-container"/g,
-    `<rect rx="${NODE_RADIUS}" ry="${NODE_RADIUS}" class="basic label-container"`,
-  );
+  /* C4 paints everything that is not a box — boundary outline, relationship lines and
+     both sets of labels — in one grey of its own, which no directive reaches. Split it
+     by role on the way out: strokes take the line colour, text takes the label colour,
+     the same two the other diagrams use. */
+  out = out
+    .replace(/stroke="#444444"/gi, `stroke="${TOKEN[SENTINEL.border]}"`)
+    .replace(/fill="#444444"/gi, `fill="${TOKEN[SENTINEL.label]}"`);
+  /* The sequence renderer writes the actor box straight onto the rect as attributes, so
+     the theme variables above never reach it. Same split by role on the way out. */
+  out = out
+    .replace(/fill="#eaeaea"/gi, `fill="${TOKEN[SENTINEL.node]}"`)
+    .replace(/stroke="#(?:666|999)"/gi, `stroke="${TOKEN[SENTINEL.border]}"`);
+  return out;
 }
 
 /** The id a diagram's SVG is filed under — content-addressed, so an edit regenerates. */

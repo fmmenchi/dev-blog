@@ -22,6 +22,15 @@ export const projects: Project[] = [
     language: 'TypeScript',
     url: 'https://github.com/fmmenchi/dev-blog',
   },
+  {
+    name: 'shared-platform',
+    period: '2026',
+    status: 'active',
+    description:
+      'The shared layers behind my other services — UI and design tokens, analytics, signing, CI plugins — fifteen packages in one monorepo, each released on its own.',
+    language: 'TypeScript',
+    url: 'https://github.com/fmmenchi/shared-platform',
+  },
 ];
 
 export interface Social {
