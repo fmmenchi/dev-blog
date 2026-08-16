@@ -49,6 +49,15 @@ jobs:
           node-version-file: .nvmrc
           cache: 'pnpm'
 
+      # The @fmmenchi packages live in GitHub Packages, which wants a token even for
+      # public ones. It goes through `pnpm config set` rather than the repo's .npmrc:
+      # pnpm will not expand a variable into a credential read from a committed file.
+      # GITHUB_TOKEN is issued per run, so there is nothing to create or rotate.
+      - name: Authenticate to GitHub Packages
+        run: pnpm config set "//npm.pkg.github.com/:_authToken" "$GITHUB_TOKEN"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - run: pnpm install --frozen-lockfile
 
       # A notification you cannot test is a notification you do not have. Without this,
