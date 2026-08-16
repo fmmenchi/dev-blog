@@ -118,7 +118,9 @@ export default function Home() {
                   <p className="max-w-intro text-[14.5px] leading-copy text-muted-foreground">
                     {featured.excerpt}
                   </p>
-                  <div className="mt-1.5 flex gap-2">
+                  {/* `flex-wrap`, or the chips run past the card edge on a
+                      phone: a flex row cannot shrink a word. */}
+                  <div className="mt-1.5 flex flex-wrap gap-2">
                     {featured.tags.map((tag) => (
                       <Badge key={tag} variant="tag">
                         #{tag}
@@ -138,7 +140,7 @@ export default function Home() {
                   <Card
                     as="article"
                     interactive
-                    className="flex items-center justify-between gap-5 py-5"
+                    className="flex flex-col gap-2.5 py-5 sm:flex-row sm:items-start sm:justify-between sm:gap-5"
                   >
                     <div>
                       <h2 className="text-lg leading-[1.3] font-semibold [transition:var(--transition-color)] group-hover:text-primary">
@@ -147,8 +149,20 @@ export default function Home() {
                       <p className="mt-1 text-[13px] text-muted-foreground">
                         {post.excerpt}
                       </p>
+                      {/* Same chips as the featured card and as /blog: a post
+                          preview carries its tags, whichever card it lands in. */}
+                      <div className="mt-2.5 flex flex-wrap gap-2">
+                        {post.tags.map((tag) => (
+                          <Badge key={tag} variant="tag">
+                            #{tag}
+                          </Badge>
+                        ))}
+                      </div>
                     </div>
-                    <span className="font-mono text-2xs whitespace-nowrap text-muted-foreground">
+                    {/* Phone: the meta line moves on top, like the featured
+                        card — beside the title it leaves a column two words
+                        wide. From `sm` it goes back to the right. */}
+                    <span className="order-first font-mono text-2xs whitespace-nowrap text-muted-foreground sm:order-none">
                       {compactDate(post.date)} · {post.minutes} min
                     </span>
                   </Card>
