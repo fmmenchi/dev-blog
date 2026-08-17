@@ -28,67 +28,22 @@ on:
     # Monday 06:00 UTC. Early enough that a bad Monday is still a Monday.
     - cron: '0 6 * * 1'
   workflow_dispatch:
-    inputs:
-      test_notification:
-        description: 'Post a test message to Slack instead of scanning'
-        type: boolean
-        default: false
 
 permissions:
   contents: read
-  # See ci.yml: an explicit block zeroes what it omits, and the install needs to read
-  # @fmmenchi/* from GitHub Packages.
+  # The ceiling for the called workflow, which cannot hold more than its caller grants —
+  # the reusable's own install reads @fmmenchi/* from GitHub Packages. Note the reusable
+  # must also ASK for it: at gh-actions/v0 it declares `contents: read` alone, so the
+  # scan fails there until that side adds the scope.
   packages: read
 
 jobs:
   # `alert-on-failure` only on the schedule: a pull request already shows a red check, and
   # a message that arrives every week regardless is a message nobody opens.
   scan:
-    if: ${{ !inputs.test_notification }}
     uses: fmmenchi/shared-platform/.github/workflows/security.reusable.yml@gh-actions/v0
     with:
       app-name: dev-blog
       announce-project: blog
       alert-on-failure: ${{ github.event_name == 'schedule' }}
     secrets: inherit
-
-  # The one thing the reusable cannot do for us: prove the Slack wiring works while
-  # nothing is broken. Worth having — the alternative is finding out the channel was
-  # wrong on the morning the scan finally goes red.
-  test-slack:
-    if: ${{ inputs.test_notification }}
-    name: Test the Slack wiring
-    runs-on: ubuntu-latest
-    env:
-      HUSKY: 0
-    steps:
-      - uses: actions/checkout@v7
-
-      - uses: pnpm/action-setup@v6
-
-      - uses: actions/setup-node@v7
-        with:
-          node-version-file: .nvmrc
-          cache: 'pnpm'
-
-      # The @fmmenchi packages live in GitHub Packages, which wants a token even for
-      # public ones. It goes through `pnpm config set` rather than the repo's .npmrc:
-      # pnpm will not expand a variable into a credential read from a committed file.
-      # GITHUB_TOKEN is issued per run, so there is nothing to create or rotate.
-      - name: Authenticate to GitHub Packages
-        run: pnpm config set "//npm.pkg.github.com/:_authToken" "$GITHUB_TOKEN"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - run: pnpm install --frozen-lockfile
-
-      - name: Post the test message
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-          SLACK_CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID }}
-          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        run: >-
-          pnpm nx run blog:announce-error
-          --appName=dev-blog
-          --message=":white_check_mark: *Test message.* The security scan can reach this
-          channel — so the day it goes red, this is where you will hear about it."
