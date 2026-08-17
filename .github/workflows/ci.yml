@@ -129,16 +129,25 @@ jobs:
       # every project), not curl and jq: the failure that happens is Slack answering 200
       # while refusing the message, and only a unit test pins that down. Missing secrets
       # skip the step rather than failing it.
+      # shared-platform's brick rather than a call of our own: it takes the version and the
+      # URL as inputs and hands them to the executor through the environment, which is the
+      # only way that works — nx reserves `--version`, so passing it as an option leaves
+      # the announce exiting green having sent nothing.
+      #
+      # Its sibling `announce-releases` is the wrong one here: that reads a file of
+      # `{project}@{version}` tags and looks each up with `gh release view`, while this repo
+      # cuts a single `v1.8.2`.
       - name: Announce the release to Slack
         if: steps.release.outputs.version != ''
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-          SLACK_CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID }}
-        run: >-
-          pnpm nx run blog:announce-release
-          --appName=dev-blog
-          --version=${{ steps.release.outputs.version }}
-          --url=${{ github.server_url }}/${{ github.repository }}/releases/tag/v${{ steps.release.outputs.version }}
+        uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/slack-notify@gh-actions/v0
+        with:
+          type: release
+          app-name: dev-blog
+          project: blog
+          version: ${{ steps.release.outputs.version }}
+          release-url: ${{ github.server_url }}/${{ github.repository }}/releases/tag/v${{ steps.release.outputs.version }}
+          bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
 
   # Deploy to Cloudflare Workers on every green push to main.
   # Requires the CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID repo secrets;
