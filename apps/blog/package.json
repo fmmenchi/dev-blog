@@ -13,24 +13,26 @@
     "targets": {
       "preview": {
         "command": "vite preview --port 4300",
-        "options": {
-          "cwd": "{projectRoot}"
-        },
         "dependsOn": [
           "build"
-        ]
+        ],
+        "options": {
+          "cwd": "{projectRoot}"
+        }
       },
       "deploy": {
         "command": "wrangler deploy",
-        "options": {
-          "cwd": "{projectRoot}"
-        },
         "dependsOn": [
           "build"
-        ]
+        ],
+        "options": {
+          "cwd": "{projectRoot}"
+        }
       },
       "maintenance": {
         "command": "wrangler kv key put maintenance off --binding MAINTENANCE_KV --remote",
+        "defaultConfiguration": "off",
+        "cache": false,
         "options": {
           "cwd": "{projectRoot}"
         },
@@ -39,9 +41,7 @@
             "command": "wrangler kv key put maintenance on --binding MAINTENANCE_KV --remote"
           },
           "off": {}
-        },
-        "defaultConfiguration": "off",
-        "cache": false
+        }
       },
       "assess": {
         "executor": "nx:run-commands",
@@ -104,20 +104,11 @@
           "check-diagrams"
         ]
       },
-      "vuln": {
-        "executor": "@dev-blog/security:trivy",
-        "cache": true,
-        "inputs": [
-          "{workspaceRoot}/pnpm-lock.yaml",
-          "{projectRoot}/package.json"
-        ],
-        "options": {
-          "scanners": [
-            "vuln"
-          ]
-        },
+      "sbom": {
+        "executor": "@fmmenchi/nx-trivy:sbom",
+        "cache": false,
         "configurations": {
-          "ci": {
+          "docker": {
             "runner": "docker"
           }
         }

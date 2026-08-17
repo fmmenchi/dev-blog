@@ -1,0 +1,14 @@
+# Trivy vulnerability suppressions (structured), read by @fmmenchi/nx-trivy. This file
+# lives at the scan root so Trivy auto-detects it.
+#
+# POLICY — prefer FIXING over ignoring:
+#   1. Bump the dependency. For a TRANSITIVE one that means an `overrides` entry in your
+#      package manager's workspace config, scoped to the vulnerable version line.
+#   2. Add an entry below ONLY when no fix exists, or the risk is formally accepted —
+#      always with a `statement` (why) AND `expired_at` (so it is re-reviewed), e.g.:
+#
+#        - id: CVE-2026-16221
+#          statement: 'Vulnerable code path not reached in our usage.'
+#          expired_at: 2026-12-31
+#
+vulnerabilities: []

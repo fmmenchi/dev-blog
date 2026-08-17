@@ -32,6 +32,15 @@ jobs:
           node-version-file: .nvmrc
           cache: 'pnpm'
 
+      # The @fmmenchi packages live in GitHub Packages, which wants a token even for
+      # public ones. It goes through `pnpm config set` rather than the repo's .npmrc:
+      # pnpm will not expand a variable into a credential read from a committed file.
+      # GITHUB_TOKEN is issued per run, so there is nothing to create or rotate.
+      - name: Authenticate to GitHub Packages
+        run: pnpm config set "//npm.pkg.github.com/:_authToken" "$GITHUB_TOKEN"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - run: pnpm install --frozen-lockfile
 
       - name: Install Playwright browsers
@@ -74,6 +83,15 @@ jobs:
           node-version-file: .nvmrc
           cache: 'pnpm'
 
+      # The @fmmenchi packages live in GitHub Packages, which wants a token even for
+      # public ones. It goes through `pnpm config set` rather than the repo's .npmrc:
+      # pnpm will not expand a variable into a credential read from a committed file.
+      # GITHUB_TOKEN is issued per run, so there is nothing to create or rotate.
+      - name: Authenticate to GitHub Packages
+        run: pnpm config set "//npm.pkg.github.com/:_authToken" "$GITHUB_TOKEN"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - run: pnpm install --frozen-lockfile
 
       - name: Configure git author
@@ -101,18 +119,20 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # Tell Slack, but only when a new tag was actually cut. The message is built and
-      # sent in tested TypeScript (@dev-blog/notify, through the release plugin's notify
-      # executor), not curl and jq: the failure that happens is Slack answering 200 while
-      # refusing the message, and only a unit test pins that down. Missing secrets skip
-      # the step rather than failing it.
+      # sent in tested TypeScript (@fmmenchi/nx-notify's `announce-release`, inferred onto
+      # every project), not curl and jq: the failure that happens is Slack answering 200
+      # while refusing the message, and only a unit test pins that down. Missing secrets
+      # skip the step rather than failing it.
       - name: Announce the release to Slack
         if: steps.release.outputs.version != ''
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
           SLACK_CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID }}
-          RELEASE_VERSION: ${{ steps.release.outputs.version }}
-          RELEASE_URL: ${{ github.server_url }}/${{ github.repository }}/releases/tag/v${{ steps.release.outputs.version }}
-        run: pnpm nx run @dev-blog/release:notify
+        run: >-
+          pnpm nx run blog:announce-release
+          --appName=dev-blog
+          --version=${{ steps.release.outputs.version }}
+          --url=${{ github.server_url }}/${{ github.repository }}/releases/tag/v${{ steps.release.outputs.version }}
 
   # Deploy to Cloudflare Workers on every green push to main.
   # Requires the CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID repo secrets;
@@ -139,6 +159,15 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: 'pnpm'
+
+      # The @fmmenchi packages live in GitHub Packages, which wants a token even for
+      # public ones. It goes through `pnpm config set` rather than the repo's .npmrc:
+      # pnpm will not expand a variable into a credential read from a committed file.
+      # GITHUB_TOKEN is issued per run, so there is nothing to create or rotate.
+      - name: Authenticate to GitHub Packages
+        run: pnpm config set "//npm.pkg.github.com/:_authToken" "$GITHUB_TOKEN"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - run: pnpm install --frozen-lockfile
 

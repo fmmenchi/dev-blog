@@ -45,18 +45,6 @@ export default [
               onlyDependOnLibsWithTags: [],
             },
             {
-              // Build/CI tooling (the Nx plugins) may use the shared utilities, and
-              // nothing of the app: a plugin that imported a component would mean the
-              // build depended on the thing it builds.
-              sourceTag: 'type:tooling',
-              onlyDependOnLibsWithTags: ['type:util', 'type:tooling'],
-            },
-            {
-              // Utilities are leaves too — that is what makes them shareable.
-              sourceTag: 'type:util',
-              onlyDependOnLibsWithTags: ['type:util'],
-            },
-            {
               // Design tokens are a leaf, like the icons: they are the bottom of the
               // stack, so there is nothing below them left to reach for. Allowing
               // `type:theme` here would only ever permit one theme lib to depend on

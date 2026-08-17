@@ -1,7 +1,6 @@
 packages:
   - 'apps/*'
   - 'libs/*'
-  - 'plugins/*'
 allowBuilds:
   nx: true
   '@swc/core': true
@@ -13,6 +12,10 @@ allowBuilds:
   vue-demi: true
   unrs-resolver: true
 engineStrict: true
+minimumReleaseAgeExclude:
+  - '@fmmenchi/nx-trivy@0.1.1'
+  - '@fmmenchi/notify@0.0.12'
+  - '@fmmenchi/nx-notify@0.0.15'
 # Both dragged in by unlighthouse (dev-only tooling); the overrides keep
 # `trivy --include-dev-deps` clean. Acceptance test after touching either:
 # `pnpm nx assess blog` must still complete its sweep. Drop them once
