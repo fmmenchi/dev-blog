@@ -98,7 +98,9 @@ to use.
 The rule is not written about those three names. It is written about what kind
 of thing each one is — a **tag**, in Nx's vocabulary: `ui` carries `type:ui`,
 `theme` carries `type:theme`, `icons` carries `type:icons`, and the app carries
-`type:app`. The whole rule is four entries:
+`type:app`. Each also carries a `scope:` tag, on a second axis this article
+leaves alone — so the rule is five entries, and these are the four that decide
+the import above:
 
 ```js
 depConstraints: [
