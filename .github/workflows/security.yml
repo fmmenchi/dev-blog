@@ -36,6 +36,9 @@ on:
 
 permissions:
   contents: read
+  # See ci.yml: an explicit block zeroes what it omits, and the install needs to read
+  # @fmmenchi/* from GitHub Packages.
+  packages: read
 
 jobs:
   # `alert-on-failure` only on the schedule: a pull request already shows a red check, and
