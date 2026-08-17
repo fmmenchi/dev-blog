@@ -70,6 +70,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: main
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    # Serialize releases: two quick merges must not run the tag-and-push concurrently.
+    concurrency:
+      group: release
+      cancel-in-progress: false
     permissions:
       contents: write
       # Job-level permissions REPLACE the workflow-level block rather than adding to it.
@@ -105,6 +109,34 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
+      # STILL OUR OWN CALL, and not for want of trying: @fmmenchi/ci is installed and both
+      # `release` and `notify` were wired to the bricks here. A dry run of the release brick
+      # against this repo — `RELEASE_DRY_RUN=true node $(require.resolve('@fmmenchi/ci/release'))`,
+      # which writes nothing — refused twice, and both refusals are about SHAPE.
+      #
+      # The bricks assume shared-platform's shape: many independently versioned, publishable
+      # packages, each with its own tag. This repo is one fixed release group that cuts a
+      # single `v{version}` tag and publishes nothing.
+      #
+      #   1. `toReleaseRecords` reads each project's tag from `projectChangelogs[project]`,
+      #      and we set `changelog.projectChangelogs: false` — one blog, one changelog. nx
+      #      hands the tag back under `workspaceChangelog`, where the brick does not look,
+      #      so it threw: "nx released blog-e2e@1.8.3 but handed back no git tag for it".
+      #      Turning projectChangelogs on gets past it, and straight into the second half of
+      #      the same mismatch: the record then holds SIX entries — blog, blog-e2e, ui,
+      #      theme, icons, source — all carrying the same tag `v1.8.3`, because that is what
+      #      a fixed group is. notify announces per entry, so one release becomes six
+      #      identical Slack messages. The brick dedupes the tag list it writes for the SBOM
+      #      step, but not the records.
+      #   2. It then calls `nx release publish` unconditionally, where this step passes
+      #      `--skip-publish`. Every project here is `private` — nothing is publishable, so
+      #      none of them has an `nx-release-publish` target, and nx errors out rather than
+      #      treating that as nothing to do.
+      #
+      # Neither is fixable from this side without inventing something, so the wiring waits
+      # on the bricks handling a fixed group and a workspace with nothing to publish.
+      # @fmmenchi/ci stays installed: it is what the bricks resolve at runtime, and when
+      # they do fit, only this file changes.
       - name: Release
         # --first-release is required when no v* tag exists yet
         run: |
@@ -115,22 +147,6 @@ jobs:
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # No Slack announcement here for now, deliberately.
-      #
-      # It used to run shared-platform's `slack-notify` brick, which drove this repo's own
-      # `announce-release` target. Both ends of that are gone: `gh-actions/v0` has moved on
-      # and no longer carries a `slack-notify` action at all, and the plugin that provided
-      # the target (@fmmenchi/nx-notify) is no longer a dependency here.
-      #
-      # Its replacement is the pair of bricks `release` + `notify`: release writes a record
-      # of what it released, notify announces every entry in it. Both resolve
-      # `@fmmenchi/ci/*` at runtime, so they need @fmmenchi/ci installed — and 0.0.12, the
-      # newest published, depends on @fmmenchi/notify@0.0.1, a version that was never
-      # published. `pnpm add` fails outright. Wire them the moment that pin is fixed.
-      #
-      # Leaving the old step in place was not an option: a `uses:` pointing at an action
-      # that no longer exists fails the release job, and `deploy` needs `release`.
 
   # Deploy to Cloudflare Workers on every green push to main.
   # Requires the CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID repo secrets;
