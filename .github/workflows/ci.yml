@@ -9,6 +9,10 @@ on:
 permissions:
   actions: read
   contents: read
+  # Reading @fmmenchi/* from GitHub Packages. Declaring any `permissions` block zeroes
+  # every scope left out of it, so without this line the token cannot fetch the package
+  # metadata at all — and pnpm reports that 403 as ERR_PNPM_TARBALL_URL_MISMATCH.
+  packages: read
 
 jobs:
   main:
@@ -68,6 +72,8 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     permissions:
       contents: write
+      # Job-level permissions REPLACE the workflow-level block rather than adding to it.
+      packages: read
     env:
       HUSKY: 0 # git hooks are for humans; the release commit is machine-generated
     steps:
