@@ -12,6 +12,13 @@ allowBuilds:
   vue-demi: true
   unrs-resolver: true
 engineStrict: true
+# pnpm records the tarball URL it resolved and re-checks it against the registry's
+# metadata. GitHub Packages serves a content-addressed download URL that does not match
+# what its metadata advertises, so every @fmmenchi package fails that check with
+# ERR_PNPM_TARBALL_URL_MISMATCH — not a signal about the package, a mismatch between two
+# registries' conventions. The integrity hash still pins the contents.
+trustPolicyExclude:
+  - '@fmmenchi/*'
 minimumReleaseAgeExclude:
   - '@fmmenchi/nx-trivy@0.1.1'
   - '@fmmenchi/notify@0.0.12'
