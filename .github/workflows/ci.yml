@@ -110,33 +110,37 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
       # STILL OUR OWN CALL, and not for want of trying: @fmmenchi/ci is installed and both
-      # `release` and `notify` were wired to the bricks here. A dry run of the release brick
+      # `release` and `notify` were wired to the bricks here. Rehearsing the release brick
       # against this repo — `RELEASE_DRY_RUN=true node $(require.resolve('@fmmenchi/ci/release'))`,
-      # which writes nothing — refused twice, and both refusals are about SHAPE.
+      # which writes nothing — found two problems. ONE of them is ours, and its fix is
+      # written down here. The other is not, and it is why this step is unchanged.
       #
-      # The bricks assume shared-platform's shape: many independently versioned, publishable
-      # packages, each with its own tag. This repo is one fixed release group that cuts a
-      # single `v{version}` tag and publishes nothing.
+      # OURS. `toReleaseRecords` reads each project's tag out of `projectChangelogs[project]`,
+      # and we set `changelog.projectChangelogs: false` — one blog, one changelog — so nx
+      # hands the tag back under `workspaceChangelog`, where the brick does not look. It
+      # threw: "nx released blog-e2e@1.8.3 but handed back no git tag for it". Turning
+      # projectChangelogs on clears that but exposes the shape underneath: with
+      # `release.projects: ["*"]` the record holds SIX entries — blog, blog-e2e, ui, theme,
+      # icons, source — all carrying the same `v1.8.3`, because that is what a fixed group
+      # is, and `eventsFromReleases` turns all six into six Slack messages (measured: six
+      # in, six out; five of them read "version bump only ... there were no code changes").
+      # Narrowing the group to `release.projects: ["blog"]` gives exactly one record,
+      # `blog -> 1.8.3 tag=v1.8.3`, which is the shape notify wants. So this half is a
+      # config change here, to make together with the wiring.
       #
-      #   1. `toReleaseRecords` reads each project's tag from `projectChangelogs[project]`,
-      #      and we set `changelog.projectChangelogs: false` — one blog, one changelog. nx
-      #      hands the tag back under `workspaceChangelog`, where the brick does not look,
-      #      so it threw: "nx released blog-e2e@1.8.3 but handed back no git tag for it".
-      #      Turning projectChangelogs on gets past it, and straight into the second half of
-      #      the same mismatch: the record then holds SIX entries — blog, blog-e2e, ui,
-      #      theme, icons, source — all carrying the same tag `v1.8.3`, because that is what
-      #      a fixed group is. notify announces per entry, so one release becomes six
-      #      identical Slack messages. The brick dedupes the tag list it writes for the SBOM
-      #      step, but not the records.
-      #   2. It then calls `nx release publish` unconditionally, where this step passes
-      #      `--skip-publish`. Every project here is `private` — nothing is publishable, so
-      #      none of them has an `nx-release-publish` target, and nx errors out rather than
-      #      treating that as nothing to do.
+      # NOT OURS, and the actual blocker. The brick ends with an unconditional
+      # `nx release publish`, where this step passes `--skip-publish`. Every project in this
+      # workspace is `private`, so none has an `nx-release-publish` target and nx errors
+      # instead of treating that as nothing to do — measured with the release group narrowed
+      # to one project, so it is not the fixed group causing it:
+      # "the following projects were matched for publishing but do not have the
+      # nx-release-publish target specified: - blog". In a real run that lands AFTER the tag
+      # is cut, which is survivable by design (the record is on disk, announce can be
+      # re-run) — except the job still goes red, and `deploy` needs `release`. A workspace
+      # that releases without publishing needs the brick to skip publishing.
       #
-      # Neither is fixable from this side without inventing something, so the wiring waits
-      # on the bricks handling a fixed group and a workspace with nothing to publish.
       # @fmmenchi/ci stays installed: it is what the bricks resolve at runtime, and when
-      # they do fit, only this file changes.
+      # publishing is skippable this file and nx.json are the only things that change.
       - name: Release
         # --first-release is required when no v* tag exists yet
         run: |
