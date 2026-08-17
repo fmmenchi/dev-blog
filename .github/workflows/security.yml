@@ -44,6 +44,5 @@ jobs:
     uses: fmmenchi/shared-platform/.github/workflows/security.reusable.yml@gh-actions/v0
     with:
       app-name: dev-blog
-      announce-project: blog
       alert-on-failure: ${{ github.event_name == 'schedule' }}
     secrets: inherit

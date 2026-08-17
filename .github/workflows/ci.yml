@@ -106,48 +106,31 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Release
-        id: release
         # --first-release is required when no v* tag exists yet
         run: |
-          before=$(git describe --tags --abbrev=0 --match "v*" 2>/dev/null || echo "")
-          if [ -n "$before" ]; then
+          if git describe --tags --abbrev=0 --match "v*" >/dev/null 2>&1; then
             pnpm nx release --skip-publish
           else
             pnpm nx release --skip-publish --first-release
           fi
-          after=$(git describe --tags --abbrev=0 --match "v*" 2>/dev/null || echo "")
-          # Only a changed tag is a release: a push with no releasable commits leaves it
-          # untouched, and the notify step downstream keys off this being non-empty.
-          if [ -n "$after" ] && [ "$after" != "$before" ]; then
-            echo "version=${after#v}" >> "$GITHUB_OUTPUT"
-          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Tell Slack, but only when a new tag was actually cut. The message is built and
-      # sent in tested TypeScript (@fmmenchi/nx-notify's `announce-release`, inferred onto
-      # every project), not curl and jq: the failure that happens is Slack answering 200
-      # while refusing the message, and only a unit test pins that down. Missing secrets
-      # skip the step rather than failing it.
-      # shared-platform's brick rather than a call of our own: it takes the version and the
-      # URL as inputs and hands them to the executor through the environment, which is the
-      # only way that works — nx reserves `--version`, so passing it as an option leaves
-      # the announce exiting green having sent nothing.
+      # No Slack announcement here for now, deliberately.
       #
-      # Its sibling `announce-releases` is the wrong one here: that reads a file of
-      # `{project}@{version}` tags and looks each up with `gh release view`, while this repo
-      # cuts a single `v1.8.2`.
-      - name: Announce the release to Slack
-        if: steps.release.outputs.version != ''
-        uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/slack-notify@gh-actions/v0
-        with:
-          type: release
-          app-name: dev-blog
-          project: blog
-          version: ${{ steps.release.outputs.version }}
-          release-url: ${{ github.server_url }}/${{ github.repository }}/releases/tag/v${{ steps.release.outputs.version }}
-          bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
-          channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
+      # It used to run shared-platform's `slack-notify` brick, which drove this repo's own
+      # `announce-release` target. Both ends of that are gone: `gh-actions/v0` has moved on
+      # and no longer carries a `slack-notify` action at all, and the plugin that provided
+      # the target (@fmmenchi/nx-notify) is no longer a dependency here.
+      #
+      # Its replacement is the pair of bricks `release` + `notify`: release writes a record
+      # of what it released, notify announces every entry in it. Both resolve
+      # `@fmmenchi/ci/*` at runtime, so they need @fmmenchi/ci installed — and 0.0.12, the
+      # newest published, depends on @fmmenchi/notify@0.0.1, a version that was never
+      # published. `pnpm add` fails outright. Wire them the moment that pin is fixed.
+      #
+      # Leaving the old step in place was not an option: a `uses:` pointing at an action
+      # that no longer exists fails the release job, and `deploy` needs `release`.
 
   # Deploy to Cloudflare Workers on every green push to main.
   # Requires the CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID repo secrets;

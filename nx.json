@@ -78,8 +78,7 @@
         "targetName": "e2e"
       }
     },
-    "@fmmenchi/nx-trivy",
-    "@fmmenchi/nx-notify"
+    "@fmmenchi/nx-trivy"
   ],
   "release": {
     "projectsRelationship": "fixed",
