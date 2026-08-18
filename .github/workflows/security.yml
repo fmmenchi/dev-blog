@@ -9,9 +9,6 @@ name: Security
 #
 # Running it on every push would tell us the same thing forty times a week and teach us
 # to stop reading it.
-#
-# The scan itself is shared-platform's reusable workflow: the triggers below and the
-# gating are the caller's business, everything after them is not this repo's to maintain.
 on:
   pull_request:
     paths:
@@ -31,28 +28,68 @@ on:
 
 permissions:
   contents: read
-  # The ceiling for the called workflow, which cannot hold more than its caller grants —
-  # the reusable's own install reads @fmmenchi/* from GitHub Packages. Granting it here is
-  # necessary and not yet sufficient: a called workflow must also ASK for the scope, and at
-  # gh-actions/v0.2.0 the reusable still declares `contents: read` alone. Its `setup` step
-  # does not pass a registry-url either, so the install carries no credential for
-  # npm.pkg.github.com. Until that side changes, the scan cannot fetch @fmmenchi/nx-trivy —
-  # and pnpm reports that 403 as ERR_PNPM_TARBALL_URL_MISMATCH, not as an auth error.
+  # The install below reads @fmmenchi/* from GitHub Packages, and declaring any
+  # `permissions` block zeroes every scope left out of it.
   packages: read
 
+env:
+  # GitHub Packages wants a token even for public packages. `setup` configures the registry
+  # through actions/setup-node, which writes an npmrc referring to NODE_AUTH_TOKEN — and the
+  # install runs INSIDE that composite action, so a workflow-level env is the only place a
+  # caller can put the token.
+  NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  REGISTRY_URL: https://npm.pkg.github.com
+  HUSKY: 0 # a CI install must not run git hooks
+
 jobs:
-  # `alert-on-failure` only on the schedule: a pull request already shows a red check, and
-  # a message that arrives every week regardless is a message nobody opens.
+  # THE BRICKS, CALLED DIRECTLY, rather than shared-platform's turnkey
+  # `security.reusable.yml`. Not a preference — the reusable cannot install this repo:
+  # it declares `contents: read` alone and calls `setup` without a registry-url, so its
+  # `pnpm install --frozen-lockfile` has neither the scope nor the credential for
+  # npm.pkg.github.com and dies fetching @fmmenchi/nx-trivy. pnpm reports that 403 as
+  # ERR_PNPM_TARBALL_URL_MISMATCH, which is why it reads like a corrupt lockfile.
+  # Measured on two runs, at gh-actions/v0 and again at v0.2.0.
   #
-  # `cache-db: false` keeps what this repo already decided, back when the scan was ours:
-  # Trivy's DB expires in 21 hours (metadata.json, DownloadedAt -> NextUpdate) and the
-  # weekly run lands a week later, so a restored cache is always stale — Trivy discards it,
-  # pulls the fresh ~100 MB layer anyway, and we upload another ~70 MB for next time. The
-  # input defaults to ON, so leaving it out would be the change, not keeping it.
+  # The scan itself is still shared-platform's — same `trivy-scan` brick the reusable runs,
+  # same `notify` for the alert. Only the setup around it is ours, because that is the part
+  # that has to know about this repo's registry. Go back to the reusable the day it passes
+  # a registry-url through; nothing else here would change.
   scan:
-    uses: fmmenchi/shared-platform/.github/workflows/security.reusable.yml@gh-actions/v0.2.0
-    with:
-      app-name: dev-blog
-      alert-on-failure: ${{ github.event_name == 'schedule' }}
-      cache-db: false
-    secrets: inherit
+    name: Vulnerabilities & secrets
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          filter: tree:0
+
+      # .nvmrc is this repo's single source for the Node version — pnpm refuses to install
+      # on anything else — and the setup brick takes a version string, not a file.
+      - id: node
+        run: echo "version=$(cat .nvmrc)" >> "$GITHUB_OUTPUT"
+
+      - uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/setup@gh-actions/v0.2.0
+        with:
+          node-version: ${{ steps.node.outputs.version }}
+          registry-url: ${{ env.REGISTRY_URL }}
+
+      # `cache-db: false` keeps what this repo already decided, back when the scan was ours:
+      # Trivy's DB expires in 21 hours (metadata.json, DownloadedAt -> NextUpdate) and the
+      # weekly run lands a week later, so a restored cache is always stale — Trivy discards
+      # it, pulls the fresh ~100 MB layer anyway, and we upload another ~70 MB for next time.
+      # The input defaults to ON, so leaving it out would be the change.
+      - name: Scan
+        uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/trivy-scan@gh-actions/v0.2.0
+        with:
+          cache-db: false
+
+      # Only on the schedule: a pull request already shows a red check, and a message that
+      # arrives every week regardless is a message nobody opens.
+      - name: Alert Slack on findings
+        if: ${{ failure() && github.event_name == 'schedule' }}
+        uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/notify@gh-actions/v0.2.0
+        with:
+          kind: error
+          app: dev-blog
+          message: 'The Trivy audit found CRITICAL/HIGH dependency vulnerabilities.'
+          bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
