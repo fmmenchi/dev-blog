@@ -43,6 +43,7 @@ jobs:
         with:
           node-version: ${{ steps.node.outputs.version }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          registry-url: https://npm.pkg.github.com
 
       # `cache-db: false` because this runs WEEKLY. Trivy's DB expires in about 21 hours
       # (metadata.json, DownloadedAt -> NextUpdate), so a copy restored seven days later is

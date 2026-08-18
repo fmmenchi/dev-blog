@@ -65,6 +65,7 @@ jobs:
         with:
           node-version: ${{ steps.node.outputs.version }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          registry-url: https://npm.pkg.github.com
 
       # The DB cache stays ON here — the default — and that is the opposite call from
       # weekly-audit.yml, deliberately. Trivy's DB expires in about 21 hours: useless to a

@@ -14,13 +14,20 @@ permissions:
   # metadata at all — and pnpm reports that 403 as ERR_PNPM_TARBALL_URL_MISMATCH.
   packages: read
 
-# GitHub Packages wants a token even for public packages, and `setup` takes it directly
-# through `github-token` — one input per job, no ambient env.
+# Every `setup` below passes BOTH `github-token` and `registry-url`, and it needs both.
 #
-# NOT `registry-url`, which is what this used to pass: actions/setup-node turns that into a
-# bare `registry=` line, and a bare line is GLOBAL. Every public dependency in the workspace
-# would then be asked of GitHub Packages, which serves none of them. The scope mapping
-# belongs in this repo's .npmrc, where it is one line and applies to @fmmenchi alone.
+# `github-token` alone is the documented way, and for pnpm it does not work. The token is
+# exported as NODE_AUTH_TOKEN, which a scoped auth line in .npmrc is supposed to resolve —
+# but pnpm REFUSES to expand environment variables in credentials read from a PROJECT
+# .npmrc, in its own words "because that file is committed to the repository and could leak
+# the secret to an attacker-controlled registry". It says so and carries on unauthenticated,
+# and the 403 that follows arrives as ERR_PNPM_TARBALL_URL_MISMATCH, which reads like a
+# corrupt lockfile. Measured twice: here, and on a standalone probe outside the workspace.
+#
+# `registry-url` is what makes the token usable, because actions/setup-node writes its
+# npmrc as a USER-level file and points NPM_CONFIG_USERCONFIG at it — a source pnpm trusts
+# and does expand. Its documented cost is a global `registry=` line; with a frozen install
+# every tarball URL is already pinned in the lockfile, so nothing is resolved through it.
 jobs:
   # One canonical "what kind of run is this?" — the jobs below consume these outputs
   # instead of each re-deriving github.event_name/github.ref conditions.
@@ -62,6 +69,7 @@ jobs:
         with:
           node-version: ${{ needs.context.outputs.node-version }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          registry-url: https://npm.pkg.github.com
 
       - name: Install Playwright browsers
         run: pnpm exec playwright install --with-deps chromium
@@ -123,6 +131,7 @@ jobs:
         with:
           node-version: ${{ needs.context.outputs.node-version }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          registry-url: https://npm.pkg.github.com
 
       - name: Configure git author
         run: |
@@ -181,6 +190,7 @@ jobs:
         with:
           node-version: ${{ needs.context.outputs.node-version }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          registry-url: https://npm.pkg.github.com
 
       - uses: actions/download-artifact@v4
         with:
@@ -213,6 +223,7 @@ jobs:
         with:
           node-version: ${{ needs.context.outputs.node-version }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          registry-url: https://npm.pkg.github.com
 
       - uses: actions/download-artifact@v4
         with:
@@ -265,6 +276,7 @@ jobs:
         with:
           node-version: ${{ needs.context.outputs.node-version }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          registry-url: https://npm.pkg.github.com
 
       # Baked into the bundle by apps/blog/vite.config.mts, and part of the Nx cache
       # key (nx.json → sharedGlobals), so this build cannot be served from the cache
@@ -331,6 +343,7 @@ jobs:
         with:
           node-version: ${{ needs.context.outputs.node-version }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          registry-url: https://npm.pkg.github.com
 
       - uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/notify-failure@gh-actions/v0.4.0
         with:
