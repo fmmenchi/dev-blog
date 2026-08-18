@@ -250,9 +250,14 @@ jobs:
       # Baked into the bundle by apps/blog/vite.config.mts, and part of the Nx cache
       # key (nx.json → sharedGlobals), so this build cannot be served from the cache
       # the CI build filled before the tag existed.
+      #
+      # `v[0-9]*`, not `v*`, and that glob is load-bearing: a tag named `v{version}` —
+      # nx's own pattern, written out literally — matched `v*`, sorted last, and got baked
+      # into the bundle as the version. The footer read "{version}" on the live site until
+      # the tag was deleted. Anything that is not a digit after the v is not a version.
       - name: Resolve the released version
         run: |
-          echo "APP_VERSION=$(git describe --tags --abbrev=0 --match 'v*' | sed 's/^v//')" >> "$GITHUB_ENV"
+          echo "APP_VERSION=$(git describe --tags --abbrev=0 --match 'v[0-9]*' | sed 's/^v//')" >> "$GITHUB_ENV"
           echo "GIT_HASH=$(git rev-parse --short HEAD)" >> "$GITHUB_ENV"
 
       - name: Deploy to Cloudflare Workers

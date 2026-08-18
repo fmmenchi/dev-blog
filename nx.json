@@ -97,13 +97,10 @@
     },
     "changelog": {
       "projectChangelogs": {
-        "createRelease": false,
-        "file": false
-      },
-      "workspaceChangelog": {
         "createRelease": "github",
         "file": false
-      }
+      },
+      "workspaceChangelog": false
     },
     "projects": ["blog"]
   },
