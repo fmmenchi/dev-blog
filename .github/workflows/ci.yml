@@ -262,9 +262,18 @@ jobs:
       # nx's own pattern, written out literally — matched `v*`, sorted last, and got baked
       # into the bundle as the version. The footer read "{version}" on the live site until
       # the tag was deleted. Anything that is not a digit after the v is not a version.
+      #
+      # And NO `--abbrev=0`, which is the other half. This job runs on every push to main,
+      # not only on a release — deliberately: an article correction lands as `docs(blog):`,
+      # which conventional commits does not version, and gating the deploy on a release
+      # would leave those fixes on main forever. But `--abbrev=0` reports the nearest tag
+      # and nothing else, so those builds went out labelled with a version they were not.
+      # Plain `git describe` says how far past the tag we are, and `-3-g6533588` becomes
+      # `+3`: the footer reads `v1.8.4+3` when it is three commits past the release, and
+      # `v1.8.4` when it IS the release. The commit is shown beside it either way.
       - name: Resolve the released version
         run: |
-          echo "APP_VERSION=$(git describe --tags --abbrev=0 --match 'v[0-9]*' | sed 's/^v//')" >> "$GITHUB_ENV"
+          echo "APP_VERSION=$(git describe --tags --match 'v[0-9]*' | sed -E 's/^v//; s/-([0-9]+)-g[0-9a-f]+$/+\1/')" >> "$GITHUB_ENV"
           echo "GIT_HASH=$(git rev-parse --short HEAD)" >> "$GITHUB_ENV"
 
       - name: Deploy to Cloudflare Workers
