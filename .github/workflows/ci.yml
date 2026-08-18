@@ -14,38 +14,56 @@ permissions:
   # metadata at all — and pnpm reports that 403 as ERR_PNPM_TARBALL_URL_MISMATCH.
   packages: read
 
+# GitHub Packages wants a token even for public packages. `setup` configures the registry
+# through actions/setup-node, which writes an npmrc referring to NODE_AUTH_TOKEN — so the
+# token has to be in the environment of the install that runs INSIDE that composite action,
+# and a job-level env is the only place a caller can put it. GITHUB_TOKEN is issued per
+# run: nothing to create, nothing to rotate.
+env:
+  NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  REGISTRY_URL: https://npm.pkg.github.com
+
 jobs:
+  # One canonical "what kind of run is this?" — the jobs below consume these outputs
+  # instead of each re-deriving github.event_name/github.ref conditions.
+  #
+  # It also publishes the Node version, because .nvmrc is this repo's single source for it
+  # (pnpm refuses to install on anything else) and the setup brick takes a version string,
+  # not a file. Read once here, passed down, still one source.
+  context:
+    runs-on: ubuntu-latest
+    outputs:
+      is-release: ${{ steps.ctx.outputs.is-release }}
+      node-version: ${{ steps.node.outputs.version }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          filter: tree:0
+
+      - id: ctx
+        uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/compute-context@gh-actions/v0.2.0
+
+      - id: node
+        run: echo "version=$(cat .nvmrc)" >> "$GITHUB_OUTPUT"
+
   main:
     runs-on: ubuntu-latest
+    needs: context
     steps:
       - uses: actions/checkout@v7
         with:
           filter: tree:0
           fetch-depth: 0
 
-      # This enables task distribution via Nx Cloud
-      # Run this command as early as possible, before dependencies are installed
+      # This enables task distribution via Nx Cloud. Run this command as early as possible,
+      # BEFORE dependencies are installed — so it goes ahead of `setup`, which installs.
       # Learn more at https://nx.dev/docs/reference/nx-cloud-cli#npx-nxcloud-startcirun
       - run: npx nx start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="e2e"
 
-      - uses: pnpm/action-setup@v6
-
-      # Cache node_modules
-      - uses: actions/setup-node@v7
+      - uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/setup@gh-actions/v0.2.0
         with:
-          node-version-file: .nvmrc
-          cache: 'pnpm'
-
-      # The @fmmenchi packages live in GitHub Packages, which wants a token even for
-      # public ones. It goes through `pnpm config set` rather than the repo's .npmrc:
-      # pnpm will not expand a variable into a credential read from a committed file.
-      # GITHUB_TOKEN is issued per run, so there is nothing to create or rotate.
-      - name: Authenticate to GitHub Packages
-        run: pnpm config set "//npm.pkg.github.com/:_authToken" "$GITHUB_TOKEN"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - run: pnpm install --frozen-lockfile
+          node-version: ${{ needs.context.outputs.node-version }}
+          registry-url: ${{ env.REGISTRY_URL }}
 
       - name: Install Playwright browsers
         run: pnpm exec playwright install --with-deps chromium
@@ -64,12 +82,17 @@ jobs:
       - run: pnpm nx fix-ci
         if: always()
 
-  # Trunk-based release: every green push to main versions from conventional
-  # commits, tags, updates the changelog and creates the GitHub release.
+  # Trunk-based release: every green push to main versions the blog from its conventional
+  # commits, tags `v{version}`, and creates the GitHub Release. It publishes nothing — every
+  # project here is private — and the brick says so out loud rather than failing on it.
   release:
     runs-on: ubuntu-latest
-    needs: main
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [main, context]
+    if: needs.context.outputs.is-release == 'true'
+    outputs:
+      # How many projects were released — '0' on a push with no releasable commits, which
+      # is what gates the two jobs below.
+      released: ${{ steps.release.outputs.released }}
     # Serialize releases: two quick merges must not run the tag-and-push concurrently.
     concurrency:
       group: release
@@ -86,84 +109,132 @@ jobs:
           filter: tree:0
           fetch-depth: 0
 
-      - uses: pnpm/action-setup@v6
-
-      - uses: actions/setup-node@v7
+      - uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/setup@gh-actions/v0.2.0
         with:
-          node-version-file: .nvmrc
-          cache: 'pnpm'
-
-      # The @fmmenchi packages live in GitHub Packages, which wants a token even for
-      # public ones. It goes through `pnpm config set` rather than the repo's .npmrc:
-      # pnpm will not expand a variable into a credential read from a committed file.
-      # GITHUB_TOKEN is issued per run, so there is nothing to create or rotate.
-      - name: Authenticate to GitHub Packages
-        run: pnpm config set "//npm.pkg.github.com/:_authToken" "$GITHUB_TOKEN"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - run: pnpm install --frozen-lockfile
+          node-version: ${{ needs.context.outputs.node-version }}
+          registry-url: ${{ env.REGISTRY_URL }}
 
       - name: Configure git author
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      # STILL OUR OWN CALL, and not for want of trying: @fmmenchi/ci is installed and both
-      # `release` and `notify` were wired to the bricks here. Rehearsing the release brick
-      # against this repo — `RELEASE_DRY_RUN=true node $(require.resolve('@fmmenchi/ci/release'))`,
-      # which writes nothing — found two problems. ONE of them is ours, and its fix is
-      # written down here. The other is not, and it is why this step is unchanged.
+      # It drives nx's release API with THIS repo's nx.json, so the outcome is unchanged:
+      # one tag, `v{version}`, which is the tag the deploy below reads. What it adds is a
+      # record of what it released — { project, version, tag } — which the two jobs below
+      # consume instead of cutting a version back out of `git describe`.
       #
-      # OURS. `toReleaseRecords` reads each project's tag out of `projectChangelogs[project]`,
-      # and we set `changelog.projectChangelogs: false` — one blog, one changelog — so nx
-      # hands the tag back under `workspaceChangelog`, where the brick does not look. It
-      # threw: "nx released blog-e2e@1.8.3 but handed back no git tag for it". Turning
-      # projectChangelogs on clears that but exposes the shape underneath: with
-      # `release.projects: ["*"]` the record holds SIX entries — blog, blog-e2e, ui, theme,
-      # icons, source — all carrying the same `v1.8.3`, because that is what a fixed group
-      # is, and `eventsFromReleases` turns all six into six Slack messages (measured: six
-      # in, six out; five of them read "version bump only ... there were no code changes").
-      # Narrowing the group to `release.projects: ["blog"]` gives exactly one record,
-      # `blog -> 1.8.3 tag=v1.8.3`, which is the shape notify wants. So this half is a
-      # config change here, to make together with the wiring.
-      #
-      # NOT OURS, and the actual blocker. The brick ends with an unconditional
-      # `nx release publish`, where this step passes `--skip-publish`. Every project in this
-      # workspace is `private`, so none has an `nx-release-publish` target and nx errors
-      # instead of treating that as nothing to do — measured with the release group narrowed
-      # to one project, so it is not the fixed group causing it:
-      # "the following projects were matched for publishing but do not have the
-      # nx-release-publish target specified: - blog". In a real run that lands AFTER the tag
-      # is cut, which is survivable by design (the record is on disk, announce can be
-      # re-run) — except the job still goes red, and `deploy` needs `release`. A workspace
-      # that releases without publishing needs the brick to skip publishing.
-      #
-      # @fmmenchi/ci stays installed: it is what the bricks resolve at runtime, and when
-      # publishing is skippable this file and nx.json are the only things that change.
+      # nx.json had to meet it halfway, and both halves are load-bearing. `projectChangelogs`
+      # is on, because the brick reads each project's tag from there and a workspace-only
+      # changelog leaves it empty. And `release.projects` is `["blog"]`, because with `["*"]`
+      # a fixed group hands back one record PER PROJECT all carrying the same tag, and the
+      # announce step turns every record into its own Slack message — measured: six records
+      # in, six messages out, five of them "version bump only ... there were no code
+      # changes". Narrowed, it is one record and one message. The visible trade is that a
+      # commit touching only root files no longer cuts a version: nx attributes commits by
+      # path, and `.github/**` is not `apps/blog`.
       - name: Release
-        # --first-release is required when no v* tag exists yet
-        run: |
-          if git describe --tags --abbrev=0 --match "v*" >/dev/null 2>&1; then
-            pnpm nx release --skip-publish
-          else
-            pnpm nx release --skip-publish --first-release
-          fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        id: release
+        uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/release@gh-actions/v0.2.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      # The record crosses the job boundary as an artifact, which is what lets "Re-run
+      # failed jobs" re-attach an SBOM or re-announce without re-releasing.
+      - name: Publish the release record
+        if: steps.release.outputs.released != '0'
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-result
+          path: ${{ steps.release.outputs.result-file }}
+          if-no-files-found: error
+          retention-days: 30
+
+  # Attaching an SBOM and announcing are SEPARATE OPERATIONS from releasing, so they are
+  # separate jobs: each fails, and is re-run, on its own. The release is irreversible; these
+  # are not. The price is a checkout and an install per job, and it buys exactly that.
+  sbom:
+    runs-on: ubuntu-latest
+    needs: [release, context]
+    if: needs.release.outputs.released != '0'
+    permissions:
+      contents: write
+      packages: read
+    env:
+      HUSKY: 0
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          filter: tree:0
+
+      - uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/setup@gh-actions/v0.2.0
+        with:
+          node-version: ${{ needs.context.outputs.node-version }}
+          registry-url: ${{ env.REGISTRY_URL }}
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: release-result
+          path: ${{ runner.temp }}
+
+      # A CycloneDX SBOM per released project, generated by @fmmenchi/nx-trivy from an
+      # nx-pruned lockfile and uploaded to that Release. Nothing here parses a tag: the
+      # record names the project.
+      - name: Attach the SBOM to the release
+        uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/attach-sbom@gh-actions/v0.2.0
+        with:
+          result-file: ${{ runner.temp }}/release-result.json
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+  announce:
+    runs-on: ubuntu-latest
+    needs: [release, context]
+    if: needs.release.outputs.released != '0'
+    env:
+      HUSKY: 0
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          filter: tree:0
+
+      # Nothing in this job runs nx, but the notify brick resolves @fmmenchi/ci out of
+      # node_modules, so the install is not optional.
+      - uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/setup@gh-actions/v0.2.0
+        with:
+          node-version: ${{ needs.context.outputs.node-version }}
+          registry-url: ${{ env.REGISTRY_URL }}
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: release-result
+          path: ${{ runner.temp }}
+
+      # A GitHub Release created with the built-in GITHUB_TOKEN does not trigger other
+      # workflows, so a `release: published` listener would never fire — announce from here.
+      # The message is built and sent in tested TypeScript rather than curl and jq: the
+      # failure that actually happens is Slack answering 200 while refusing the message, and
+      # only a unit test pins that down. Missing secrets skip the step green and say so; a
+      # message it was asked to send and could not is red.
+      - name: Announce the release to Slack
+        uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/notify@gh-actions/v0.2.0
+        with:
+          result-file: ${{ runner.temp }}/release-result.json
+          bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
 
   # Deploy to Cloudflare Workers on every green push to main.
   # Requires the CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID repo secrets;
   # skips gracefully until they exist.
   #
   # It waits for `release`, and not merely for `main`, because the footer shows the
-  # version: the tag this deploy IS carries is the one the release job cuts, and until
+  # version: the tag this deploy carries is the one the release job cuts, and until
   # it exists there is nothing to read. Deploying in parallel would ship the previous
   # version, and only until the next push — a bug nobody would ever catch in the act.
+  # It does NOT wait for sbom or announce: neither changes what gets served.
   deploy:
     runs-on: ubuntu-latest
-    needs: release
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [release, context]
+    if: needs.context.outputs.is-release == 'true'
     steps:
       - uses: actions/checkout@v7
         with:
@@ -171,23 +242,10 @@ jobs:
           filter: tree:0
           fetch-depth: 0
 
-      - uses: pnpm/action-setup@v6
-
-      - uses: actions/setup-node@v7
+      - uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/setup@gh-actions/v0.2.0
         with:
-          node-version-file: .nvmrc
-          cache: 'pnpm'
-
-      # The @fmmenchi packages live in GitHub Packages, which wants a token even for
-      # public ones. It goes through `pnpm config set` rather than the repo's .npmrc:
-      # pnpm will not expand a variable into a credential read from a committed file.
-      # GITHUB_TOKEN is issued per run, so there is nothing to create or rotate.
-      - name: Authenticate to GitHub Packages
-        run: pnpm config set "//npm.pkg.github.com/:_authToken" "$GITHUB_TOKEN"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - run: pnpm install --frozen-lockfile
+          node-version: ${{ needs.context.outputs.node-version }}
+          registry-url: ${{ env.REGISTRY_URL }}
 
       # Baked into the bundle by apps/blog/vite.config.mts, and part of the Nx cache
       # key (nx.json → sharedGlobals), so this build cannot be served from the cache
