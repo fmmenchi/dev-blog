@@ -48,7 +48,9 @@ jobs:
   # `pnpm install --frozen-lockfile` has neither the scope nor the credential for
   # npm.pkg.github.com and dies fetching @fmmenchi/nx-trivy. pnpm reports that 403 as
   # ERR_PNPM_TARBALL_URL_MISMATCH, which is why it reads like a corrupt lockfile.
-  # Measured on two runs, at gh-actions/v0 and again at v0.2.0.
+  # Measured on two runs, at gh-actions/v0 and again at v0.2.0, and unchanged at v0.3.1 —
+  # where the reusable still declares `contents: read` alone and still pins its own bricks
+  # at v0.1.2, so a fix shipped in a brick does not reach anyone calling the reusable.
   #
   # The scan itself is still shared-platform's — same `trivy-scan` brick the reusable runs,
   # same `notify` for the alert. Only the setup around it is ours, because that is the part
@@ -67,7 +69,7 @@ jobs:
       - id: node
         run: echo "version=$(cat .nvmrc)" >> "$GITHUB_OUTPUT"
 
-      - uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/setup@gh-actions/v0.2.0
+      - uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/setup@gh-actions/v0.3.1
         with:
           node-version: ${{ steps.node.outputs.version }}
           registry-url: ${{ env.REGISTRY_URL }}
@@ -78,7 +80,7 @@ jobs:
       # it, pulls the fresh ~100 MB layer anyway, and we upload another ~70 MB for next time.
       # The input defaults to ON, so leaving it out would be the change.
       - name: Scan
-        uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/trivy-scan@gh-actions/v0.2.0
+        uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/trivy-scan@gh-actions/v0.3.1
         with:
           cache-db: false
 
@@ -86,7 +88,7 @@ jobs:
       # arrives every week regardless is a message nobody opens.
       - name: Alert Slack on findings
         if: ${{ failure() && github.event_name == 'schedule' }}
-        uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/notify@gh-actions/v0.2.0
+        uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/notify@gh-actions/v0.3.1
         with:
           kind: error
           app: dev-blog
