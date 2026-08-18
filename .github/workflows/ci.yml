@@ -68,9 +68,16 @@ jobs:
       - name: Install Playwright browsers
         run: pnpm exec playwright install --with-deps chromium
 
+      # `--all`, and NOT `--base="remotes/origin/main"`, which is what this was. On a pull
+      # request that base is a real comparison; on a push to main it is HEAD itself, so the
+      # changed-file set is empty and the step passed unconditionally — a green check that
+      # checked nothing, on the one branch where it matters most. Repo-wide costs about a
+      # second here, and it needed .prettierignore to name the generated trees first
+      # (route typegen, build output) or it would trip on files nobody wrote.
+      #
       # Prepend any command with "nx record --" to record its logs to Nx Cloud
       - name: Format check
-        run: pnpm nx record -- pnpm nx format:check --base="remotes/origin/main"
+        run: pnpm nx record -- pnpm nx format:check --all
 
       - name: Lint, test, build, typecheck, lint-css (all projects)
         run: pnpm nx run-many -t lint test build typecheck lint-css
