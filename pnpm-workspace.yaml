@@ -33,14 +33,11 @@ minimumReleaseAgeExclude:
 # Pinned exactly by nx itself, so nothing but an override reaches it. Drop it when
 # nx ships a release that has moved.
 #
-# @fmmenchi/notify: @fmmenchi/ci declares `workspace:*` in source, and at pack time that
-# gets replaced with the dependency's SOURCE version — every package in shared-platform
-# sits at 0.0.1 on disk, the real number is stamped at release — instead of the version
-# being published. So published @fmmenchi/ci asks for @fmmenchi/notify@0.0.1, which has
-# never existed (the list starts at 0.0.2) and `pnpm add` fails with
-# ERR_PNPM_NO_MATCHING_VERSION. 0.0.13 happened to be packed correctly; 0.0.15 and 0.0.16
-# are wrong again, so this is not a one-off to wait out. Drop this the moment a released
-# @fmmenchi/ci resolves its own dependency.
+# @fmmenchi/notify: @fmmenchi/ci is pinned at 0.0.17, and every @fmmenchi/ci up to and
+# including that one was packed with `@fmmenchi/notify@0.0.1` — the dependency's SOURCE
+# version, not the released one, and a version that has never existed. 0.0.18 is packed
+# correctly and would not need this line; it is not the one installed, and the comment on
+# the pin in package.json says why.
 overrides:
   '@opentelemetry/core': '>=2.8.0'
   esbuild: '>=0.28.1'
