@@ -70,6 +70,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: main
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    # Serialize releases: two quick merges must not run the tag-and-push concurrently.
+    concurrency:
+      group: release
+      cancel-in-progress: false
     permissions:
       contents: write
       # Job-level permissions REPLACE the workflow-level block rather than adding to it.
@@ -105,40 +109,48 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
+      # STILL OUR OWN CALL, and not for want of trying: @fmmenchi/ci is installed and both
+      # `release` and `notify` were wired to the bricks here. Rehearsing the release brick
+      # against this repo — `RELEASE_DRY_RUN=true node $(require.resolve('@fmmenchi/ci/release'))`,
+      # which writes nothing — found two problems. ONE of them is ours, and its fix is
+      # written down here. The other is not, and it is why this step is unchanged.
+      #
+      # OURS. `toReleaseRecords` reads each project's tag out of `projectChangelogs[project]`,
+      # and we set `changelog.projectChangelogs: false` — one blog, one changelog — so nx
+      # hands the tag back under `workspaceChangelog`, where the brick does not look. It
+      # threw: "nx released blog-e2e@1.8.3 but handed back no git tag for it". Turning
+      # projectChangelogs on clears that but exposes the shape underneath: with
+      # `release.projects: ["*"]` the record holds SIX entries — blog, blog-e2e, ui, theme,
+      # icons, source — all carrying the same `v1.8.3`, because that is what a fixed group
+      # is, and `eventsFromReleases` turns all six into six Slack messages (measured: six
+      # in, six out; five of them read "version bump only ... there were no code changes").
+      # Narrowing the group to `release.projects: ["blog"]` gives exactly one record,
+      # `blog -> 1.8.3 tag=v1.8.3`, which is the shape notify wants. So this half is a
+      # config change here, to make together with the wiring.
+      #
+      # NOT OURS, and the actual blocker. The brick ends with an unconditional
+      # `nx release publish`, where this step passes `--skip-publish`. Every project in this
+      # workspace is `private`, so none has an `nx-release-publish` target and nx errors
+      # instead of treating that as nothing to do — measured with the release group narrowed
+      # to one project, so it is not the fixed group causing it:
+      # "the following projects were matched for publishing but do not have the
+      # nx-release-publish target specified: - blog". In a real run that lands AFTER the tag
+      # is cut, which is survivable by design (the record is on disk, announce can be
+      # re-run) — except the job still goes red, and `deploy` needs `release`. A workspace
+      # that releases without publishing needs the brick to skip publishing.
+      #
+      # @fmmenchi/ci stays installed: it is what the bricks resolve at runtime, and when
+      # publishing is skippable this file and nx.json are the only things that change.
       - name: Release
-        id: release
         # --first-release is required when no v* tag exists yet
         run: |
-          before=$(git describe --tags --abbrev=0 --match "v*" 2>/dev/null || echo "")
-          if [ -n "$before" ]; then
+          if git describe --tags --abbrev=0 --match "v*" >/dev/null 2>&1; then
             pnpm nx release --skip-publish
           else
             pnpm nx release --skip-publish --first-release
           fi
-          after=$(git describe --tags --abbrev=0 --match "v*" 2>/dev/null || echo "")
-          # Only a changed tag is a release: a push with no releasable commits leaves it
-          # untouched, and the notify step downstream keys off this being non-empty.
-          if [ -n "$after" ] && [ "$after" != "$before" ]; then
-            echo "version=${after#v}" >> "$GITHUB_OUTPUT"
-          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # Tell Slack, but only when a new tag was actually cut. The message is built and
-      # sent in tested TypeScript (@fmmenchi/nx-notify's `announce-release`, inferred onto
-      # every project), not curl and jq: the failure that happens is Slack answering 200
-      # while refusing the message, and only a unit test pins that down. Missing secrets
-      # skip the step rather than failing it.
-      - name: Announce the release to Slack
-        if: steps.release.outputs.version != ''
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-          SLACK_CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID }}
-        run: >-
-          pnpm nx run blog:announce-release
-          --appName=dev-blog
-          --version=${{ steps.release.outputs.version }}
-          --url=${{ github.server_url }}/${{ github.repository }}/releases/tag/v${{ steps.release.outputs.version }}
 
   # Deploy to Cloudflare Workers on every green push to main.
   # Requires the CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID repo secrets;

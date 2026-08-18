@@ -61,12 +61,12 @@ importers:
       '@eslint/js':
         specifier: ^10.0.1
         version: 10.0.1(eslint@9.39.4(jiti@2.4.2))
-      '@fmmenchi/nx-notify':
-        specifier: 0.0.15
-        version: 0.0.15(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23)))
+      '@fmmenchi/ci':
+        specifier: 0.0.13
+        version: 0.0.13(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23)))
       '@fmmenchi/nx-trivy':
-        specifier: ^0.1.1
-        version: 0.1.1(@babel/traverse@7.29.8)(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/cli@0.8.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(chokidar@5.0.0))(@swc/core@1.15.8(@swc/helpers@0.5.23))(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23)))
+        specifier: ^0.1.4
+        version: 0.1.4(@babel/traverse@7.29.8)(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/cli@0.8.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(chokidar@5.0.0))(@swc/core@1.15.8(@swc/helpers@0.5.23))(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23)))
       '@mdx-js/react':
         specifier: ^3.1.1
         version: 3.1.1(@types/react@19.2.17)(react@19.2.8)
@@ -2176,25 +2176,28 @@ packages:
         integrity: sha512-HzHKCNVxnGS35r9fCHBc3+uCnjw9IWIlCPL683cGgM9Kgj2BiAl8x1mS7vtvP6F9S/e/q4O6MApwSHj8hNLGfw==,
       }
 
-  '@fmmenchi/notify@0.0.12':
+  '@fmmenchi/ci@0.0.13':
     resolution:
       {
-        integrity: sha512-nqsS6+8kO3dd5VkTYY1iYD8Mlj9sbyCiy4+KY1qyl0qCj268sJa4icIq2tFXH3/yXpQbqfRkKu62WocXSk63DA==,
-        tarball: https://npm.pkg.github.com/download/@fmmenchi/notify/0.0.12/3e3b3c10419952575468f6d918370ce131d29583,
+        integrity: sha512-Ga1ipiq1gT0q/hP5NS66yvxPLtowygu02jyShrogCDpo0GiZnkEq986/zDrJd1yxasfRqNvllwxOVJMXYyHK3A==,
+        tarball: https://npm.pkg.github.com/download/@fmmenchi/ci/0.0.13/0e5a736a22068965d7a0b1b4f2b4d5135380f264,
+      }
+    hasBin: true
+    peerDependencies:
+      nx: ^23.1.1
+
+  '@fmmenchi/notify@0.0.14':
+    resolution:
+      {
+        integrity: sha512-unefYFKaeXGRYH7Vo3anWNdkKVGUXNVzJgb+aMfUvPHW4OvnQonUV/34ZPd+NUw8tCIKy+XbYPLVFvUG4A6xZg==,
+        tarball: https://npm.pkg.github.com/download/@fmmenchi/notify/0.0.14/82dea7d097b72aff74373611a59bfd8582829f07,
       }
 
-  '@fmmenchi/nx-notify@0.0.15':
+  '@fmmenchi/nx-trivy@0.1.4':
     resolution:
       {
-        integrity: sha512-aq3ZkSBS21LojcuLFF3anPKHf4ycux5vFeW4QkwXZHBQbhih0sYoLgRrAY2ZAk7V0W2lTfKeVoJ5b2f6n8CRXw==,
-        tarball: https://npm.pkg.github.com/download/@fmmenchi/nx-notify/0.0.15/300c201439849b3199d670dc4cbaf2cbc3032855,
-      }
-
-  '@fmmenchi/nx-trivy@0.1.1':
-    resolution:
-      {
-        integrity: sha512-qCSzrHFun6DDoA8FEdSghSpiKjJxLi3BifSCzQbYLv8NW1777fcccTpyzxpnzKjYGYwyseQJIV4WmooqWOohdw==,
-        tarball: https://npm.pkg.github.com/download/@fmmenchi/nx-trivy/0.1.1/3888ec3e3789e05a1e42f5f9094212301260e999,
+        integrity: sha512-niVk5KAVYnmZZTCM9XG37IHKCcar4myMwWwtkMMS3j63dcuv4CL2/gBJgs8mo45KZsVNvtZI+4OBSLcLjRZ8ZQ==,
+        tarball: https://npm.pkg.github.com/download/@fmmenchi/nx-trivy/0.1.4/b535f58a80ab4650e6c82e0701b9e0a39a169e16,
       }
 
   '@formatjs/ecma402-abstract@2.3.6':
@@ -19328,19 +19331,17 @@ snapshots:
       - '@vue/composition-api'
       - vue
 
-  '@fmmenchi/notify@0.0.12':
+  '@fmmenchi/ci@0.0.13(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23)))':
+    dependencies:
+      '@fmmenchi/notify': 0.0.14
+      nx: 23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23))
+      tslib: 2.8.1
+
+  '@fmmenchi/notify@0.0.14':
     dependencies:
       tslib: 2.8.1
 
-  '@fmmenchi/nx-notify@0.0.15(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23)))':
-    dependencies:
-      '@fmmenchi/notify': 0.0.12
-      '@nx/devkit': 23.1.1(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23)))
-      tslib: 2.8.1
-    transitivePeerDependencies:
-      - nx
-
-  '@fmmenchi/nx-trivy@0.1.1(@babel/traverse@7.29.8)(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/cli@0.8.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(chokidar@5.0.0))(@swc/core@1.15.8(@swc/helpers@0.5.23))(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23)))':
+  '@fmmenchi/nx-trivy@0.1.4(@babel/traverse@7.29.8)(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/cli@0.8.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(chokidar@5.0.0))(@swc/core@1.15.8(@swc/helpers@0.5.23))(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23)))':
     dependencies:
       '@nx/devkit': 23.1.1(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23)))
       '@nx/js': 23.1.1(@babel/traverse@7.29.8)(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/cli@0.8.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(chokidar@5.0.0))(@swc/core@1.15.8(@swc/helpers@0.5.23))(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23)))

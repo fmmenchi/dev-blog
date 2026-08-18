@@ -12,10 +12,15 @@ allowBuilds:
   vue-demi: true
   unrs-resolver: true
 engineStrict: true
+# pnpm 11 refuses any version published less than `minimumReleaseAge` ago — 1440 minutes
+# by default — and falls back to an older one without saying so. That is the right default
+# against a compromised release, but @fmmenchi/* is ours: we publish it and then install it
+# minutes later. Named here version by version, so the exception stays an exception.
+# pnpm appends to this list itself when you ask for an exact version.
 minimumReleaseAgeExclude:
-  - '@fmmenchi/nx-trivy@0.1.1'
-  - '@fmmenchi/notify@0.0.12'
-  - '@fmmenchi/nx-notify@0.0.15'
+  - '@fmmenchi/nx-trivy@0.1.4'
+  - '@fmmenchi/ci@0.0.13'
+  - '@fmmenchi/notify@0.0.14'
 # Both dragged in by unlighthouse (dev-only tooling); the overrides keep
 # `trivy --include-dev-deps` clean. Acceptance test after touching either:
 # `pnpm nx assess blog` must still complete its sweep. Drop them once
