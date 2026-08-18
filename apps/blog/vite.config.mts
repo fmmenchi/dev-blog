@@ -128,9 +128,17 @@ function git(...args: string[]): string {
   }
 }
 
+/* `v[0-9]*`, not `v*`. A release that versioned nothing once wrote out nx's own tag
+   pattern literally, `v{version}`, and `v*` matched it, sorted it last and baked the
+   braces into the bundle — the footer read "{version}" on the live site, and the
+   site-footer test that asserts /^v\d/ is what caught it. Anything that is not a digit
+   after the v is not a version. */
 const VERSION =
   process.env['APP_VERSION'] ||
-  git('describe', '--tags', '--abbrev=0', '--match', 'v*').replace(/^v/, '') ||
+  git('describe', '--tags', '--abbrev=0', '--match', 'v[0-9]*').replace(
+    /^v/,
+    '',
+  ) ||
   'dev';
 
 const COMMIT = process.env['GIT_HASH'] || git('rev-parse', '--short', 'HEAD');
