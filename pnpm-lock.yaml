@@ -62,8 +62,8 @@ importers:
         specifier: ^10.0.1
         version: 10.0.1(eslint@9.39.4(jiti@2.4.2))
       '@fmmenchi/ci':
-        specifier: 0.0.19
-        version: 0.0.19(@nx/devkit@23.1.1(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23))))(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23)))
+        specifier: ^0.1.0
+        version: 0.1.0(@nx/devkit@23.1.1(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23))))(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23)))
       '@fmmenchi/nx-trivy':
         specifier: ^0.1.4
         version: 0.1.4(@babel/traverse@7.29.8)(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/cli@0.8.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(chokidar@5.0.0))(@swc/core@1.15.8(@swc/helpers@0.5.23))(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23)))
@@ -2176,11 +2176,11 @@ packages:
         integrity: sha512-HzHKCNVxnGS35r9fCHBc3+uCnjw9IWIlCPL683cGgM9Kgj2BiAl8x1mS7vtvP6F9S/e/q4O6MApwSHj8hNLGfw==,
       }
 
-  '@fmmenchi/ci@0.0.19':
+  '@fmmenchi/ci@0.1.0':
     resolution:
       {
-        integrity: sha512-1L7M497u1WNBnoQBocTUyFGtXr4iI4gtQ/gNMhRU+m1FtdaUyouUfisnzKtK8z3Zq6tJEQr7IWnX2dCJwCj4Ew==,
-        tarball: https://npm.pkg.github.com/download/@fmmenchi/ci/0.0.19/6c02dd9deac465c8bc3879ccf815fb46ba8c6a6c,
+        integrity: sha512-h92yfQzKn1GPhsI7FQMi2ur/NdZHrZ2nAaAZs6S2xxxHdaePou5GQr2HUqYGY0a4qXJdHnxyQ+pqAt0FW1PLYw==,
+        tarball: https://npm.pkg.github.com/download/@fmmenchi/ci/0.1.0/5888f1a1051f2c957c2f8c644cda4c1a42e00527,
       }
     hasBin: true
     peerDependencies:
@@ -19332,7 +19332,7 @@ snapshots:
       - '@vue/composition-api'
       - vue
 
-  '@fmmenchi/ci@0.0.19(@nx/devkit@23.1.1(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23))))(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23)))':
+  '@fmmenchi/ci@0.1.0(@nx/devkit@23.1.1(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23))))(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23)))':
     dependencies:
       '@fmmenchi/notify': 0.0.17
       '@nx/devkit': 23.1.1(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23)))

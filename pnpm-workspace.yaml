@@ -19,7 +19,7 @@ engineStrict: true
 # pnpm appends to this list itself when you ask for an exact version.
 minimumReleaseAgeExclude:
   - '@fmmenchi/nx-trivy@0.1.4'
-  - '@fmmenchi/ci@0.0.19'
+  - '@fmmenchi/ci@0.1.0'
   - '@fmmenchi/notify@0.0.17'
 # Both dragged in by unlighthouse (dev-only tooling); the overrides keep
 # `trivy --include-dev-deps` clean. Acceptance test after touching either:
