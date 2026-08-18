@@ -128,9 +128,21 @@ function git(...args: string[]): string {
   }
 }
 
+/* `v[0-9]*`, not `v*`. A release that versioned nothing once wrote out nx's own tag
+   pattern literally, `v{version}`, and `v*` matched it, sorted it last and baked the
+   braces into the bundle — the footer read "{version}" on the live site, and the
+   site-footer test that asserts /^v\d/ is what caught it. Anything that is not a digit
+   after the v is not a version.
+
+   No `--abbrev=0` either, so a tree that is past the last tag says so: `v1.8.4-3-g6533588`
+   becomes `1.8.4+3`, and a tree sitting exactly on the tag stays `1.8.4`. The same rule
+   the deploy job applies, for the same reason — a build is not the release just because
+   the release is the nearest thing behind it. */
 const VERSION =
   process.env['APP_VERSION'] ||
-  git('describe', '--tags', '--abbrev=0', '--match', 'v*').replace(/^v/, '') ||
+  git('describe', '--tags', '--match', 'v[0-9]*')
+    .replace(/^v/, '')
+    .replace(/-(\d+)-g[0-9a-f]+$/, '+$1') ||
   'dev';
 
 const COMMIT = process.env['GIT_HASH'] || git('rev-parse', '--short', 'HEAD');
