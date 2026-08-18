@@ -19,8 +19,8 @@ engineStrict: true
 # pnpm appends to this list itself when you ask for an exact version.
 minimumReleaseAgeExclude:
   - '@fmmenchi/nx-trivy@0.1.4'
-  - '@fmmenchi/ci@0.0.17'
-  - '@fmmenchi/notify@0.0.14'
+  - '@fmmenchi/ci@0.1.0'
+  - '@fmmenchi/notify@0.0.17'
 # Both dragged in by unlighthouse (dev-only tooling); the overrides keep
 # `trivy --include-dev-deps` clean. Acceptance test after touching either:
 # `pnpm nx assess blog` must still complete its sweep. Drop them once
@@ -32,14 +32,7 @@ minimumReleaseAgeExclude:
 # brace-expansion <5.0.9: CVE-2026-69152 (DoS via unbounded intermediate arrays).
 # Pinned exactly by nx itself, so nothing but an override reaches it. Drop it when
 # nx ships a release that has moved.
-#
-# @fmmenchi/notify: @fmmenchi/ci is pinned at 0.0.17, and every @fmmenchi/ci up to and
-# including that one was packed with `@fmmenchi/notify@0.0.1` — the dependency's SOURCE
-# version, not the released one, and a version that has never existed. 0.0.18 is packed
-# correctly and would not need this line; it is not the one installed, and the comment on
-# the pin in package.json says why.
 overrides:
   '@opentelemetry/core': '>=2.8.0'
   esbuild: '>=0.28.1'
   brace-expansion: '>=5.0.9'
-  '@fmmenchi/notify': '0.0.14'

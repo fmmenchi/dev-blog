@@ -1,0 +1,82 @@
+name: Weekly audit
+
+# SEPARATE FROM security.yml, and not for tidiness — the two want opposite settings.
+#
+# This one asks "did the WORLD change?", so it runs on a clock and nothing else. Its DB
+# cache is off and it alerts, because a scan nobody triggered is a scan nobody is watching
+# for: if it goes red on a Monday morning and says nothing, it says nothing until someone
+# happens to open the Actions tab.
+#
+# security.yml asks "did WE introduce something?", runs on dependency changes, keeps the
+# cache on and stays quiet — a red check on the pull request is already the signal, and a
+# second one in Slack is how people learn to mute the channel.
+on:
+  schedule:
+    # Monday 06:00 UTC. Early enough that a bad Monday is still a Monday.
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+env:
+  HUSKY: 0 # a CI install must not run git hooks
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # The install reads @fmmenchi/* from GitHub Packages; `actions: read` is what lets the
+      # alert below ask the API which step failed. A job-level block REPLACES the
+      # workflow-level one, so every scope this job needs is named here.
+      packages: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          filter: tree:0
+
+      # .nvmrc is this repo's single source for the Node version — pnpm refuses to install
+      # on anything else — and the setup brick takes a version string, not a file.
+      - id: node
+        run: echo "version=$(cat .nvmrc)" >> "$GITHUB_OUTPUT"
+
+      - uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/setup@gh-actions/v0.4.0
+        with:
+          node-version: ${{ steps.node.outputs.version }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          registry-url: https://npm.pkg.github.com
+
+      # `cache-db: false` because this runs WEEKLY. Trivy's DB expires in about 21 hours
+      # (metadata.json, DownloadedAt -> NextUpdate), so a copy restored seven days later is
+      # always stale: Trivy throws it away, pulls the fresh ~100 MB anyway, and the run then
+      # uploads another ~70 MB for a next run that will do exactly the same. The input
+      # defaults to ON, so leaving it out would be the change.
+      #
+      # `report` costs a second scan, and that is inherent: Trivy writes either stdout or a
+      # file, so one pass with --output would leave the log without its table. The report
+      # pass runs first and non-fatally, then the pass that gates — which is what makes the
+      # report exist when the scan is RED, the only time anybody wants to read it.
+      - name: Scan
+        uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/trivy-scan@gh-actions/v0.4.0
+        with:
+          cache-db: false
+          report: trivy-report.json
+
+      # No message written here: the brick asks the API which step failed and says so. It
+      # only runs when the scan already failed, so the worst case for the attachment is an
+      # alert that arrives without its file — not a pipeline that breaks.
+      #
+      # Two preconditions on the Slack side, neither visible from this file:
+      #   - the app needs `files:write` on top of `chat:write`, or the message lands and the
+      #     upload fails with missing_scope;
+      #   - the bot has to be IN the channel — Slack answers 200 with
+      #     {"ok": false, "error": "not_in_channel"} otherwise, which the brick reports as a
+      #     failure rather than swallowing.
+      # Missing secrets are the one green skip, and it says how many messages it did not send.
+      - name: Alert Slack with the report
+        if: ${{ failure() }}
+        uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/notify-failure@gh-actions/v0.4.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
+          attachments: trivy-report.json
