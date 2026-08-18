@@ -1,14 +1,14 @@
 name: Security
 
-# A vulnerability scan is not like a test. A test goes red because the CODE changed; a
-# scan goes red because the WORLD changed — a CVE was published against a dependency
-# nobody touched. So it runs on two triggers, and it needs both:
+# "Did WE introduce something?" — this runs when the dependencies change, and only then.
 #
-#   - when the dependencies change, because that is when WE introduce something;
-#   - every Monday, because that is when the world does.
+# The other half of the question, "did the WORLD change?", is weekly-audit.yml. They are two
+# files because they want opposite settings: the cache is ON here and OFF there, and the
+# Slack alert is THERE and not here. A red check on the pull request is already the signal;
+# a second one in Slack every time somebody bumps a dependency is how a channel gets muted.
 #
-# Running it on every push would tell us the same thing forty times a week and teach us
-# to stop reading it.
+# Running it on every push would tell us the same thing forty times a week and teach us to
+# stop reading it.
 on:
   pull_request:
     paths:
@@ -21,9 +21,6 @@ on:
       - 'pnpm-lock.yaml'
       - '**/package.json'
       - '.trivyignore.yaml'
-  schedule:
-    # Monday 06:00 UTC. Early enough that a bad Monday is still a Monday.
-    - cron: '0 6 * * 1'
   workflow_dispatch:
 
 permissions:
@@ -33,29 +30,24 @@ permissions:
   packages: read
 
 env:
-  # GitHub Packages wants a token even for public packages. `setup` configures the registry
-  # through actions/setup-node, which writes an npmrc referring to NODE_AUTH_TOKEN — and the
-  # install runs INSIDE that composite action, so a workflow-level env is the only place a
-  # caller can put the token.
-  NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  REGISTRY_URL: https://npm.pkg.github.com
   HUSKY: 0 # a CI install must not run git hooks
 
 jobs:
   # THE BRICKS, CALLED DIRECTLY, rather than shared-platform's turnkey
-  # `security.reusable.yml`. Not a preference — the reusable cannot install this repo:
-  # it declares `contents: read` alone and calls `setup` without a registry-url, so its
-  # `pnpm install --frozen-lockfile` has neither the scope nor the credential for
-  # npm.pkg.github.com and dies fetching @fmmenchi/nx-trivy. pnpm reports that 403 as
-  # ERR_PNPM_TARBALL_URL_MISMATCH, which is why it reads like a corrupt lockfile.
-  # Measured on two runs, at gh-actions/v0 and again at v0.2.0, and unchanged at v0.3.1 —
-  # where the reusable still declares `contents: read` alone and still pins its own bricks
-  # at v0.1.2, so a fix shipped in a brick does not reach anyone calling the reusable.
+  # `security.reusable.yml`. That was never a preference: the reusable could not install
+  # this repo — it declared `contents: read` alone and called `setup` without a token, so
+  # its frozen install had neither the scope nor the credential for npm.pkg.github.com and
+  # died fetching @fmmenchi/nx-trivy, which pnpm reports as ERR_PNPM_TARBALL_URL_MISMATCH
+  # and therefore reads like a corrupt lockfile. Measured at gh-actions/v0, v0.2.0 and
+  # v0.3.1.
   #
-  # The scan itself is still shared-platform's — same `trivy-scan` brick the reusable runs,
-  # same `notify` for the alert. Only the setup around it is ours, because that is the part
-  # that has to know about this repo's registry. Go back to the reusable the day it passes
-  # a registry-url through; nothing else here would change.
+  # It is not a choice to revisit any more: the reusable was DELETED at v0.4.0, on the
+  # grounds that a file in .github/workflows/ belongs to no nx project, so no release
+  # carried it and no check watched it — which is exactly how its internal pins fell two
+  # minors behind without anyone being able to notice.
+  #
+  # The scan itself is still shared-platform's: the same `trivy-scan` brick the reusable
+  # ran. Only the setup around it is ours.
   scan:
     name: Vulnerabilities & secrets
     runs-on: ubuntu-latest
@@ -69,29 +61,15 @@ jobs:
       - id: node
         run: echo "version=$(cat .nvmrc)" >> "$GITHUB_OUTPUT"
 
-      - uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/setup@gh-actions/v0.3.1
+      - uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/setup@gh-actions/v0.4.0
         with:
           node-version: ${{ steps.node.outputs.version }}
-          registry-url: ${{ env.REGISTRY_URL }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      # `cache-db: false` keeps what this repo already decided, back when the scan was ours:
-      # Trivy's DB expires in 21 hours (metadata.json, DownloadedAt -> NextUpdate) and the
-      # weekly run lands a week later, so a restored cache is always stale — Trivy discards
-      # it, pulls the fresh ~100 MB layer anyway, and we upload another ~70 MB for next time.
-      # The input defaults to ON, so leaving it out would be the change.
+      # The DB cache stays ON here — the default — and that is the opposite call from
+      # weekly-audit.yml, deliberately. Trivy's DB expires in about 21 hours: useless to a
+      # weekly run, but these triggers cluster. A dependency change arrives as a pull
+      # request and then again as a push to main, usually the same day, and the second run
+      # restores a DB that is still fresh instead of pulling ~100 MB again.
       - name: Scan
-        uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/trivy-scan@gh-actions/v0.3.1
-        with:
-          cache-db: false
-
-      # Only on the schedule: a pull request already shows a red check, and a message that
-      # arrives every week regardless is a message nobody opens.
-      - name: Alert Slack on findings
-        if: ${{ failure() && github.event_name == 'schedule' }}
-        uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/notify@gh-actions/v0.3.1
-        with:
-          kind: error
-          app: dev-blog
-          message: 'The Trivy audit found CRITICAL/HIGH dependency vulnerabilities.'
-          bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
-          channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
+        uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/trivy-scan@gh-actions/v0.4.0

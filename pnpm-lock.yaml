@@ -8,7 +8,6 @@ overrides:
   '@opentelemetry/core': '>=2.8.0'
   esbuild: '>=0.28.1'
   brace-expansion: '>=5.0.9'
-  '@fmmenchi/notify': 0.0.14
 
 importers:
   .:
@@ -63,8 +62,8 @@ importers:
         specifier: ^10.0.1
         version: 10.0.1(eslint@9.39.4(jiti@2.4.2))
       '@fmmenchi/ci':
-        specifier: 0.0.17
-        version: 0.0.17(@nx/devkit@23.1.1(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23))))(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23)))
+        specifier: 0.0.19
+        version: 0.0.19(@nx/devkit@23.1.1(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23))))(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23)))
       '@fmmenchi/nx-trivy':
         specifier: ^0.1.4
         version: 0.1.4(@babel/traverse@7.29.8)(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/cli@0.8.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(chokidar@5.0.0))(@swc/core@1.15.8(@swc/helpers@0.5.23))(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23)))
@@ -2177,22 +2176,22 @@ packages:
         integrity: sha512-HzHKCNVxnGS35r9fCHBc3+uCnjw9IWIlCPL683cGgM9Kgj2BiAl8x1mS7vtvP6F9S/e/q4O6MApwSHj8hNLGfw==,
       }
 
-  '@fmmenchi/ci@0.0.17':
+  '@fmmenchi/ci@0.0.19':
     resolution:
       {
-        integrity: sha512-WUGcl2pH3dcswUDJfKq5xrDXIHtb3evEB+JRTgT+Hh930IiKRXJm+zZW7zSNNPa07cO1zXEFP2eYI49A3mU4EA==,
-        tarball: https://npm.pkg.github.com/download/@fmmenchi/ci/0.0.17/36c5b18ef941d54742250ad49d2b09562094402f,
+        integrity: sha512-1L7M497u1WNBnoQBocTUyFGtXr4iI4gtQ/gNMhRU+m1FtdaUyouUfisnzKtK8z3Zq6tJEQr7IWnX2dCJwCj4Ew==,
+        tarball: https://npm.pkg.github.com/download/@fmmenchi/ci/0.0.19/6c02dd9deac465c8bc3879ccf815fb46ba8c6a6c,
       }
     hasBin: true
     peerDependencies:
       '@nx/devkit': ^23.1.1
       nx: ^23.1.1
 
-  '@fmmenchi/notify@0.0.14':
+  '@fmmenchi/notify@0.0.17':
     resolution:
       {
-        integrity: sha512-unefYFKaeXGRYH7Vo3anWNdkKVGUXNVzJgb+aMfUvPHW4OvnQonUV/34ZPd+NUw8tCIKy+XbYPLVFvUG4A6xZg==,
-        tarball: https://npm.pkg.github.com/download/@fmmenchi/notify/0.0.14/82dea7d097b72aff74373611a59bfd8582829f07,
+        integrity: sha512-xIZ80WBAgvGeVDgmiqq6MUtC2Y4CRAeKohGF03TlXj4nErkN8XD1CaYiYKvm7Seixoeu84pbD+jTMbxh9kWeJQ==,
+        tarball: https://npm.pkg.github.com/download/@fmmenchi/notify/0.0.17/4e275fedb47f27f05644ac20cf57764339e9d90f,
       }
 
   '@fmmenchi/nx-trivy@0.1.4':
@@ -19333,14 +19332,14 @@ snapshots:
       - '@vue/composition-api'
       - vue
 
-  '@fmmenchi/ci@0.0.17(@nx/devkit@23.1.1(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23))))(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23)))':
+  '@fmmenchi/ci@0.0.19(@nx/devkit@23.1.1(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23))))(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23)))':
     dependencies:
-      '@fmmenchi/notify': 0.0.14
+      '@fmmenchi/notify': 0.0.17
       '@nx/devkit': 23.1.1(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23)))
       nx: 23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23))
       tslib: 2.8.1
 
-  '@fmmenchi/notify@0.0.14':
+  '@fmmenchi/notify@0.0.17':
     dependencies:
       tslib: 2.8.1
 
