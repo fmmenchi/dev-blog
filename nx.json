@@ -96,13 +96,16 @@
       "adjustSemverBumpsForZeroMajorVersion": false
     },
     "changelog": {
-      "projectChangelogs": false,
+      "projectChangelogs": {
+        "createRelease": false,
+        "file": false
+      },
       "workspaceChangelog": {
         "createRelease": "github",
         "file": false
       }
     },
-    "projects": ["*"]
+    "projects": ["blog"]
   },
   "targetDefaults": {
     "build": {
