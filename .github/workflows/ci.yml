@@ -143,9 +143,15 @@ jobs:
       # record of what it released — { project, version, tag } — which the two jobs below
       # consume instead of cutting a version back out of `git describe`.
       #
-      # nx.json had to meet it halfway, and both halves are load-bearing. `projectChangelogs`
-      # is on, because the brick reads each project's tag from there and a workspace-only
-      # changelog leaves it empty. And `release.projects` is `["blog"]`, because with `["*"]`
+      # nx.json had to meet it halfway on two counts; since @fmmenchi/ci@0.2.0 only one is
+      # left. The tag no longer comes out of `changelog.projectChangelogs`: our
+      # `createRelease: false` + `file: false` reads to nx as "changelogs off", so that map
+      # came back EMPTY, and the first run that actually released something would have
+      # failed on a tagless record — after the tag was cut and pushed. 0.2.0 forms the tag
+      # from the resolved `releaseTag.pattern` and checks it against the tags nx is about to
+      # cut, so nothing about it depends on changelogs any more.
+      #
+      # Still load-bearing is `release.projects: ["blog"]`, because with `["*"]`
       # a fixed group hands back one record PER PROJECT all carrying the same tag, and the
       # announce step turns every record into its own Slack message — measured: six records
       # in, six messages out, five of them "version bump only ... there were no code
