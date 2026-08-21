@@ -61,7 +61,7 @@ jobs:
       - id: node
         run: echo "version=$(cat .nvmrc)" >> "$GITHUB_OUTPUT"
 
-      - uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/setup@gh-actions/v0.4.0
+      - uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/setup@gh-actions/v0.4.1
         with:
           node-version: ${{ steps.node.outputs.version }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -73,4 +73,4 @@ jobs:
       # request and then again as a push to main, usually the same day, and the second run
       # restores a DB that is still fresh instead of pulling ~100 MB again.
       - name: Scan
-        uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/trivy-scan@gh-actions/v0.4.0
+        uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/trivy-scan@gh-actions/v0.4.1

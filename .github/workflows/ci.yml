@@ -46,7 +46,7 @@ jobs:
           filter: tree:0
 
       - id: ctx
-        uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/compute-context@gh-actions/v0.4.0
+        uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/compute-context@gh-actions/v0.4.1
 
       - id: node
         run: echo "version=$(cat .nvmrc)" >> "$GITHUB_OUTPUT"
@@ -65,7 +65,7 @@ jobs:
       # Learn more at https://nx.dev/docs/reference/nx-cloud-cli#npx-nxcloud-startcirun
       - run: npx nx start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="e2e"
 
-      - uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/setup@gh-actions/v0.4.0
+      - uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/setup@gh-actions/v0.4.1
         with:
           node-version: ${{ needs.context.outputs.node-version }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -127,7 +127,7 @@ jobs:
           filter: tree:0
           fetch-depth: 0
 
-      - uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/setup@gh-actions/v0.4.0
+      - uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/setup@gh-actions/v0.4.1
         with:
           node-version: ${{ needs.context.outputs.node-version }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -143,9 +143,15 @@ jobs:
       # record of what it released — { project, version, tag } — which the two jobs below
       # consume instead of cutting a version back out of `git describe`.
       #
-      # nx.json had to meet it halfway, and both halves are load-bearing. `projectChangelogs`
-      # is on, because the brick reads each project's tag from there and a workspace-only
-      # changelog leaves it empty. And `release.projects` is `["blog"]`, because with `["*"]`
+      # nx.json had to meet it halfway on two counts; since @fmmenchi/ci@0.2.0 only one is
+      # left. The tag no longer comes out of `changelog.projectChangelogs`: our
+      # `createRelease: false` + `file: false` reads to nx as "changelogs off", so that map
+      # came back EMPTY, and the first run that actually released something would have
+      # failed on a tagless record — after the tag was cut and pushed. 0.2.0 forms the tag
+      # from the resolved `releaseTag.pattern` and checks it against the tags nx is about to
+      # cut, so nothing about it depends on changelogs any more.
+      #
+      # Still load-bearing is `release.projects: ["blog"]`, because with `["*"]`
       # a fixed group hands back one record PER PROJECT all carrying the same tag, and the
       # announce step turns every record into its own Slack message — measured: six records
       # in, six messages out, five of them "version bump only ... there were no code
@@ -154,9 +160,10 @@ jobs:
       # path, and `.github/**` is not `apps/blog`.
       - name: Release
         id: release
-        uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/release@gh-actions/v0.4.0
+        uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/release@gh-actions/v0.4.1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          verbose: true
 
       # The record crosses the job boundary as an artifact, which is what lets "Re-run
       # failed jobs" re-attach an SBOM or re-announce without re-releasing.
@@ -186,7 +193,7 @@ jobs:
         with:
           filter: tree:0
 
-      - uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/setup@gh-actions/v0.4.0
+      - uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/setup@gh-actions/v0.4.1
         with:
           node-version: ${{ needs.context.outputs.node-version }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -201,7 +208,7 @@ jobs:
       # nx-pruned lockfile and uploaded to that Release. Nothing here parses a tag: the
       # record names the project.
       - name: Attach the SBOM to the release
-        uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/attach-sbom@gh-actions/v0.4.0
+        uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/attach-sbom@gh-actions/v0.4.1
         with:
           result-file: ${{ runner.temp }}/release-result.json
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -219,7 +226,7 @@ jobs:
 
       # Nothing in this job runs nx, but the notify brick resolves @fmmenchi/ci out of
       # node_modules, so the install is not optional.
-      - uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/setup@gh-actions/v0.4.0
+      - uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/setup@gh-actions/v0.4.1
         with:
           node-version: ${{ needs.context.outputs.node-version }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -237,7 +244,7 @@ jobs:
       # only a unit test pins that down. Missing secrets skip the step green and say so; a
       # message it was asked to send and could not is red.
       - name: Announce the release to Slack
-        uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/notify@gh-actions/v0.4.0
+        uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/notify@gh-actions/v0.4.1
         with:
           result-file: ${{ runner.temp }}/release-result.json
           bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
@@ -272,7 +279,7 @@ jobs:
           # so nothing here reads a tag and there is no history to fetch for one.
           filter: tree:0
 
-      - uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/setup@gh-actions/v0.4.0
+      - uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/setup@gh-actions/v0.4.1
         with:
           node-version: ${{ needs.context.outputs.node-version }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -339,13 +346,13 @@ jobs:
 
       # The brick resolves @fmmenchi/ci out of node_modules, so the install is not optional
       # even though nothing in this job runs nx.
-      - uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/setup@gh-actions/v0.4.0
+      - uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/setup@gh-actions/v0.4.1
         with:
           node-version: ${{ needs.context.outputs.node-version }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
           registry-url: https://npm.pkg.github.com
 
-      - uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/notify-failure@gh-actions/v0.4.0
+      - uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/notify-failure@gh-actions/v0.4.1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
