@@ -163,6 +163,7 @@ jobs:
         uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/release@gh-actions/v0.4.1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          verbose: true
 
       # The record crosses the job boundary as an artifact, which is what lets "Re-run
       # failed jobs" re-attach an SBOM or re-announce without re-releasing.
