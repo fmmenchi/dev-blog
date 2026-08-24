@@ -39,7 +39,7 @@ jobs:
       - id: node
         run: echo "version=$(cat .nvmrc)" >> "$GITHUB_OUTPUT"
 
-      - uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/setup@gh-actions/v0.4.0
+      - uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/setup@gh-actions/v0.4.1
         with:
           node-version: ${{ steps.node.outputs.version }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -56,7 +56,7 @@ jobs:
       # pass runs first and non-fatally, then the pass that gates — which is what makes the
       # report exist when the scan is RED, the only time anybody wants to read it.
       - name: Scan
-        uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/trivy-scan@gh-actions/v0.4.0
+        uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/trivy-scan@gh-actions/v0.4.1
         with:
           cache-db: false
           report: trivy-report.json
@@ -74,7 +74,7 @@ jobs:
       # Missing secrets are the one green skip, and it says how many messages it did not send.
       - name: Alert Slack with the report
         if: ${{ failure() }}
-        uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/notify-failure@gh-actions/v0.4.0
+        uses: fmmenchi/shared-platform/packages/ops/gh-actions/actions/notify-failure@gh-actions/v0.4.1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
