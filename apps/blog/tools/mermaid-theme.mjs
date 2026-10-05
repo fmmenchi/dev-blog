@@ -98,6 +98,11 @@ export const SHARED_SHAPE = {
   borderWidth: '0.5',
 };
 
+/* The three lines of a C4 shape. mermaid 11.17 started deriving the last two from the
+   first (0.75em and 0.82em of 14px), which lands them under the size of a relation's
+   label; these are the sizes the shapes had before. */
+export const C4_TEXT = { name: '16px', detail: '14px' };
+
 /** classDef the diagrams use for an emphasised (accent) node: `:::accent`. */
 export const accentClassDef = `classDef accent fill:${SENTINEL.accent},stroke:${SENTINEL.accent},color:${SENTINEL.accentText};`;
 
