@@ -232,8 +232,8 @@ importers:
         specifier: ^5.1.0
         version: 5.1.0
       unlighthouse:
-        specifier: ^0.18.2
-        version: 0.18.2(f902a798e2fbdea70176c3ae096cf6d7)
+        specifier: ^0.19.1
+        version: 0.19.1(f902a798e2fbdea70176c3ae096cf6d7)
       vite:
         specifier: ^8.3.2
         version: 8.3.2(@types/node@24.19.1)(esbuild@0.28.2)(jiti@2.4.2)(terser@5.50.0)(yaml@2.9.1)
@@ -6907,25 +6907,25 @@ packages:
       webpack:
         optional: true
 
-  '@unlighthouse/cli@0.18.2':
+  '@unlighthouse/cli@0.19.1':
     resolution:
       {
-        integrity: sha512-tzpc/bhH5KtsyOHyST6UDXCllgmHu9AFVlq1As6+tZ0Ckni6eTGNvKdvJzWViVREjoczjFOF/IeCUGQcu+euSg==,
+        integrity: sha512-oGHLr8bDfPy998tNIGbhH3pHYRP/78+OCZrWbDavf3yLjZdToelJTkpiicmUhYVz2CFkheHyJHL8DTz7oNk9HQ==,
       }
     engines: { node: '>=22.18.0' }
     hasBin: true
 
-  '@unlighthouse/client@0.18.2':
+  '@unlighthouse/client@0.19.1':
     resolution:
       {
-        integrity: sha512-vUikcj94dYy72w/73dQbA7FjT3sE2BWnnxWLtgTcXfXs3UcgtDqbBJo1WcsnQwfxCULX2O1tFybaweBMsyHIFw==,
+        integrity: sha512-Ghbz4BZ8hJs9qYX1jKQhJYGx/qqyasTIqZ808LEmDYTiPJlHi1BLdteqyrL1Lg4eHk0XQ6xIgPwF1YG31zQpWg==,
       }
     engines: { node: '>=22.18.0' }
 
-  '@unlighthouse/core@0.18.2':
+  '@unlighthouse/core@0.19.1':
     resolution:
       {
-        integrity: sha512-zNXavPQP2ewxWHUAX4J7gwjJ+W+a/AV5vp8hX8rdBMqIsZbdiMbGikXmglfIPcBiLAwv/QWenNFx6zjl3SM7ZQ==,
+        integrity: sha512-IVw/TGT7keLRGl52RCOfELZ50ngstzZRESit2nnPv30h9itB+WdNxnPDPKG9fF0JaZ5rjMPx6RrapKx6nnKWBA==,
       }
     engines: { node: '>=22.18.0' }
     peerDependencies:
@@ -6934,10 +6934,10 @@ packages:
       puppeteer:
         optional: true
 
-  '@unlighthouse/server@0.18.2':
+  '@unlighthouse/server@0.19.1':
     resolution:
       {
-        integrity: sha512-dAOI6oS4Qg7T/pOXc2yj6eOH/Lu+0NpoR0l1XsOnPTGmDH+0jsCHZ1oOxx7N+a1dcNx46J0FUK3J/SgcQsHP3g==,
+        integrity: sha512-6bL8qQqPVEwvVKI0nZ59uLoXwY94F0Z7fqEBjW/WzvuLEaBs9TBBVyogM8+pSDDbbW+ezPLIOv0l65W+LkdVVw==,
       }
     engines: { node: '>=22.18.0' }
 
@@ -16627,10 +16627,10 @@ packages:
       }
     engines: { node: '>= 10.0.0' }
 
-  unlighthouse@0.18.2:
+  unlighthouse@0.19.1:
     resolution:
       {
-        integrity: sha512-YdpKSl2Txdq+K9MxxbgJRbx497i3MjkTDyK4qWqervOTNF8npIQTBiglDESwBKfOfSVTbHLJG6R/ed0QoqbPBA==,
+        integrity: sha512-O/32ISkGwOJaAHsOs6SYPfE1DwXPN2ncWODBuBDKtDmpmCEhhxTtKMxOr/BJOVSZOOUIjAY25vQBV/CjkbW4gA==,
       }
     engines: { node: '>=22.18.0' }
     hasBin: true
@@ -22257,12 +22257,12 @@ snapshots:
       - rollup
       - unloader
 
-  '@unlighthouse/cli@0.18.2(48202e0c4138908876abd882bed72e10)':
+  '@unlighthouse/cli@0.19.1(48202e0c4138908876abd882bed72e10)':
     dependencies:
       '@lhci/utils': 0.15.1
-      '@unlighthouse/client': 0.18.2(b49a2a448b42b5250e942ac687b68e46)
-      '@unlighthouse/core': 0.18.2(555b3b3fa69c5334da06f77d94c36031)
-      '@unlighthouse/server': 0.18.2(48202e0c4138908876abd882bed72e10)
+      '@unlighthouse/client': 0.19.1(b49a2a448b42b5250e942ac687b68e46)
+      '@unlighthouse/core': 0.19.1(555b3b3fa69c5334da06f77d94c36031)
+      '@unlighthouse/server': 0.19.1(48202e0c4138908876abd882bed72e10)
       cac: 7.0.0
       consola: 3.4.2
       defu: 6.1.7
@@ -22367,7 +22367,7 @@ snapshots:
       - yup
       - zod
 
-  '@unlighthouse/client@0.18.2(b49a2a448b42b5250e942ac687b68e46)':
+  '@unlighthouse/client@0.19.1(b49a2a448b42b5250e942ac687b68e46)':
     dependencies:
       '@nuxt/ui': 4.11.3(3a015e10f64f79d27207668c7f111f7f)
       '@tailwindcss/vite': 4.3.3(vite@8.3.2(@types/node@24.19.1)(esbuild@0.28.2)(jiti@2.4.2)(terser@5.50.0)(yaml@2.9.1))
@@ -22459,11 +22459,11 @@ snapshots:
       - yup
       - zod
 
-  '@unlighthouse/core@0.18.2(555b3b3fa69c5334da06f77d94c36031)':
+  '@unlighthouse/core@0.19.1(555b3b3fa69c5334da06f77d94c36031)':
     dependencies:
       '@clack/prompts': 1.8.1
       '@puppeteer/browsers': 3.2.3(yauzl@3.4.0)
-      '@unlighthouse/client': 0.18.2(b49a2a448b42b5250e942ac687b68e46)
+      '@unlighthouse/client': 0.19.1(b49a2a448b42b5250e942ac687b68e46)
       c12: 3.3.4(magicast@0.5.5)
       chrome-launcher: 1.2.2
       consola: 3.4.2
@@ -22579,9 +22579,9 @@ snapshots:
       - yup
       - zod
 
-  '@unlighthouse/server@0.18.2(48202e0c4138908876abd882bed72e10)':
+  '@unlighthouse/server@0.19.1(48202e0c4138908876abd882bed72e10)':
     dependencies:
-      '@unlighthouse/core': 0.18.2(555b3b3fa69c5334da06f77d94c36031)
+      '@unlighthouse/core': 0.19.1(555b3b3fa69c5334da06f77d94c36031)
       h3: 1.15.11
       listhen: 1.10.1(@parcel/watcher@2.6.0)
     transitivePeerDependencies:
@@ -29906,11 +29906,12 @@ snapshots:
 
   universalify@2.0.1: {}
 
-  unlighthouse@0.18.2(f902a798e2fbdea70176c3ae096cf6d7):
+  unlighthouse@0.19.1(f902a798e2fbdea70176c3ae096cf6d7):
     dependencies:
-      '@unlighthouse/cli': 0.18.2(48202e0c4138908876abd882bed72e10)
-      '@unlighthouse/client': 0.18.2(b49a2a448b42b5250e942ac687b68e46)
-      '@unlighthouse/core': 0.18.2(555b3b3fa69c5334da06f77d94c36031)
+      '@unlighthouse/cli': 0.19.1(48202e0c4138908876abd882bed72e10)
+      '@unlighthouse/client': 0.19.1(b49a2a448b42b5250e942ac687b68e46)
+      '@unlighthouse/core': 0.19.1(555b3b3fa69c5334da06f77d94c36031)
+      c12: 3.3.4(magicast@0.5.5)
     optionalDependencies:
       puppeteer: 25.3.0(yauzl@3.4.0)
       vue: 3.5.43(typescript@6.0.3)
@@ -30131,7 +30132,7 @@ snapshots:
     dependencies:
       citty: 0.1.6
       defu: 6.1.7
-      jiti: 2.7.0
+      jiti: 2.4.2
       knitwork: 1.3.0
       scule: 1.3.0
 
