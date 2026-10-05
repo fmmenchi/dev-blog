@@ -62,8 +62,8 @@ importers:
         specifier: ^10.0.1
         version: 10.0.1(eslint@9.39.4(jiti@2.4.2))
       '@fmmenchi/ci':
-        specifier: ^0.1.0
-        version: 0.1.0(@nx/devkit@23.1.1(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23))))(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23)))
+        specifier: ^0.2.2
+        version: 0.2.2(@nx/devkit@23.1.1(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23))))(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23)))
       '@fmmenchi/nx-trivy':
         specifier: ^0.1.4
         version: 0.1.4(@babel/traverse@7.29.8)(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/cli@0.8.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(chokidar@5.0.0))(@swc/core@1.15.8(@swc/helpers@0.5.23))(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23)))
@@ -2176,22 +2176,22 @@ packages:
         integrity: sha512-HzHKCNVxnGS35r9fCHBc3+uCnjw9IWIlCPL683cGgM9Kgj2BiAl8x1mS7vtvP6F9S/e/q4O6MApwSHj8hNLGfw==,
       }
 
-  '@fmmenchi/ci@0.1.0':
+  '@fmmenchi/ci@0.2.2':
     resolution:
       {
-        integrity: sha512-h92yfQzKn1GPhsI7FQMi2ur/NdZHrZ2nAaAZs6S2xxxHdaePou5GQr2HUqYGY0a4qXJdHnxyQ+pqAt0FW1PLYw==,
-        tarball: https://npm.pkg.github.com/download/@fmmenchi/ci/0.1.0/5888f1a1051f2c957c2f8c644cda4c1a42e00527,
+        integrity: sha512-mmTyTgHg2pfLn3aQo48dKHnJZr7PYsS2/qfCWvVstuYUQ0Dp+y/LrNEKS2sqapKCoj4gRyCdmvEx/HaP+MBnYA==,
+        tarball: https://npm.pkg.github.com/download/@fmmenchi/ci/0.2.2/73eec80da8d7b863a389dab3e58b8c0847883804,
       }
     hasBin: true
     peerDependencies:
       '@nx/devkit': ^23.1.1
       nx: ^23.1.1
 
-  '@fmmenchi/notify@0.0.17':
+  '@fmmenchi/notify@0.0.19':
     resolution:
       {
-        integrity: sha512-xIZ80WBAgvGeVDgmiqq6MUtC2Y4CRAeKohGF03TlXj4nErkN8XD1CaYiYKvm7Seixoeu84pbD+jTMbxh9kWeJQ==,
-        tarball: https://npm.pkg.github.com/download/@fmmenchi/notify/0.0.17/4e275fedb47f27f05644ac20cf57764339e9d90f,
+        integrity: sha512-7rZgbRGS3zkflLOL/6l4wicduLSVwGgsHNHSGCpOR08eVsMz8MrAuYBDzvPzjUgYMGm8jEm5Nrh8WcI2i3l7HA==,
+        tarball: https://npm.pkg.github.com/download/@fmmenchi/notify/0.0.19/6920db17baeee862979250167071489875c3485f,
       }
 
   '@fmmenchi/nx-trivy@0.1.4':
@@ -10429,6 +10429,7 @@ packages:
         integrity: sha512-XoMjdBOwe/esVgEvLmNsD3IRHkm7fbKIUGvrleloJXUZgDHig2IPWNniv+GwjyJXzuNqVjlr5+4yVUZjycJwfQ==,
       }
     engines: { node: ^18.18.0 || ^20.9.0 || >=21.1.0 }
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
     peerDependencies:
       jiti: '*'
@@ -16526,6 +16527,12 @@ packages:
         integrity: sha512-fegtha91tq2DHphyoiBXVHjVi2YG9zFaRnboT9C28tO1en9Y3wJsfspuy40F+u5wl3hHVbw7cnd1b67kEGHb8g==,
       }
 
+  third-party-web@0.30.0:
+    resolution:
+      {
+        integrity: sha512-p+PfyL5U0ediGzvwPzMSdD9MnC8rHW6nWJJVLIQvqN7RsSqfaZ+7n4c9GILqH36EYR0eXB9CzAeCRnKFr/9uJg==,
+      }
+
   through@2.3.8:
     resolution:
       {
@@ -19332,14 +19339,14 @@ snapshots:
       - '@vue/composition-api'
       - vue
 
-  '@fmmenchi/ci@0.1.0(@nx/devkit@23.1.1(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23))))(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23)))':
+  '@fmmenchi/ci@0.2.2(@nx/devkit@23.1.1(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23))))(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23)))':
     dependencies:
-      '@fmmenchi/notify': 0.0.17
+      '@fmmenchi/notify': 0.0.19
       '@nx/devkit': 23.1.1(nx@23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23)))
       nx: 23.1.1(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.23))(@swc/types@0.1.27)(typescript@6.0.3))(@swc/core@1.15.8(@swc/helpers@0.5.23))
       tslib: 2.8.1
 
-  '@fmmenchi/notify@0.0.17':
+  '@fmmenchi/notify@0.0.19':
     dependencies:
       tslib: 2.8.1
 
@@ -21043,12 +21050,12 @@ snapshots:
   '@paulirish/trace_engine@0.0.53':
     dependencies:
       legacy-javascript: 0.0.1
-      third-party-web: 0.29.2
+      third-party-web: 0.30.0
 
   '@paulirish/trace_engine@0.0.65':
     dependencies:
       legacy-javascript: 0.0.1
-      third-party-web: 0.29.2
+      third-party-web: 0.30.0
 
   '@phenomnomnominal/tsquery@6.2.0(typescript@6.0.3)':
     dependencies:
@@ -30175,6 +30182,8 @@ snapshots:
   third-party-web@0.26.7: {}
 
   third-party-web@0.29.2: {}
+
+  third-party-web@0.30.0: {}
 
   through@2.3.8: {}
 
