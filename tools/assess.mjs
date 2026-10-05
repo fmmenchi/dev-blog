@@ -33,14 +33,22 @@ async function waitForServer(deadline) {
 
 const server = spawn('pnpm', ['exec', 'nx', 'run', 'blog:preview'], {
   stdio: 'ignore',
-  /* Its own process group, so the kill below takes the whole tree with it. */
+  /* Its own process group, so the signal below reaches pnpm and nx together. */
   detached: true,
 });
 
-/* Never leave the port held, whatever happens below. */
+/*
+ * Never leave the port held, whatever happens below.
+ *
+ * SIGTERM, not SIGKILL: nx starts `vite preview` in a process group of ITS own, so a
+ * signal to our group never reaches the process that holds the port. Killed outright,
+ * nx cannot pass anything on and the server lives on as an orphan — every run left one
+ * behind, and the next run then timed out waiting on a port answering 500. Asked to
+ * terminate, nx stops its child before it goes.
+ */
 const stopServer = () => {
   try {
-    process.kill(-server.pid, 'SIGKILL');
+    process.kill(-server.pid, 'SIGTERM');
   } catch {
     /* Already gone. */
   }
