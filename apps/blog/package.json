@@ -119,7 +119,7 @@
     "@dev-blog/icons": "workspace:*",
     "@dev-blog/theme": "workspace:*",
     "@dev-blog/ui": "workspace:*",
-    "isbot": "^4.4.0",
+    "isbot": "^5.2.2",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "react-router": "^8.4.0"
