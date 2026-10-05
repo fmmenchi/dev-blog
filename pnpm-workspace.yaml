@@ -47,10 +47,6 @@ minimumReleaseAgeExclude:
 # - basic-ftp <6.2.1: CVE-2026-102990 (quadratic parse of a hostile FTP listing), via
 #   puppeteer's proxy chain → get-uri. A major up from the 5.x get-uri asks for; nothing
 #   here fetches an ftp: URL.
-# - toml <4.2.0: CVE-2026-63376 (prototype pollution) and CVE-2026-77465, via
-#   remark-mdx-frontmatter. This one is in the BUILD, not in unlighthouse: its
-#   acceptance test is the blog build. Our frontmatter is YAML, so the TOML parser is
-#   loaded and never called. Drop it when remark-mdx-frontmatter moves to 6.
 overrides:
   '@opentelemetry/core': '>=2.8.0'
   esbuild: '>=0.28.1'
@@ -60,4 +56,3 @@ overrides:
   '@tiptap/core': '^3.30.5'
   '@tiptap/pm': '^3.30.5'
   basic-ftp: '^6.2.1'
-  toml: '^4.2.0'
