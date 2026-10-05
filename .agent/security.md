@@ -12,7 +12,9 @@ page. The site shipped with **none** of them.
 - **CSP with a per-response nonce.** React Router's hydration data is an inline
   `<script>`. `entry.server.tsx` mints a nonce, passes it to `<ServerRouter nonce>` —
   which forwards it to `<Links>`/`<Scripts>` through context, so `root.tsx` needs no
-  change — and allows exactly that nonce. **Never** reach for `script-src
+  change — and to `renderToReadableStream`, because React writes inline scripts of its
+  own for a Suspense boundary that streams in after the shell. It allows exactly that
+  nonce. **Never** reach for `script-src
 'unsafe-inline'` to make something work; that is the one directive that matters.
 - **`style-src 'self' 'unsafe-inline'` is deliberate**, and it is not the same
   concession. Components set inline style _attributes_ (the avatar's size, the accent
@@ -32,7 +34,9 @@ renders perfectly and responds to nothing. `curl` cannot see this. Neither can a
 test, which only proves the header _string_.
 
 `apps/blog-e2e/src/security.spec.ts` clicks the accent switcher — a client-only control
-— and asserts the accent actually changed, with zero CSP violations in the console.
+— and asserts the accent actually changed, with zero CSP violations in the console. It
+also loads `/blog`, the page that streams a Suspense boundary: a refused script there
+does not kill the page, it only shows up as a console error.
 **If you change the policy, that test is the proof.** Run it.
 
 ## No third-party origins
