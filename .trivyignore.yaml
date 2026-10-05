@@ -11,4 +11,27 @@
 #          statement: 'Vulnerable code path not reached in our usage.'
 #          expired_at: 2026-12-31
 #
-vulnerabilities: []
+# The four below are dev-only and have NO fixed release (checked 2026-10-05), so there
+# is nothing to bump or override. They only show up with `--include-dev-deps`.
+vulnerabilities:
+  # braces through 3.0.3: stack overflow on deeply nested brace patterns. Reached via
+  # micromatch, i.e. the globs of our own tooling config — no pattern comes from outside
+  # the repo.
+  - id: CVE-2026-93687
+    statement: 'No fixed version. Dev tooling only; glob patterns are ours, not user input.'
+    expired_at: 2026-12-31
+  # extract-zip through 2.0.1: file write outside the destination via a symlink entry.
+  # Reached via unlighthouse → @puppeteer/browsers, which unpacks the browser build it
+  # downloads from Google's own bucket.
+  - id: CVE-2026-19693
+    statement: 'No fixed version. Dev tooling only; the only archive unpacked is the Chrome build puppeteer downloads.'
+    expired_at: 2026-12-31
+  - id: CVE-2026-56876
+    statement: 'No fixed version. Dev tooling only; the only archive unpacked is the Chrome build puppeteer downloads.'
+    expired_at: 2026-12-31
+  # node-forge through 1.4.0: RSA PKCS#1 v1.5 signature forgery. Reached via
+  # unlighthouse → listhen, which uses it to mint a self-signed certificate for a local
+  # HTTPS dev server — it verifies nobody's signature.
+  - id: CVE-2026-85393
+    statement: 'No fixed version. Dev tooling only; used to generate a local self-signed certificate, never to verify a signature.'
+    expired_at: 2026-12-31

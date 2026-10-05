@@ -35,7 +35,29 @@ minimumReleaseAgeExclude:
 # brace-expansion <5.0.9: CVE-2026-69152 (DoS via unbounded intermediate arrays).
 # Pinned exactly by nx itself, so nothing but an override reaches it. Drop it when
 # nx ships a release that has moved.
+#
+# Same story, same exact pin inside nx (checked at 23.2.1), same exit condition:
+# - axios <1.20.0: CVE-2026-101898 and six more HIGH. Also reached through
+#   unlighthouse → @vueuse/integrations.
+# - smol-toml <1.7.1: CVE-2026-85730.
+#
+# Dev-only chains again; each range stops at the major that carries the fix:
+# - @tiptap/core <3.30.5: GHSA-j95f-988m-3j2f, via unlighthouse → @nuxt/ui. @tiptap/pm
+#   moves with it because the extensions peer on both at one version.
+# - basic-ftp <6.2.1: CVE-2026-102990 (quadratic parse of a hostile FTP listing), via
+#   puppeteer's proxy chain → get-uri. A major up from the 5.x get-uri asks for; nothing
+#   here fetches an ftp: URL.
+# - toml <4.2.0: CVE-2026-63376 (prototype pollution) and CVE-2026-77465, via
+#   remark-mdx-frontmatter. This one is in the BUILD, not in unlighthouse: its
+#   acceptance test is the blog build. Our frontmatter is YAML, so the TOML parser is
+#   loaded and never called. Drop it when remark-mdx-frontmatter moves to 6.
 overrides:
   '@opentelemetry/core': '>=2.8.0'
   esbuild: '>=0.28.1'
   brace-expansion: '>=5.0.9'
+  axios: '^1.20.0'
+  smol-toml: '^1.7.1'
+  '@tiptap/core': '^3.30.5'
+  '@tiptap/pm': '^3.30.5'
+  basic-ftp: '^6.2.1'
+  toml: '^4.2.0'
