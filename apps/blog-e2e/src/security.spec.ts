@@ -54,4 +54,25 @@ test.describe('security headers', () => {
 
     expect(violations).toEqual([]);
   });
+
+  /*
+   * `/` proves React Router's scripts carry the nonce. It says nothing about React's
+   * own: those only exist on a page that streams a Suspense boundary after the shell,
+   * and /blog is that page (the lazy filter bar). Refused, they do not leave the page
+   * dead — React re-renders it on the client and logs #419 — so only the console tells.
+   */
+  test('nor a page that streams a Suspense boundary', async ({ page }) => {
+    const problems: string[] = [];
+    page.on('console', (message) => {
+      if (/Content Security Policy|Refused to/i.test(message.text())) {
+        problems.push(message.text());
+      }
+    });
+    page.on('pageerror', (error) => problems.push(error.message));
+
+    await page.goto('/blog');
+    await expect(page.getByRole('heading', { level: 1 }).first()).toBeVisible();
+
+    expect(problems).toEqual([]);
+  });
 });

@@ -23,10 +23,10 @@ export default async function handleRequest(
   const userAgent = request.headers.get('user-agent');
 
   /*
-   * One nonce, used twice: React Router stamps it on the inline scripts it renders
-   * (and forwards it to <Links>/<Scripts> through context, so root.tsx needs no
-   * change), and the CSP below allows exactly that nonce. Any other inline script —
-   * an injected one — is refused.
+   * One nonce, used three times: React Router stamps it on the inline scripts it
+   * renders (and forwards it to <Links>/<Scripts> through context, so root.tsx needs no
+   * change), React stamps it on the ones IT writes, and the CSP below allows exactly
+   * that nonce. Any other inline script — an injected one — is refused.
    */
   const nonce = makeNonce();
 
@@ -37,6 +37,11 @@ export default async function handleRequest(
       <ServerRouter context={routerContext} url={request.url} nonce={nonce} />
     </NonceContext.Provider>,
     {
+      /* React writes inline scripts of its own to reveal a Suspense boundary that
+         streams in after the shell. Without the nonce the policy refuses them, the
+         boundary never completes, and the page falls back to a client render with
+         error #419 — on /blog, the one route that streams one (the lazy filter bar). */
+      nonce,
       onError(error: unknown) {
         responseStatusCode = 500;
         // Log streaming rendering errors from inside the shell. Shell errors
