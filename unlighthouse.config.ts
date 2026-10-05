@@ -22,6 +22,13 @@ export default defineConfig({
     crawler: true,
     /* Resource routes and assets are not pages: rss.xml and sitemap.xml have no UI. */
     exclude: ['.*\\.(xml|txt|ico|png|jpe?g|webp|avif|svg|woff2?)$'],
+    /*
+     * Simulate a slow network. Since 0.19 a localhost site runs UNTHROTTLED unless
+     * this is set; up to 0.18 it was throttled regardless (a `typeof` check that was
+     * always true). Without it every route scores as if on a LAN, and the numbers
+     * stop being comparable with the ones taken before.
+     */
+    throttle: true,
   },
   ci: {
     /* Per-route JSON with the full category scores, at .unlighthouse/ci-result.json */

@@ -5,13 +5,10 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  '@opentelemetry/core': '>=2.8.0'
   esbuild: '>=0.28.1'
   brace-expansion: '>=5.0.9'
   axios: ^1.20.0
   smol-toml: ^1.7.1
-  '@tiptap/core': ^3.30.5
-  '@tiptap/pm': ^3.30.5
   basic-ftp: ^6.2.1
 
 importers:
@@ -232,8 +229,8 @@ importers:
         specifier: ^5.1.0
         version: 5.1.0
       unlighthouse:
-        specifier: ^0.18.2
-        version: 0.18.2(f902a798e2fbdea70176c3ae096cf6d7)
+        specifier: ^0.19.1
+        version: 0.19.1(f902a798e2fbdea70176c3ae096cf6d7)
       vite:
         specifier: ^8.3.2
         version: 8.3.2(@types/node@24.19.1)(esbuild@0.28.2)(jiti@2.4.2)(terser@5.50.0)(yaml@2.9.1)
@@ -3339,7 +3336,7 @@ packages:
       '@internationalized/date': ^3
       '@internationalized/number': ^3
       '@nuxt/content': ^3
-      '@tiptap/core': ^3.30.5
+      '@tiptap/core': ^3
       '@tiptap/extension-bubble-menu': ^3
       '@tiptap/extension-code': ^3
       '@tiptap/extension-collaboration': ^3
@@ -3352,7 +3349,7 @@ packages:
       '@tiptap/extension-node-range': ^3
       '@tiptap/extension-placeholder': ^3
       '@tiptap/markdown': ^3
-      '@tiptap/pm': ^3.30.5
+      '@tiptap/pm': ^3
       '@tiptap/starter-kit': ^3
       '@tiptap/suggestion': ^3
       '@tiptap/vue-3': ^3
@@ -5278,7 +5275,7 @@ packages:
     engines: { node: '>=18' }
     peerDependencies:
       '@opentelemetry/api': ^1.9.0
-      '@opentelemetry/core': '>=2.8.0'
+      '@opentelemetry/core': ^1.30.1 || ^2.1.0
       '@opentelemetry/exporter-trace-otlp-http': '>=0.57.0 <1'
       '@opentelemetry/instrumentation': '>=0.57.1 <1'
       '@opentelemetry/sdk-trace-base': ^1.30.1 || ^2.1.0
@@ -5316,7 +5313,7 @@ packages:
     engines: { node: '>=18' }
     peerDependencies:
       '@opentelemetry/api': ^1.9.0
-      '@opentelemetry/core': '>=2.8.0'
+      '@opentelemetry/core': ^1.30.1 || ^2.1.0
       '@opentelemetry/sdk-trace-base': ^1.30.1 || ^2.1.0
 
   '@sentry/server-utils@10.76.0':
@@ -5975,7 +5972,7 @@ packages:
         integrity: sha512-cIVUQYBycighzsk6GbmCef8ZiEDVxoT5EuAe4xg2q9dNkDqCXVqI4YGr9aavCQEiAS4uHiRwqvcsPqJHipFDfg==,
       }
     peerDependencies:
-      '@tiptap/pm': ^3.30.5
+      '@tiptap/pm': 3.31.4
 
   '@tiptap/extension-blockquote@3.31.4':
     resolution:
@@ -5983,8 +5980,8 @@ packages:
         integrity: sha512-FHnbvCIW0eDKgUUFjmvEB0ax9YUBW7/Unm+38qpuQROvU872yRqhnDtycKT9IKk46jNdjM4A4fAGUbge10CrAA==,
       }
     peerDependencies:
-      '@tiptap/core': ^3.30.5
-      '@tiptap/pm': ^3.30.5
+      '@tiptap/core': 3.31.4
+      '@tiptap/pm': 3.31.4
 
   '@tiptap/extension-bold@3.31.4':
     resolution:
@@ -5992,7 +5989,7 @@ packages:
         integrity: sha512-QX1xoXvO0gz6uVsoLegumqQ4MJXL7lcUDQZ4J7la7LBqiIh4efrCmp2EXbhpr37M/YQL7w8q3g7H/VovSh7xIg==,
       }
     peerDependencies:
-      '@tiptap/core': ^3.30.5
+      '@tiptap/core': 3.31.4
 
   '@tiptap/extension-bubble-menu@3.27.3':
     resolution:
@@ -6000,8 +5997,8 @@ packages:
         integrity: sha512-PKSM9g8BXzO0Lxm2gOin7FAFvxO6T0QvlXTXVke/GJn/sR1tEz7w5ybsvweytUPmSliUc601pfIUOHKEhIVC2Q==,
       }
     peerDependencies:
-      '@tiptap/core': ^3.30.5
-      '@tiptap/pm': ^3.30.5
+      '@tiptap/core': 3.27.3
+      '@tiptap/pm': 3.27.3
 
   '@tiptap/extension-bullet-list@3.31.4':
     resolution:
@@ -6017,8 +6014,8 @@ packages:
         integrity: sha512-su/B/cfQ1HpiHl6JfJ6wa+RVEptiYsV4dCntE8XQNj2dUcII4y6w6PQbbswOoDrU79uXHsAvpy44215rghG4LA==,
       }
     peerDependencies:
-      '@tiptap/core': ^3.30.5
-      '@tiptap/pm': ^3.30.5
+      '@tiptap/core': 3.31.4
+      '@tiptap/pm': 3.31.4
 
   '@tiptap/extension-code@3.27.3':
     resolution:
@@ -6026,7 +6023,7 @@ packages:
         integrity: sha512-T7JF10Y3k7fyVujXXLVubdUh7fctgBUoiuxbvjotpltg1U/mPbOcT0UW/uif9j3H8TFvAwNApVw3x8bwwFUakA==,
       }
     peerDependencies:
-      '@tiptap/core': ^3.30.5
+      '@tiptap/core': 3.27.3
 
   '@tiptap/extension-collaboration@3.27.3':
     resolution:
@@ -6034,8 +6031,8 @@ packages:
         integrity: sha512-cSmyHpRLd6RkVg7DfRpBjD8fxvvc4uRP22zb+zn1otGf+Kk7y18t9bkwfNJCVIASedc6RfSufxbdQW8qZ/eHWg==,
       }
     peerDependencies:
-      '@tiptap/core': ^3.30.5
-      '@tiptap/pm': ^3.30.5
+      '@tiptap/core': 3.27.3
+      '@tiptap/pm': 3.27.3
       '@tiptap/y-tiptap': ^3.0.6
       yjs: ^13
 
@@ -6045,7 +6042,7 @@ packages:
         integrity: sha512-vT20u62RWR+BLIyNJ54e24MPUY4zm8VF7tcgJnxQXi7BgVJWcNMtMWWDIkPJ4JNXwfoIznKh3jzYsaYmbCJgQQ==,
       }
     peerDependencies:
-      '@tiptap/core': ^3.30.5
+      '@tiptap/core': 3.31.4
 
   '@tiptap/extension-drag-handle-vue-3@3.27.3':
     resolution:
@@ -6054,7 +6051,7 @@ packages:
       }
     peerDependencies:
       '@tiptap/extension-drag-handle': 3.27.3
-      '@tiptap/pm': ^3.30.5
+      '@tiptap/pm': 3.27.3
       '@tiptap/vue-3': 3.27.3
       vue: ^3.0.0
 
@@ -6064,10 +6061,10 @@ packages:
         integrity: sha512-9TTJTuSbzDGzWWhkbyNK5l3bEJmkw+IfEkSI6KDznarOwZ5zGTEhZBId+mk/vnUS65Z8fTS4Ke55oT01wXXpFQ==,
       }
     peerDependencies:
-      '@tiptap/core': ^3.30.5
+      '@tiptap/core': 3.27.3
       '@tiptap/extension-collaboration': 3.27.3
       '@tiptap/extension-node-range': 3.27.3
-      '@tiptap/pm': ^3.30.5
+      '@tiptap/pm': 3.27.3
       '@tiptap/y-tiptap': ^3.0.6
 
   '@tiptap/extension-dropcursor@3.31.4':
@@ -6085,8 +6082,8 @@ packages:
       }
     peerDependencies:
       '@floating-ui/dom': ^1.0.0
-      '@tiptap/core': ^3.30.5
-      '@tiptap/pm': ^3.30.5
+      '@tiptap/core': 3.27.3
+      '@tiptap/pm': 3.27.3
 
   '@tiptap/extension-gapcursor@3.31.4':
     resolution:
@@ -6102,7 +6099,7 @@ packages:
         integrity: sha512-oLNajLyUvRMg1qtzFgKGduygTlpaHFB9PU+M+pUWdA4sa1bRnxS2Y++Ao4lHYopJ7nxatLndrYoCIHkotqkPDQ==,
       }
     peerDependencies:
-      '@tiptap/core': ^3.30.5
+      '@tiptap/core': 3.31.4
 
   '@tiptap/extension-heading@3.31.4':
     resolution:
@@ -6110,7 +6107,7 @@ packages:
         integrity: sha512-KqlSeLathpdxCc3kVHBCA/RkHvb+V7u5vgiSEu1Cv3L70r7F19COMGODav/k1AGYBgEXKL6lM9cy8cloE5/28g==,
       }
     peerDependencies:
-      '@tiptap/core': ^3.30.5
+      '@tiptap/core': 3.31.4
 
   '@tiptap/extension-horizontal-rule@3.27.3':
     resolution:
@@ -6118,8 +6115,8 @@ packages:
         integrity: sha512-sNCuo0+Q001B5XTVWY+ULpWXQqtBNRmAqXxAexZl44bx3rDqHG8OzjwT4EM0LIj2+BYVbdqwaJ1vfQbZVEEbig==,
       }
     peerDependencies:
-      '@tiptap/core': ^3.30.5
-      '@tiptap/pm': ^3.30.5
+      '@tiptap/core': 3.27.3
+      '@tiptap/pm': 3.27.3
 
   '@tiptap/extension-image@3.27.3':
     resolution:
@@ -6127,7 +6124,7 @@ packages:
         integrity: sha512-3OVLRH54Xkh9yrI5oGIempuqZkhLG1plyJBRnapx0N8j9IjEImOLF78kPYoAZzaBuU78M3Zk/E7HQZgmnaNRBg==,
       }
     peerDependencies:
-      '@tiptap/core': ^3.30.5
+      '@tiptap/core': 3.27.3
 
   '@tiptap/extension-italic@3.31.4':
     resolution:
@@ -6135,7 +6132,7 @@ packages:
         integrity: sha512-pftTQBPYZocNDAj/u6OyDIp7YxmN0+N895cQPogJQ6qMHdLiRhzgawiEewJkniyN1w8k3Wx/Etp8pTKrxaOOBQ==,
       }
     peerDependencies:
-      '@tiptap/core': ^3.30.5
+      '@tiptap/core': 3.31.4
 
   '@tiptap/extension-link@3.31.4':
     resolution:
@@ -6143,8 +6140,8 @@ packages:
         integrity: sha512-LLxW3qfeL9gvDdMPVdxYFYZ0zZSjsoIDhOqjJ5U2UfaK3U2iwkKTBgV2qT+FWf3uUHmBRjBZ08q3dRPmWBAD5g==,
       }
     peerDependencies:
-      '@tiptap/core': ^3.30.5
-      '@tiptap/pm': ^3.30.5
+      '@tiptap/core': 3.31.4
+      '@tiptap/pm': 3.31.4
 
   '@tiptap/extension-list-item@3.31.4':
     resolution:
@@ -6168,8 +6165,8 @@ packages:
         integrity: sha512-Wd4YRYxOdf+TtF33/QsRo1RK1CecVxjYGjUBIKNGHAywfh8tghgV4YOUCiV1iJqYt2IBs+RWlIqTmdIPzBrd4A==,
       }
     peerDependencies:
-      '@tiptap/core': ^3.30.5
-      '@tiptap/pm': ^3.30.5
+      '@tiptap/core': 3.31.4
+      '@tiptap/pm': 3.31.4
 
   '@tiptap/extension-mention@3.27.3':
     resolution:
@@ -6177,8 +6174,8 @@ packages:
         integrity: sha512-yN698bjYxYh5Ugv7qUUAQHJ8ZiVtNcVj5YZRruhjf/LhZQRtq9Xy8T7JipiS/MBZ/Zaf0qJkXM0n9IrAdn48iA==,
       }
     peerDependencies:
-      '@tiptap/core': ^3.30.5
-      '@tiptap/pm': ^3.30.5
+      '@tiptap/core': 3.27.3
+      '@tiptap/pm': 3.27.3
       '@tiptap/suggestion': 3.27.3
 
   '@tiptap/extension-node-range@3.27.3':
@@ -6187,8 +6184,8 @@ packages:
         integrity: sha512-QDeGy1PEJupozdafAE9J3Wp1ElasSus6VNx+F/EqbCdABWfcSxjDLtbjuqg6CPwU1jqJWBFm6OaqRo911JABLA==,
       }
     peerDependencies:
-      '@tiptap/core': ^3.30.5
-      '@tiptap/pm': ^3.30.5
+      '@tiptap/core': 3.27.3
+      '@tiptap/pm': 3.27.3
 
   '@tiptap/extension-ordered-list@3.31.4':
     resolution:
@@ -6204,7 +6201,7 @@ packages:
         integrity: sha512-WZlBgw+XVKXerRlmEsoQ7x1PwSU+dh3X+b70+ViZsLebdfsmmYBIaNDrvIGwG9UQr5eLnddJnZplMSTI2YKs+g==,
       }
     peerDependencies:
-      '@tiptap/core': ^3.30.5
+      '@tiptap/core': 3.31.4
 
   '@tiptap/extension-placeholder@3.27.3':
     resolution:
@@ -6220,7 +6217,7 @@ packages:
         integrity: sha512-4MBr63TJIMqxCjE+gAPdlY1IdELgvbAP516K3Ntn/BkcpEbEoPMEYVz+XTxULyHQEuARDO6jsXPPxRXpA74jaw==,
       }
     peerDependencies:
-      '@tiptap/core': ^3.30.5
+      '@tiptap/core': 3.31.4
 
   '@tiptap/extension-text@3.31.4':
     resolution:
@@ -6228,7 +6225,7 @@ packages:
         integrity: sha512-WL2ZRpFksgQcXJN05/UQH09YCH9LlhdLrSEcviASvEH/aAfsKiJlDrouN8PET+YAWK/F5xFc5/Q1z0xj+I23jw==,
       }
     peerDependencies:
-      '@tiptap/core': ^3.30.5
+      '@tiptap/core': 3.31.4
 
   '@tiptap/extension-underline@3.31.4':
     resolution:
@@ -6236,7 +6233,7 @@ packages:
         integrity: sha512-0iFGPIqmqGkCrOFh1OPo7Dzv5s86dVN3bZaugsz0jK04otkb8bn04ZDKP2/6Wq+lcK0M9DfJ0QqfW5hC2nBZxQ==,
       }
     peerDependencies:
-      '@tiptap/core': ^3.30.5
+      '@tiptap/core': 3.31.4
 
   '@tiptap/extensions@3.27.3':
     resolution:
@@ -6244,8 +6241,8 @@ packages:
         integrity: sha512-IA2QKUVJgzUPEhhkUfr6P5u5GFVfhiApiEaaHXBz07saL2c4HNoVs2RC18QlZDCtLNKrPR1mUScr72u7uYs+YQ==,
       }
     peerDependencies:
-      '@tiptap/core': ^3.30.5
-      '@tiptap/pm': ^3.30.5
+      '@tiptap/core': 3.27.3
+      '@tiptap/pm': 3.27.3
 
   '@tiptap/extensions@3.31.4':
     resolution:
@@ -6253,8 +6250,8 @@ packages:
         integrity: sha512-nIupIne/sHpV2Kw1M4MOmr4+G454KI8BXM5+LWKOU2EpzfALZWVSy7koF9lVRna4Zp5Gv8hfg5Z8kvmrYQvhkw==,
       }
     peerDependencies:
-      '@tiptap/core': ^3.30.5
-      '@tiptap/pm': ^3.30.5
+      '@tiptap/core': 3.31.4
+      '@tiptap/pm': 3.31.4
 
   '@tiptap/markdown@3.27.3':
     resolution:
@@ -6262,8 +6259,8 @@ packages:
         integrity: sha512-+hNpPsJHqiuirpaF7LD4tZPEFqCe3Uu3nRE8krtrP3zWYmWnHnfQNg+zlvrVNR3pN9S3oh4WC96Wg/otYDJHdA==,
       }
     peerDependencies:
-      '@tiptap/core': ^3.30.5
-      '@tiptap/pm': ^3.30.5
+      '@tiptap/core': 3.27.3
+      '@tiptap/pm': 3.27.3
 
   '@tiptap/pm@3.31.4':
     resolution:
@@ -6284,8 +6281,8 @@ packages:
       }
     peerDependencies:
       '@floating-ui/dom': ^1.0.0
-      '@tiptap/core': ^3.30.5
-      '@tiptap/pm': ^3.30.5
+      '@tiptap/core': 3.27.3
+      '@tiptap/pm': 3.27.3
 
   '@tiptap/vue-3@3.27.3':
     resolution:
@@ -6294,8 +6291,8 @@ packages:
       }
     peerDependencies:
       '@floating-ui/dom': ^1.0.0
-      '@tiptap/core': ^3.30.5
-      '@tiptap/pm': ^3.30.5
+      '@tiptap/core': 3.27.3
+      '@tiptap/pm': 3.27.3
       vue: ^3.0.0
 
   '@tiptap/y-tiptap@3.0.6':
@@ -6907,25 +6904,25 @@ packages:
       webpack:
         optional: true
 
-  '@unlighthouse/cli@0.18.2':
+  '@unlighthouse/cli@0.19.1':
     resolution:
       {
-        integrity: sha512-tzpc/bhH5KtsyOHyST6UDXCllgmHu9AFVlq1As6+tZ0Ckni6eTGNvKdvJzWViVREjoczjFOF/IeCUGQcu+euSg==,
+        integrity: sha512-oGHLr8bDfPy998tNIGbhH3pHYRP/78+OCZrWbDavf3yLjZdToelJTkpiicmUhYVz2CFkheHyJHL8DTz7oNk9HQ==,
       }
     engines: { node: '>=22.18.0' }
     hasBin: true
 
-  '@unlighthouse/client@0.18.2':
+  '@unlighthouse/client@0.19.1':
     resolution:
       {
-        integrity: sha512-vUikcj94dYy72w/73dQbA7FjT3sE2BWnnxWLtgTcXfXs3UcgtDqbBJo1WcsnQwfxCULX2O1tFybaweBMsyHIFw==,
+        integrity: sha512-Ghbz4BZ8hJs9qYX1jKQhJYGx/qqyasTIqZ808LEmDYTiPJlHi1BLdteqyrL1Lg4eHk0XQ6xIgPwF1YG31zQpWg==,
       }
     engines: { node: '>=22.18.0' }
 
-  '@unlighthouse/core@0.18.2':
+  '@unlighthouse/core@0.19.1':
     resolution:
       {
-        integrity: sha512-zNXavPQP2ewxWHUAX4J7gwjJ+W+a/AV5vp8hX8rdBMqIsZbdiMbGikXmglfIPcBiLAwv/QWenNFx6zjl3SM7ZQ==,
+        integrity: sha512-IVw/TGT7keLRGl52RCOfELZ50ngstzZRESit2nnPv30h9itB+WdNxnPDPKG9fF0JaZ5rjMPx6RrapKx6nnKWBA==,
       }
     engines: { node: '>=22.18.0' }
     peerDependencies:
@@ -6934,10 +6931,10 @@ packages:
       puppeteer:
         optional: true
 
-  '@unlighthouse/server@0.18.2':
+  '@unlighthouse/server@0.19.1':
     resolution:
       {
-        integrity: sha512-dAOI6oS4Qg7T/pOXc2yj6eOH/Lu+0NpoR0l1XsOnPTGmDH+0jsCHZ1oOxx7N+a1dcNx46J0FUK3J/SgcQsHP3g==,
+        integrity: sha512-6bL8qQqPVEwvVKI0nZ59uLoXwY94F0Z7fqEBjW/WzvuLEaBs9TBBVyogM8+pSDDbbW+ezPLIOv0l65W+LkdVVw==,
       }
     engines: { node: '>=22.18.0' }
 
@@ -16627,10 +16624,10 @@ packages:
       }
     engines: { node: '>= 10.0.0' }
 
-  unlighthouse@0.18.2:
+  unlighthouse@0.19.1:
     resolution:
       {
-        integrity: sha512-YdpKSl2Txdq+K9MxxbgJRbx497i3MjkTDyK4qWqervOTNF8npIQTBiglDESwBKfOfSVTbHLJG6R/ed0QoqbPBA==,
+        integrity: sha512-O/32ISkGwOJaAHsOs6SYPfE1DwXPN2ncWODBuBDKtDmpmCEhhxTtKMxOr/BJOVSZOOUIjAY25vQBV/CjkbW4gA==,
       }
     engines: { node: '>=22.18.0' }
     hasBin: true
@@ -22257,12 +22254,12 @@ snapshots:
       - rollup
       - unloader
 
-  '@unlighthouse/cli@0.18.2(48202e0c4138908876abd882bed72e10)':
+  '@unlighthouse/cli@0.19.1(48202e0c4138908876abd882bed72e10)':
     dependencies:
       '@lhci/utils': 0.15.1
-      '@unlighthouse/client': 0.18.2(b49a2a448b42b5250e942ac687b68e46)
-      '@unlighthouse/core': 0.18.2(555b3b3fa69c5334da06f77d94c36031)
-      '@unlighthouse/server': 0.18.2(48202e0c4138908876abd882bed72e10)
+      '@unlighthouse/client': 0.19.1(b49a2a448b42b5250e942ac687b68e46)
+      '@unlighthouse/core': 0.19.1(555b3b3fa69c5334da06f77d94c36031)
+      '@unlighthouse/server': 0.19.1(48202e0c4138908876abd882bed72e10)
       cac: 7.0.0
       consola: 3.4.2
       defu: 6.1.7
@@ -22367,7 +22364,7 @@ snapshots:
       - yup
       - zod
 
-  '@unlighthouse/client@0.18.2(b49a2a448b42b5250e942ac687b68e46)':
+  '@unlighthouse/client@0.19.1(b49a2a448b42b5250e942ac687b68e46)':
     dependencies:
       '@nuxt/ui': 4.11.3(3a015e10f64f79d27207668c7f111f7f)
       '@tailwindcss/vite': 4.3.3(vite@8.3.2(@types/node@24.19.1)(esbuild@0.28.2)(jiti@2.4.2)(terser@5.50.0)(yaml@2.9.1))
@@ -22459,11 +22456,11 @@ snapshots:
       - yup
       - zod
 
-  '@unlighthouse/core@0.18.2(555b3b3fa69c5334da06f77d94c36031)':
+  '@unlighthouse/core@0.19.1(555b3b3fa69c5334da06f77d94c36031)':
     dependencies:
       '@clack/prompts': 1.8.1
       '@puppeteer/browsers': 3.2.3(yauzl@3.4.0)
-      '@unlighthouse/client': 0.18.2(b49a2a448b42b5250e942ac687b68e46)
+      '@unlighthouse/client': 0.19.1(b49a2a448b42b5250e942ac687b68e46)
       c12: 3.3.4(magicast@0.5.5)
       chrome-launcher: 1.2.2
       consola: 3.4.2
@@ -22579,9 +22576,9 @@ snapshots:
       - yup
       - zod
 
-  '@unlighthouse/server@0.18.2(48202e0c4138908876abd882bed72e10)':
+  '@unlighthouse/server@0.19.1(48202e0c4138908876abd882bed72e10)':
     dependencies:
-      '@unlighthouse/core': 0.18.2(555b3b3fa69c5334da06f77d94c36031)
+      '@unlighthouse/core': 0.19.1(555b3b3fa69c5334da06f77d94c36031)
       h3: 1.15.11
       listhen: 1.10.1(@parcel/watcher@2.6.0)
     transitivePeerDependencies:
@@ -29906,11 +29903,12 @@ snapshots:
 
   universalify@2.0.1: {}
 
-  unlighthouse@0.18.2(f902a798e2fbdea70176c3ae096cf6d7):
+  unlighthouse@0.19.1(f902a798e2fbdea70176c3ae096cf6d7):
     dependencies:
-      '@unlighthouse/cli': 0.18.2(48202e0c4138908876abd882bed72e10)
-      '@unlighthouse/client': 0.18.2(b49a2a448b42b5250e942ac687b68e46)
-      '@unlighthouse/core': 0.18.2(555b3b3fa69c5334da06f77d94c36031)
+      '@unlighthouse/cli': 0.19.1(48202e0c4138908876abd882bed72e10)
+      '@unlighthouse/client': 0.19.1(b49a2a448b42b5250e942ac687b68e46)
+      '@unlighthouse/core': 0.19.1(555b3b3fa69c5334da06f77d94c36031)
+      c12: 3.3.4(magicast@0.5.5)
     optionalDependencies:
       puppeteer: 25.3.0(yauzl@3.4.0)
       vue: 3.5.43(typescript@6.0.3)
@@ -30131,7 +30129,7 @@ snapshots:
     dependencies:
       citty: 0.1.6
       defu: 6.1.7
-      jiti: 2.7.0
+      jiti: 2.4.2
       knitwork: 1.3.0
       scule: 1.3.0
 
