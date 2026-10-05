@@ -76,7 +76,7 @@
     "unist-util-visit": "^5.1.0",
     "unlighthouse": "^0.18.2",
     "vite": "^8.3.2",
-    "vite-imagetools": "^10.0.1",
+    "vite-imagetools": "^12.0.1",
     "vitest": "~4.1.11"
   },
   "dependencies": {
