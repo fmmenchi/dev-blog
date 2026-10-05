@@ -20,7 +20,7 @@
     "@commitlint/config-conventional": "^21.2.0",
     "@eslint/js": "^10.0.1",
     "@fmmenchi/ci": "^0.2.2",
-    "@fmmenchi/nx-trivy": "^0.1.4",
+    "@fmmenchi/nx-trivy": "^0.2.3",
     "@mdx-js/react": "^3.1.1",
     "@mdx-js/rollup": "^3.1.1",
     "@nx/devkit": "23.2.1",
