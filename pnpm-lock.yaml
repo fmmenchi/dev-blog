@@ -40,8 +40,8 @@ importers:
         specifier: ^0.7.1
         version: 0.7.1
       isbot:
-        specifier: ^4.4.0
-        version: 4.4.0
+        specifier: ^5.2.2
+        version: 5.2.2
       react:
         specifier: ^19.3.0
         version: 19.3.0
@@ -257,8 +257,8 @@ importers:
         specifier: workspace:*
         version: link:../../libs/ui
       isbot:
-        specifier: ^4.4.0
-        version: 4.4.0
+        specifier: ^5.2.2
+        version: 5.2.2
       react:
         specifier: ^19.3.0
         version: 19.3.0
@@ -11948,13 +11948,6 @@ packages:
       {
         integrity: sha512-xHjhDr3cNBK0BzdUJSPXZntQUx/mwMS5Rw4A7lPJ90XGAO6ISP/ePDNuo0vhqOZU+UD5JoodwCAAoZQd3FeAKw==,
       }
-
-  isbot@4.4.0:
-    resolution:
-      {
-        integrity: sha512-8ZvOWUA68kyJO4hHJdWjyreq7TYNWTS9y15IzeqVdKxR9pPr3P/3r9AHcoIv9M0Rllkao5qWz2v1lmcyKIVCzQ==,
-      }
-    engines: { node: '>=18' }
 
   isbot@5.2.2:
     resolution:
@@ -25417,7 +25410,7 @@ snapshots:
 
   glob@13.0.6:
     dependencies:
-      minimatch: 10.2.5
+      minimatch: 10.2.6
       minipass: 7.1.3
       path-scurry: 2.0.2
 
@@ -26038,8 +26031,6 @@ snapshots:
       is-inside-container: 1.0.0
 
   isarray@2.0.5: {}
-
-  isbot@4.4.0: {}
 
   isbot@5.2.2: {}
 
@@ -29524,7 +29515,7 @@ snapshots:
     dependencies:
       '@istanbuljs/schema': 0.1.6
       glob: 10.5.0
-      minimatch: 10.2.5
+      minimatch: 10.2.6
 
   text-decoder@1.2.7:
     dependencies:
