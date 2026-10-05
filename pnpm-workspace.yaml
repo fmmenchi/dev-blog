@@ -24,13 +24,13 @@ minimumReleaseAgeExclude:
   - '@fmmenchi/nx-trivy@0.1.4'
   - '@fmmenchi/ci@0.2.2'
   - '@fmmenchi/notify@0.0.19'
-# Both dragged in by unlighthouse (dev-only tooling); the overrides keep
-# `trivy --include-dev-deps` clean. Acceptance test after touching either:
-# `pnpm nx assess blog` must still complete its sweep. Drop them once
-# unlighthouse's chain moves past the vulnerable ranges.
-# - @opentelemetry/core 1.x: CVE-2026-54285 (DoS via oversized baggage headers),
-#   via lighthouse → @sentry/node.
-# - esbuild <0.28.1: GHSA-g7r4-m6w7-qqqr (dev-server CORS), via @nuxt/fonts.
+# Dragged in by unlighthouse (dev-only tooling). Acceptance test after touching it:
+# `pnpm nx assess blog` must still complete its sweep. Drop it once unlighthouse's
+# chain moves past the vulnerable range.
+# - esbuild <0.28.1: GHSA-g7r4-m6w7-qqqr (dev-server CORS), via @nuxt/fonts →
+#   fontless@0.2.1, which asks for ^0.27.0 (checked at unlighthouse 0.19.1). Trivy
+#   rates it LOW: the CRITICAL,HIGH scan is green with or without this override, which
+#   is here to keep the vulnerable release out of the lockfile.
 #
 # brace-expansion <5.0.9: CVE-2026-69152 (DoS via unbounded intermediate arrays).
 # Pinned exactly by nx itself, so nothing but an override reaches it. Drop it when
@@ -41,18 +41,13 @@ minimumReleaseAgeExclude:
 #   unlighthouse → @vueuse/integrations.
 # - smol-toml <1.7.1: CVE-2026-85730.
 #
-# Dev-only chains again; each range stops at the major that carries the fix:
-# - @tiptap/core <3.30.5: GHSA-j95f-988m-3j2f, via unlighthouse → @nuxt/ui. @tiptap/pm
-#   moves with it because the extensions peer on both at one version.
+# A dev-only chain again; the range stops at the major that carries the fix:
 # - basic-ftp <6.2.1: CVE-2026-102990 (quadratic parse of a hostile FTP listing), via
 #   puppeteer's proxy chain → get-uri. A major up from the 5.x get-uri asks for; nothing
 #   here fetches an ftp: URL.
 overrides:
-  '@opentelemetry/core': '>=2.8.0'
   esbuild: '>=0.28.1'
   brace-expansion: '>=5.0.9'
   axios: '^1.20.0'
   smol-toml: '^1.7.1'
-  '@tiptap/core': '^3.30.5'
-  '@tiptap/pm': '^3.30.5'
   basic-ftp: '^6.2.1'
