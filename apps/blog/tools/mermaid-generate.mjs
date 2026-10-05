@@ -20,6 +20,7 @@ import { chromium } from '@playwright/test';
 
 import {
   ACCENT_SENTINEL,
+  C4_TEXT,
   SHARED_SHAPE,
   TEXT_SENTINEL,
   accentClassDef,
@@ -86,7 +87,7 @@ async function render(sources) {
       'm' + Math.abs([...source].reduce((a, c) => a + c.charCodeAt(0), 0));
 
     const svg = await page.evaluate(
-      async ({ id, source, config, accent, text, shape }) => {
+      async ({ id, source, config, accent, text, shape, c4Text }) => {
         // @ts-expect-error injected global
         mermaid.initialize(config);
         // @ts-expect-error injected global
@@ -132,6 +133,10 @@ async function render(sources) {
         for (const box of [...el.querySelectorAll('rect.label-container')]) {
           box.setAttribute('rx', String(shape.radius));
           box.setAttribute('ry', String(shape.radius));
+          /* Since mermaid 11.17 a C4 shape also carries its radius as an `!important`
+             inline style, which beats the attribute. */
+          box.style.removeProperty('rx');
+          box.style.removeProperty('ry');
           box.style.strokeWidth = shape.borderWidth;
         }
 
@@ -141,6 +146,47 @@ async function render(sources) {
             if (/^<<.*>>$/.test(label) || /^\[[A-Z][A-Z_ ]*\]$/.test(label))
               node.remove();
           }
+
+          /* Since mermaid 11.17 a shape is a positioned group (`.c4-shape`) holding its
+             three lines as `.c4-name`, `.c4-type` and `.c4-descr`, and the type label is
+             folded into the technology line: `[Container: @dev-blog/ui]`. Same reasoning
+             as above — keep the technology, drop the type — and put the lines back on the
+             sizes the article's other diagrams are read at; mermaid now scales the last
+             two down to 0.75em and 0.82em. */
+          for (const type of [...el.querySelectorAll('.c4-shape .c4-type')]) {
+            const technology = /^\[[^:\]]*:\s*(.+)\]$/.exec(
+              (type.textContent || '').trim(),
+            )?.[1];
+            const row = type.querySelector('tspan.row');
+            if (!technology || !row) {
+              type.remove();
+              continue;
+            }
+            row.textContent = `[${technology}]`;
+            type.style.fontStyle = 'italic';
+            type.style.fontSize = c4Text.detail;
+          }
+          for (const name of [...el.querySelectorAll('.c4-shape .c4-name')])
+            name.style.fontSize = c4Text.name;
+          for (const descr of [...el.querySelectorAll('.c4-shape .c4-descr')])
+            descr.style.fontSize = c4Text.detail;
+
+          /* A shape's rect and texts now sit inside a translated group, so getBBox()
+             answers in the group's coordinates, not the diagram's. Everything below
+             compares positions across shapes, so it measures in the root's space. */
+          const toRoot = el.getScreenCTM().inverse();
+          const rootBox = (node) => {
+            const b = node.getBBox();
+            const m = toRoot.multiply(node.getScreenCTM());
+            const xs = [b.x, b.x + b.width].map((x) => x * m.a + m.e);
+            const ys = [b.y, b.y + b.height].map((y) => y * m.d + m.f);
+            return {
+              x: Math.min(...xs),
+              y: Math.min(...ys),
+              width: Math.abs(xs[1] - xs[0]),
+              height: Math.abs(ys[1] - ys[0]),
+            };
+          };
 
           /* Every relation points at ONE shared arrowhead marker, and a marker takes its
              fill from the diagram, not from the line referencing it — so an accented
@@ -223,14 +269,14 @@ async function render(sources) {
              than a child of the relation — so pair them by position, once the geometry is
              final: the nearest label to the accented arrow's midpoint is its own. */
           for (const relation of accentRelations) {
-            const near = relation.getBBox();
+            const near = rootBox(relation);
             const cx = near.x + near.width / 2;
             const cy = near.y + near.height / 2;
 
             let best = null;
             let bestDistance = 80;
             for (const text of [...el.querySelectorAll('text')]) {
-              const b = text.getBBox();
+              const b = rootBox(text);
               const distance = Math.hypot(
                 b.x + b.width / 2 - cx,
                 b.y + b.height / 2 - cy,
@@ -251,7 +297,7 @@ async function render(sources) {
           for (const frame of [
             ...el.querySelectorAll('rect[stroke-dasharray]'),
           ]) {
-            const outer = frame.getBBox();
+            const outer = rootBox(frame);
             const within = (b) =>
               b.width > 0 &&
               b.height > 0 &&
@@ -264,7 +310,7 @@ async function render(sources) {
               ...el.querySelectorAll('rect:not([stroke-dasharray])'),
             ]
               .filter((n) => n !== frame)
-              .map((n) => n.getBBox())
+              .map(rootBox)
               .filter(within);
             if (!shapes.length) continue;
 
@@ -279,7 +325,7 @@ async function render(sources) {
             /* A text sitting entirely above the shapes is the boundary's title; anything
                else is a label that belongs inside the frame. */
             const texts = [...el.querySelectorAll('text')]
-              .map((n) => ({ node: n, b: n.getBBox() }))
+              .map((n) => ({ node: n, b: rootBox(n) }))
               .filter(({ b }) => within(b));
             const titles = texts.filter(
               ({ b }) => b.y + b.height <= shapeBox.y,
@@ -332,6 +378,7 @@ async function render(sources) {
         accent: ACCENT_SENTINEL,
         text: TEXT_SENTINEL,
         shape: SHARED_SHAPE,
+        c4Text: C4_TEXT,
       },
     );
     out.set(hash, recolour(svg));

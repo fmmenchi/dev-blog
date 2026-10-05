@@ -60,9 +60,21 @@ export const themeVariables = {
 export const mermaidConfig = {
   startOnLoad: false,
   theme: 'base',
+  /* mermaid 12 changed its defaults to an ELK layout and the `neo` look, which re-lays
+     out and restyles every flowchart. Named here so the diagrams stay on the layout and
+     the look they were designed against. */
+  layout: 'dagre',
+  look: 'classic',
   fontFamily: 'ui-monospace, "SF Mono", "JetBrains Mono", monospace',
   themeVariables,
-  flowchart: { curve: 'basis', padding: 14 },
+  /* Same story for the last two: mermaid 12 wraps a node's label at 120px instead of 200
+     and widens short nodes to a 120px minimum. These are the values it had before. */
+  flowchart: {
+    curve: 'basis',
+    padding: 14,
+    wrappingWidth: 200,
+    minNodeWidth: 0,
+  },
   /* C4 draws relationship labels straight onto the canvas, with no background and no
      attempt to avoid the boxes — so the gap between two shapes has to be wide enough to
      hold the longest label, or it lands on a box and becomes unreadable. 90 is the
@@ -85,6 +97,11 @@ export const SHARED_SHAPE = {
   radius: 2.5,
   borderWidth: '0.5',
 };
+
+/* The three lines of a C4 shape. mermaid 11.17 started deriving the last two from the
+   first (0.75em and 0.82em of 14px), which lands them under the size of a relation's
+   label; these are the sizes the shapes had before. */
+export const C4_TEXT = { name: '16px', detail: '14px' };
 
 /** classDef the diagrams use for an emphasised (accent) node: `:::accent`. */
 export const accentClassDef = `classDef accent fill:${SENTINEL.accent},stroke:${SENTINEL.accent},color:${SENTINEL.accentText};`;
