@@ -14,12 +14,27 @@ function renderPost(slug: string) {
 /* Whatever is published. Rewrite every post tomorrow and these still hold. */
 const post = firstPost();
 
-describe('Post', () => {
+/*
+ * How long the route may take to show up, and how long a test here may run. The stub
+ * resolves the loader and then renders a whole article in jsdom — a 14-minute post with
+ * its diagrams. On a machine busy with other builds that took 1.4s, past the one second
+ * `findBy*` waits by default, and the test failed on a heading that was about to appear;
+ * with every core oversubscribed it took 6s, past the 5s a test gets. Neither number is
+ * about the route. These are patience, not a target: an idle run never gets near them.
+ */
+const ROUTE_RENDERED = { timeout: 10_000 };
+const TEST_BUDGET = { timeout: 15_000 };
+
+describe('Post', TEST_BUDGET, () => {
   it('renders the article with its title and its sections', async () => {
     renderPost(post.slug);
 
     expect(
-      await screen.findByRole('heading', { level: 1, name: post.title }),
+      await screen.findByRole(
+        'heading',
+        { level: 1, name: post.title },
+        ROUTE_RENDERED,
+      ),
     ).toBeTruthy();
 
     /* The content is an MDX component, loaded lazily — it arrives after the shell. */
@@ -36,7 +51,11 @@ describe('Post', () => {
     renderPost(post.slug);
 
     expect(
-      await screen.findByRole('navigation', { name: 'On this page' }),
+      await screen.findByRole(
+        'navigation',
+        { name: 'On this page' },
+        ROUTE_RENDERED,
+      ),
     ).toBeTruthy();
 
     const [first] = post.toc;
@@ -63,7 +82,7 @@ describe('Post', () => {
 
   it('shows the siblings nav only when there are siblings', async () => {
     renderPost(post.slug);
-    await screen.findByRole('heading', { level: 1 });
+    await screen.findByRole('heading', { level: 1 }, ROUTE_RENDERED);
 
     const nav = screen.queryByRole('navigation', { name: 'More posts' });
     if (posts.length > 1) expect(nav).toBeTruthy();
