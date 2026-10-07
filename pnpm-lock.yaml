@@ -307,6 +307,9 @@ importers:
       '@dev-blog/theme':
         specifier: workspace:*
         version: link:../theme
+      '@fmmenchi/share':
+        specifier: ^0.0.2
+        version: 0.0.2
       '@radix-ui/react-avatar':
         specifier: ^1.2.6
         version: 1.2.6(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -2230,6 +2233,13 @@ packages:
       {
         integrity: sha512-M0vTXrQqxxmK7RvZL1xlv3uSNY6F7invCz2BsR5Do/+hHM+J/KU/e/xcG4l8ih4Yr1HABvJboatVU/b+YXNl4Q==,
         tarball: https://npm.pkg.github.com/download/@fmmenchi/nx-trivy/0.2.3/c9beb4ce5998cb28c816e095881df98593a270ed,
+      }
+
+  '@fmmenchi/share@0.0.2':
+    resolution:
+      {
+        integrity: sha512-pj/fCo6/CeQTgqJQx8ijdYL1Wd4bw050qz1RvFFaOotC4gipaYm1OlH9HvBO8J4/WT71nY+unLQAo9IrAUjwrg==,
+        tarball: https://npm.pkg.github.com/download/@fmmenchi/share/0.0.2/00df89eb6157438b4798b713eb312f33d5515c6c,
       }
 
   '@formatjs/ecma402-abstract@2.3.6':
@@ -18949,6 +18959,10 @@ snapshots:
       - nx
       - supports-color
       - verdaccio
+
+  '@fmmenchi/share@0.0.2':
+    dependencies:
+      tslib: 2.8.1
 
   '@formatjs/ecma402-abstract@2.3.6':
     dependencies:

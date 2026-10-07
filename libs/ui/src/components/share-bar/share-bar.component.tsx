@@ -7,6 +7,13 @@ import {
   ShareIcon,
   XIcon,
 } from '@dev-blog/icons';
+import {
+  SHARE_CHANNEL_NAMES,
+  canShareNatively,
+  copyText,
+  shareHref,
+  shareNatively,
+} from '@fmmenchi/share';
 import type { ComponentType, SVGProps } from 'react';
 import { useEffect, useState } from 'react';
 
@@ -27,40 +34,16 @@ import { Link } from '../link/link.component';
  */
 export type ShareChannel = 'x' | 'bluesky' | 'linkedin' | 'hackernews';
 
-interface Channel {
-  name: string;
-  icon: ComponentType<SVGProps<SVGSVGElement>>;
-  href: (url: string, title: string) => string;
-}
-
-const CHANNELS: Record<ShareChannel, Channel> = {
-  x: {
-    name: 'X',
-    icon: XIcon,
-    href: (url, title) =>
-      `https://x.com/intent/post?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`,
-  },
-  bluesky: {
-    name: 'Bluesky',
-    icon: BlueskyIcon,
-    /* Bluesky's intent takes one text field; the link goes inside it. */
-    href: (url, title) =>
-      `https://bsky.app/intent/compose?text=${encodeURIComponent(`${title} ${url}`)}`,
-  },
-  linkedin: {
-    name: 'LinkedIn',
-    icon: LinkedinIcon,
-    href: (url) =>
-      `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
-  },
-  hackernews: {
-    name: 'Hacker News',
-    icon: HackerNewsIcon,
-    /* A SUBMISSION to a public aggregator, not a share with friends. Different thing,
-       and the right one for a post like these. */
-    href: (url, title) =>
-      `https://news.ycombinator.com/submitlink?u=${encodeURIComponent(url)}&t=${encodeURIComponent(title)}`,
-  },
+/* The links, the names, the clipboard and the native sheet come from @fmmenchi/share —
+   one place that keeps each channel's address current. What stays here is what that
+   package leaves to the app: which channels, in which order, and how they look. */
+const ICONS: Record<ShareChannel, ComponentType<SVGProps<SVGSVGElement>>> = {
+  x: XIcon,
+  bluesky: BlueskyIcon,
+  linkedin: LinkedinIcon,
+  /* A SUBMISSION to a public aggregator, not a share with friends. Different thing,
+     and the right one for a post like these. */
+  hackernews: HackerNewsIcon,
 };
 
 export interface ShareBarProps {
@@ -103,11 +86,11 @@ export function ShareBar({
   className,
 }: ShareBarProps) {
   const [copied, setCopied] = useState(false);
-  const [canShareNatively, setCanShareNatively] = useState(false);
+  const [hasNativeSheet, setHasNativeSheet] = useState(false);
 
   /* After mount, never during render: the server has no navigator. */
   useEffect(() => {
-    setCanShareNatively(typeof navigator.share === 'function');
+    setHasNativeSheet(canShareNatively());
   }, []);
 
   /* The tick is a confirmation, not a state: it goes away on its own. */
@@ -118,19 +101,15 @@ export function ShareBar({
   }, [copied]);
 
   const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(url);
-      setCopied(true);
-    } catch {
-      /* Clipboard denied, or an insecure origin. Say nothing rather than claim a
-         success that did not happen. */
-    }
+    /* False when the clipboard was denied, or on an insecure origin. Say nothing
+       rather than claim a success that did not happen. */
+    if (await copyText(url)) setCopied(true);
   };
 
-  const shareNatively = () => {
-    void navigator.share({ title, url }).catch(() => {
-      /* The sheet was dismissed. That is not an error. */
-    });
+  /* Every outcome ends the same way here: a dismissed sheet is not an error, and for
+     one that failed the channels are right there, one tap away. */
+  const openNativeSheet = () => {
+    void shareNatively({ url, title });
   };
 
   return (
@@ -142,27 +121,29 @@ export function ShareBar({
         role="group"
         aria-label={label}
       >
-        {canShareNatively ? (
-          <button type="button" onClick={shareNatively} className={ACTION}>
+        {hasNativeSheet ? (
+          <button type="button" onClick={openNativeSheet} className={ACTION}>
             <ShareIcon aria-hidden="true" className="size-4" />
             <span className="sr-only">Share</span>
           </button>
         ) : null}
 
         {channels.map((key) => {
-          const { name, icon: Icon, href } = CHANNELS[key];
+          const Icon = ICONS[key];
 
           return (
             <Link
               key={key}
-              href={href(url, title)}
+              href={shareHref(key, { url, title })}
               variant="plain"
               className={ACTION}
             >
               <Icon aria-hidden="true" className="size-4" />
               {/* Inside the link, not an aria-label: a label would override the
                   content and with it Link's "(opens in a new tab)" hint. */}
-              <span className="sr-only">Share on {name}</span>
+              <span className="sr-only">
+                Share on {SHARE_CHANNEL_NAMES[key]}
+              </span>
             </Link>
           );
         })}
