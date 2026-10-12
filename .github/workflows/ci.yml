@@ -169,7 +169,7 @@ jobs:
       # failed jobs" re-attach an SBOM or re-announce without re-releasing.
       - name: Publish the release record
         if: steps.release.outputs.released != '0'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: release-result
           path: ${{ steps.release.outputs.result-file }}
@@ -199,7 +199,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           registry-url: https://npm.pkg.github.com
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: release-result
           path: ${{ runner.temp }}
@@ -235,7 +235,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           registry-url: https://npm.pkg.github.com
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: release-result
           path: ${{ runner.temp }}
