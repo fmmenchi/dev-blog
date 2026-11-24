@@ -141,5 +141,8 @@
   "analytics": false,
   "migrate": {
     "agentic": true
+  },
+  "affected": {
+    "legacy": true
   }
 }
