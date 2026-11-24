@@ -13,6 +13,7 @@ import { reactRouter } from '@react-router/dev/vite';
 import { cloudflare } from '@cloudflare/vite-plugin';
 import tailwindcss from '@tailwindcss/vite';
 import { imagetools } from 'vite-imagetools';
+import { nxReadySignal } from '@nx/vite/plugins/nx-ready-signal.plugin';
 import mdx from '@mdx-js/rollup';
 import remarkFrontmatter from 'remark-frontmatter';
 import remarkGfm from 'remark-gfm';
@@ -172,6 +173,7 @@ export default defineConfig(async (): Promise<ViteUserConfig> => ({
   },
   plugins: [
     reapWorkerdOnSignals(),
+    nxReadySignal(),
     /* Spread: this returns an array, and a nested array inside `plugins` is legal but
        makes the element type recursive enough for TS2321. Flat, every entry is a
        `Plugin` and the check stays shallow. */
