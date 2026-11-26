@@ -11,7 +11,8 @@ libraries (design tokens + UI components).
 
 - **Stack**: Nx monorepo (TS preset), pnpm, React 19, React Router **v8**
   (framework mode, SSR), Vite, Vitest + Testing Library, ESLint, Stylelint,
-  Prettier.
+  Prettier. TypeScript **7** compiles (`tsc`), **6** stays for the tools that need
+  its API (`tsc6`) — see [architecture](./.agent/architecture.md).
 - **Styling**: **Tailwind v4** over the design tokens of `@dev-blog/theme`. The
   tokens are still the source of truth; a `@theme inline` bridge in
   `libs/theme/src/styles/tailwind.css` is what turns them into utilities

@@ -33,6 +33,52 @@ Tags in each project's `package.json` `nx.tags`; constraints in the root
 When you add a lib, tag it and extend the constraints — do not add an untagged
 project.
 
+## TypeScript 7 alongside 6
+
+TypeScript 7 is the native compiler and ships **no programmatic API**; the tools
+that `require('typescript')` still need 6. So the root `package.json` installs both
+([Nx guide](https://nx.dev/docs/kb/typescript-7)):
+
+```json
+"@typescript/native": "npm:typescript@~7.0.2",
+"typescript": "npm:@typescript/typescript6@~6.0.2"
+```
+
+- **On 7** — the `tsc` binary, so every `typecheck` task (`tsc --build
+--emitDeclarationOnly`, inferred by `@nx/js/typescript`) and any `tsc` you run.
+- **On 6** — everything that loads the API by the name `typescript`: the Nx
+  project graph and the `@nx/js/typescript` plugin, typescript-eslint, `@svgr/*`,
+  commitlint/commitizen config loading. `tsc6` is the 6.0 CLI, kept as the
+  fallback. Vite does not use either (no dts plugin), no script of ours imports
+  `typescript`, and no project uses the `@nx/js:tsc` executor.
+- **Editor / MDX tooling** — `node_modules/typescript` is the 6.0 wrapper, which
+  ships `lib/tsserverlibrary.js` but **not** `lib/tsserver.js`: an editor set to
+  "workspace version" will not find it and falls back to its bundled TypeScript.
+  The MDX language tooling may need 6 for the same reason.
+- `@react-router/*` and `valibot` under `apps/blog` resolve their optional
+  `typescript` peer to **7** (pnpm matches the real name of `@typescript/native`).
+  Harmless today: neither loads the API at runtime. Re-check if one starts to.
+- **Cache**: `targetDefaults.typecheck` adds both packages as
+  `externalDependencies` (with `"..."` to keep the inferred inputs), so a compiler
+  bump invalidates `typecheck`. Before this, no task hashed the compiler at all.
+
+**Check what you are really running** — a stale `node_modules/.bin` can keep
+running 6 without any error:
+
+```bash
+pnpm --dir <project> exec tsc --version    # 7.0.x
+pnpm --dir <project> exec tsc6 --version   # 6.0.x
+grep -o '"version":"[0-9.]*"' libs/ui/dist/tsconfig.lib.tsbuildinfo   # who wrote it
+```
+
+If `tsc` says 6, reinstall (`pnpm install`); if it still does, delete
+`node_modules` and install clean.
+
+**Remove the side-by-side** when typescript-eslint and Nx run on the TypeScript 7
+API (or a 7.x ships one they support): drop `@typescript/native`, point
+`typescript` back at `typescript@~7.x`, drop `@typescript/native` from
+`targetDefaults.typecheck`, and delete this section.
+
 ## React Router v8 notes
 
 - Runtime and dev packages are pinned together at `^8.1.0` (root and app must
