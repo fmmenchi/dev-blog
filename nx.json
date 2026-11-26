@@ -113,6 +113,12 @@
     "test": {
       "dependsOn": ["^build"]
     },
+    "typecheck": {
+      "inputs": [
+        "...",
+        { "externalDependencies": ["typescript", "@typescript/native"] }
+      ]
+    },
     "@nx/js:tsc": {
       "cache": true,
       "dependsOn": ["^build"],
