@@ -1,5 +1,5 @@
 import { createRoutesStub } from 'react-router';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 
 import { projects } from '../../app/lib/content';
 import Projects, { loader } from '../../app/routes/projects';
@@ -30,15 +30,20 @@ describe('Projects', () => {
   });
 
   /*
-   * With a single project there is nothing to filter and nothing to sort, so the
-   * bar stays away rather than offering controls that cannot change the page.
-   * Its behaviour, on a list worth filtering, is covered in filter-bar.spec.tsx.
+   * The projects span several languages, so the page offers one filter per
+   * language the data holds — no more, no fewer. The bar hiding itself when
+   * there is nothing to choose between is covered in filter-bar.spec.tsx.
    */
-  it('does not offer a filter it cannot honour', async () => {
+  it('offers a filter for every language the projects use', async () => {
+    const languages = [...new Set(projects.map(({ language }) => language))];
     renderPage();
-    await screen.findByRole('heading', { level: 1, name: 'Projects' });
-    expect(screen.queryByRole('toolbar')).toBeNull();
-    expect(screen.queryByRole('combobox')).toBeNull();
+    const bar = await screen.findByRole('toolbar', {
+      name: 'Filter by language',
+    });
+    const buttons = within(bar).getAllByRole('button');
+    expect(buttons.map((button) => button.textContent).sort()).toEqual(
+      languages.sort(),
+    );
   });
 
   it('filters from the URL alone, and says so when nothing matches', async () => {

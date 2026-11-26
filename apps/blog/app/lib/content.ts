@@ -31,6 +31,33 @@ export const projects: Project[] = [
     language: 'TypeScript',
     url: 'https://github.com/fmmenchi/shared-platform',
   },
+  {
+    name: 'tokenmeter',
+    period: '2026',
+    status: 'active',
+    description:
+      'A macOS menu-bar app and widget that shows how much of my Claude and ChatGPT plan quota is left. It reads only the files Claude Code and the Codex CLI leave on the machine.',
+    language: 'Swift',
+    url: 'https://github.com/fmmenchi/tokenmeter',
+  },
+  {
+    name: 'devmate',
+    period: '2026',
+    status: 'active',
+    description:
+      'A local assistant that takes a GitHub issue through agents — triage, plan, implement, verify, review — to a draft pull request, and grades the result against my own rubric. A human merges, always.',
+    language: 'JavaScript',
+    url: 'https://github.com/fmmenchi/devmate',
+  },
+  {
+    name: 'ai-skills',
+    period: '2026',
+    status: 'active',
+    description:
+      'My agent setup, independent of the tool: the operating contract every repository inherits, plus the few skills no vendor can write for me. Installed by symlink, so one edit reaches every tool.',
+    language: 'Shell',
+    url: 'https://github.com/fmmenchi/ai-skills',
+  },
 ];
 
 export interface Social {

@@ -8,9 +8,9 @@ import { readFilters } from '../../app/lib/filters';
 /*
  * The bar is tested here, on invented data, and NOT through /blog or /projects.
  *
- * The real site holds one post and one project, so the bar correctly refuses to
- * render there — a route test could only ever assert its absence. Its behaviour
- * needs a list worth filtering, so this supplies one.
+ * The real lists change with the content: whether the bar renders on a route
+ * depends on what is published that day. Its behaviour needs a fixed list worth
+ * filtering, so this supplies one.
  *
  * The host reads `selected` and `sort` back OUT of the URL, exactly as the real
  * loaders do. That is the whole contract: the bar does not keep state, it writes
