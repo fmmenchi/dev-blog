@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useSyncExternalStore } from 'react';
 
 import { cn } from '../../internal/cn';
 
@@ -57,6 +57,13 @@ function paintFavicon() {
   link.href = `data:image/svg+xml,${encodeURIComponent(svg)}`;
 }
 
+const subscribeNever = () => () => undefined;
+
+function readSavedAccent(): Accent | null {
+  const saved = window.localStorage.getItem(ACCENT_STORAGE_KEY);
+  return isAccent(saved) ? saved : null;
+}
+
 /**
  * Cycles the site accent (yellow → lime → amber), persisted per visitor.
  *
@@ -67,13 +74,17 @@ function paintFavicon() {
  * screen-reader user nothing at all (WCAG 4.1.3, Status Messages).
  */
 export function AccentSwitcher({ className }: { className?: string }) {
-  const [accent, setAccent] = useState<Accent>('yellow');
+  /* The saved accent lives in localStorage, which the server cannot read: it renders the
+     default, and the client snapshot takes over after hydration. A click wins over both,
+     and still holds when the write to localStorage was refused. */
+  const saved = useSyncExternalStore(
+    subscribeNever,
+    readSavedAccent,
+    () => null,
+  );
+  const [picked, setPicked] = useState<Accent | null>(null);
+  const accent: Accent = picked ?? saved ?? 'yellow';
   const [announcement, setAnnouncement] = useState('');
-
-  useEffect(() => {
-    const saved = window.localStorage.getItem(ACCENT_STORAGE_KEY);
-    if (isAccent(saved)) setAccent(saved);
-  }, []);
 
   useEffect(() => {
     document.documentElement.dataset['accent'] = accent;
@@ -88,7 +99,7 @@ export function AccentSwitcher({ className }: { className?: string }) {
     } catch {
       // persistence is best-effort
     }
-    setAccent(next);
+    setPicked(next);
     setAnnouncement(`Accent colour changed to ${next}`);
   };
 

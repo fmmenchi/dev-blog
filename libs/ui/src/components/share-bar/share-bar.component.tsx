@@ -15,7 +15,7 @@ import {
   shareNatively,
 } from '@fmmenchi/share';
 import type { ComponentType, SVGProps } from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useSyncExternalStore } from 'react';
 
 import { cn } from '../../internal/cn';
 import { Link } from '../link/link.component';
@@ -62,6 +62,8 @@ export interface ShareBarProps {
 const ACTION =
   'inline-flex size-9 cursor-pointer items-center justify-center rounded-md border border-border-strong bg-transparent text-muted-foreground [transition:var(--transition-color)] hover:border-primary hover:text-primary';
 
+const subscribeNever = () => () => undefined;
+
 /**
  * Share THIS page. Not "follow me" — that is `IconLinks`, and they are different
  * questions: this one is about the READER's network, that one about mine. X sits here
@@ -86,12 +88,14 @@ export function ShareBar({
   className,
 }: ShareBarProps) {
   const [copied, setCopied] = useState(false);
-  const [hasNativeSheet, setHasNativeSheet] = useState(false);
-
-  /* After mount, never during render: the server has no navigator. */
-  useEffect(() => {
-    setHasNativeSheet(canShareNatively());
-  }, []);
+  /* The server has no navigator, so it (and hydration) renders without the native sheet;
+     the client snapshot takes over right after. Nothing to subscribe to: the capability
+     does not change while the page is open. */
+  const hasNativeSheet = useSyncExternalStore(
+    subscribeNever,
+    canShareNatively,
+    () => false,
+  );
 
   /* The tick is a confirmation, not a state: it goes away on its own. */
   useEffect(() => {
