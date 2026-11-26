@@ -56,7 +56,7 @@
     "eslint-plugin-playwright": "^2.12.2",
     "eslint-plugin-react": "7.35.0",
     "eslint-plugin-react-hooks": "7.1.1",
-    "fontkit": "^2.0.4",
+    "fontkit": "^3.0.0",
     "husky": "^9.1.7",
     "jiti": "2.7.0",
     "jsdom": "^27.4.0",
