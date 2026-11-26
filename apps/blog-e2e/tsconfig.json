@@ -6,7 +6,6 @@
     "sourceMap": false,
     "lib": ["es2022", "dom"],
     "types": ["node"],
-    "ignoreDeprecations": "6.0",
     "rootDir": "."
   },
   "include": [
